@@ -245,6 +245,18 @@ checkpoint reloads, Grad-CAM PNG opens, realised subset counts match the config)
 matrix configs exist with `smoke_subset: null` and Table 3 values; genimage-loader selfcheck
 passes; review pass over all modules (incl. merge_runs.py) against §8 rules.
 
+**G1 PASSED 20 Aug 2026.** All six modules implemented; selfchecks green; CPU smoke ran
+end-to-end twice (incl. once with the shipped num_workers: 2 through Windows spawn); guard
+negative-tests refuse correctly; Grad-CAM overlays verified non-degenerate. A 4-lens
+adversarial code review returned 16 findings, all fixed — notably: 9 configs were cp1252-
+encoded and would have crashed every A3 run at load on Kaggle (re-encoded UTF-8 + explicit
+encoding= on all text I/O); the DataLoader worker seeder was an unpicklable closure (broken
+under spawn; now a module-level partial); `imagenet_midjourney` (official no-infix naming)
+would not have been found at A4; genimage sampling now balance-capped by construction;
+NaN divergence fails fast; merge_runs and eval got smoke side-door guards; make_split
+refuses to overwrite the committed split without --force; gradcam gained --dump-correct for
+the A4 shared-set build.
+
 ### A2 [was B1 second half] — code transport + Kaggle GPU smoke. Needs Rohit once.
 
 1. **Code transport (D1):** default — private GitHub repository, cloned in the notebook via a
@@ -291,8 +303,10 @@ session facts resolved or explicitly still-open with fallbacks.
   the next session launches** — all ten checkpoints get archived locally, not just the better
   five; the Kaggle account must not be a single point of failure for anything. Checkpoints
   additionally stay in the notebook's versioned output; each session also copies the prior
-  sessions' `best.pt` files forward into its own output, so the latest version always carries
-  the full checkpoint set (this also neutralises the multi-version-attach uncertainty).
+  sessions' **whole `<run_id>/` artefact directories** forward into its own output (not just
+  `best.pt` — `config_used.yaml` must travel with the checkpoint or `eval.py`/`gradcam.py`
+  cannot load it), so the latest version always carries the full set (this also neutralises
+  the multi-version-attach uncertainty).
 - **Sanity gate G3 (after the FIRST session, runs 1–2):** read `val_acc` — not the test
   columns, which stay untouched until numbers are final (§8.4). Fine-tuned CNN validation
   accuracy on CIFAKE is expected in the mid-90s (the CIFAKE paper's small-CNN baseline is

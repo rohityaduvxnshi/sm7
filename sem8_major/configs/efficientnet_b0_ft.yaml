@@ -1,0 +1,31 @@
+# efficientnet_b0, fine-tuning — matrix run 6. MATRIX STATE ONLY: smoke_subset stays null.
+# Values from implementation_plan.md Table 3. Field documentation: template.yaml.
+
+model: efficientnet_b0
+mode: ft                     # every parameter updated
+seed: 42
+
+data:
+  root: data/cifake
+  split_file: data/cifake_split_seed42.csv
+  num_workers: 2             # [VERIFY at first Kaggle login]
+
+resolution: 224              # ImageNet-pretrained weights expect 224x224
+batch_size: 128              # fits a T4 for the lighter backbones
+augment: hflip               # horizontal flip only; anything stronger is an ablation, not the baseline
+
+optimizer: sgd
+lr: 0.001                   # pretrained weights need small updates or the features are destroyed
+momentum: 0.9
+weight_decay: 0.0
+
+max_epochs: 30
+early_stopping_patience: 5
+amp: true
+checkpoint: best_val_loss
+
+output:
+  results_dir: results       # on Kaggle: /kaggle/working/results
+  runs_csv: results/runs.csv
+
+smoke_subset: null           # never non-null in a matrix config; smoke runs live in *_smoke.yaml
