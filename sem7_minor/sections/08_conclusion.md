@@ -1,0 +1,11 @@
+# Section 8 — Conclusion
+
+This review surveyed deep learning approaches to detecting AI-generated still images. It grouped the field by the origin of the evidence a detector uses — handcrafted and frequency-domain forensics, convolutional networks trained by transfer learning, transformer and attention-based models, frozen vision-language representations, and explainability-oriented work — then compared the datasets and benchmarks in common use, the metrics the literature reports, and 48 primary studies side by side in a single table that records for each one whether it was tested on generators absent from its training data and what limitation its own authors state.
+
+Three findings stand out. The first is that the generalisation gap is structural rather than incidental: much of what a detector learns belongs to a particular generator's design, so a change of design removes the evidence rather than merely making it harder to read. The reported drops are large, from 99.9% accuracy on a training generator to 54.9% on an unseen one [C52], and from 92.77% on a standard benchmark to 65.77% on realistic images [C36]. The second is that the strongest cross-generator results share three properties: a representation not trained on detection data, an input derived from the image rather than the image itself, or training data spanning many generators. The third is that cross-generator evaluation and explanation analysis are rarely done together — 36 of the 48 studies report the former, four the latter.
+
+That last observation is the gap this review identifies, and Section 7.6 sets out the study planned to address it: a matched comparison of four ImageNet-pretrained CNN backbones against a Vision Transformer benchmark on CIFAKE [C51], with Grad-CAM [C61] applied to correct and incorrect predictions and a cross-generator test on a GenImage subset [C52]. That work belongs to the project's second phase. No part of it has been carried out, and this paper reports no experimental results of its own.
+
+Word count: 310 (target ~250; band 200-320). Whitespace-separated tokens over the prose only; the heading and this footer are excluded, and bracketed citation markers are counted as tokens.
+
+C-IDs cited: C36, C51, C52, C61

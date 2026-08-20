@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 430" width="620" height="430">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#000000"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="620" height="430" fill="#ffffff"/>
+
+  <g font-family="Times New Roman, Times, serif" font-size="13" fill="#000000" text-anchor="middle">
+
+    <!-- identified -->
+    <rect x="40" y="20" width="320" height="54" fill="none" stroke="#000000" stroke-width="1"/>
+    <text x="200" y="44">Records identified through protocol searches</text>
+    <text x="200" y="62">across six databases (n = 101)</text>
+
+    <!-- identified -> screened -->
+    <line x1="200" y1="74" x2="200" y2="130" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+    <line x1="200" y1="102" x2="398" y2="102" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+
+    <!-- duplicates -->
+    <rect x="400" y="78" width="200" height="48" fill="none" stroke="#000000" stroke-width="1"/>
+    <text x="500" y="100" font-size="12">Duplicates removed</text>
+    <text x="500" y="118" font-size="12">(n = 26)</text>
+
+    <!-- screened -->
+    <rect x="40" y="130" width="320" height="54" fill="none" stroke="#000000" stroke-width="1"/>
+    <text x="200" y="154">Unique records screened by title and abstract</text>
+    <text x="200" y="172">(n = 75)</text>
+
+    <!-- screened -> included -->
+    <line x1="200" y1="184" x2="200" y2="240" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+    <line x1="200" y1="213" x2="398" y2="213" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+
+    <!-- excluded -->
+    <rect x="400" y="180" width="200" height="66" fill="none" stroke="#000000" stroke-width="1"/>
+    <text x="500" y="200" font-size="12">Excluded (n = 1):</text>
+    <text x="500" y="218" font-size="12">preprint failing the</text>
+    <text x="500" y="236" font-size="12">well-cited criterion</text>
+
+    <!-- included -->
+    <rect x="40" y="240" width="320" height="54" fill="none" stroke="#000000" stroke-width="1"/>
+    <text x="200" y="264">Records included in the review</text>
+    <text x="200" y="282">(n = 74)</text>
+
+    <!-- split bus -->
+    <line x1="200" y1="294" x2="200" y2="312" stroke="#000000" stroke-width="1"/>
+    <line x1="90" y1="312" x2="310" y2="312" stroke="#000000" stroke-width="1"/>
+    <line x1="90" y1="312" x2="90" y2="336" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+    <line x1="200" y1="312" x2="200" y2="336" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+    <line x1="310" y1="312" x2="310" y2="336" stroke="#000000" stroke-width="1" marker-end="url(#arrow)"/>
+
+    <!-- three outcome boxes -->
+    <rect x="40" y="336" width="100" height="70" fill="none" stroke="#000000" stroke-width="1"/>
+    <text x="90" y="358" font-size="12">Primary</text>
+    <text x="90" y="374" font-size="12">studies</text>
+    <text x="90" y="392" font-size="12">(n = 48)</text>
+
+    <rect x="150" y="336" width="100" height="70" fill="none" stroke="#000000" stroke-width="1"/>
+    <text x="200" y="358" font-size="12">Secondary</text>
+    <text x="200" y="374" font-size="12">studies</text>
+    <text x="200" y="392" font-size="12">(n = 11)</text>
+
+    <rect x="260" y="336" width="100" height="70" fill="none" stroke="#000000" stroke-width="1"/>
+    <text x="310" y="358" font-size="12">Background</text>
+    <text x="310" y="374" font-size="12">references</text>
+    <text x="310" y="392" font-size="12">(n = 15)</text>
+
+  </g>
+</svg>

@@ -1,0 +1,20 @@
+# AuthentiScan Semester 8 — implementation dependencies.
+# Floor pins only. At Phase 0, freeze the exact resolved versions:
+#     pip freeze > requirements.lock
+# and log torch/timm versions into results/runs.csv for every run — Paper 2 must report
+# exact versions, as all three reference papers do.
+#
+# Deviation from CLAUDE.md §13 Track B item 2: local venv + requirements.txt instead of
+# Miniconda + environment.yml, because Python 3.12.10 is already installed on the laptop.
+#
+# On Kaggle, torch and torchvision ship with the image — install the rest there and do not
+# upgrade torch, or the notebook loses its preinstalled CUDA build.
+
+torch>=2.2
+torchvision>=0.17
+timm>=1.0
+scikit-learn>=1.4
+matplotlib>=3.8
+pandas>=2.2
+pyyaml>=6.0
+grad-cam>=1.5

@@ -1,0 +1,9 @@
+# OS junk
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# credentials must never enter history (Kaggle tokens are KGAT_-prefixed)
+KGAT_*
+*.token
+kaggle.json

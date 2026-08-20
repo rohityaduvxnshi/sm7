@@ -1,0 +1,38 @@
+# Config template — copy it, do not run it.
+# Naming convention: <model>_<mode>.yaml, where mode is fe (feature extraction) or ft
+# (fine-tuning). Examples: resnet50_fe.yaml, resnet50_ft.yaml, vit_base_patch16_224_ft.yaml.
+#
+# Every field here is read by code/train.py; no hyperparameter is hardcoded in a script.
+# The values below are plan-level starting points and are tunable in Phase 2 — change them in
+# the config, never in the code, since the resolved config is copied into results/<run_id>/.
+
+model: resnet50              # timm name: resnet50 | densenet121 | efficientnet_b0 | vgg19 | vit_base_patch16_224
+mode: fe                     # fe = frozen backbone + new head; ft = every parameter updated
+seed: 42                     # one seed for split, init, shuffling and augmentation
+
+data:
+  root: data/cifake                          # dataset root; on Kaggle: /kaggle/input/cifake-real-and-ai-generated-synthetic-images
+  split_file: data/cifake_split_seed42.csv   # committed split: 10k stratified val carved from the 100k train set
+  num_workers: 2                             # Kaggle worker count [VERIFY at first login]
+
+resolution: 224              # ImageNet-pretrained weights expect 224x224, so CIFAKE's 32x32 is upscaled to it
+batch_size: 128              # fits a T4 for resnet50 / densenet121 / efficientnet_b0; use 64 for vgg19 and ViT
+augment: hflip               # baseline augmentation is random horizontal flip only; "none" for the ablation
+
+optimizer: sgd               # sgd for the CNNs (matches the Karki et al. reference setup); adamw for ViT
+lr: 0.01                     # CNN: 0.01 fe / 0.001 ft. ViT (adamw): 1e-3 fe (head only) / 3e-5 ft
+momentum: 0.9                # standard SGD momentum; ignored when optimizer is adamw
+weight_decay: 0.0            # no regularisation in the baseline; revisit only if learning curves show overfitting
+
+max_epochs: 30               # a ceiling, not a target — early stopping normally ends the run sooner
+early_stopping_patience: 5   # stop after 5 epochs with no validation-loss improvement, to save GPU quota
+amp: true                    # mixed precision: lower memory and shorter epochs on a T4 (estimate, confirm in Phase 1)
+checkpoint: best_val_loss    # keep the best-by-validation-loss checkpoint, discard the rest
+
+output:
+  results_dir: results       # per-run artefacts written to <results_dir>/<run_id>/; on Kaggle: /kaggle/working/results
+  runs_csv: results/runs.csv # one appended row per completed run
+
+smoke_subset: null           # images PER CLASS PER SPLIT for smoke runs; null = full dataset.
+                             # Non-null only in *_smoke.yaml configs, which must point runs_csv at
+                             # results/smoke_runs.csv — train.py refuses runs.csv + non-null smoke_subset

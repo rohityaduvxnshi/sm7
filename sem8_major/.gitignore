@@ -1,0 +1,14 @@
+# Datasets are large and are attached natively on Kaggle — nothing under data/ is committed
+# except its README and the small split file, which must be reproducible across machines.
+data/*
+!data/README.md
+!data/cifake_split_seed42.csv
+!data/genimage_access_note.md
+
+# Model checkpoints. The result CSVs under results/ ARE committed.
+*.pt
+*.pth
+
+__pycache__/
+.venv/
+.ipynb_checkpoints/

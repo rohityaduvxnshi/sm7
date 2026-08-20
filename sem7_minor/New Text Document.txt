@@ -1,0 +1,493 @@
+
+Intro
+0:00
+How do you ethically write a research
+0:01
+paper in the quickest possible manner
+0:04
+and make sure that you use maybe a
+0:06
+little bit of AI as well but still
+0:08
+maintain the academic integrity of it?
+0:11
+That's what we're going to talk about in
+0:12
+this video. I'll give you the entire
+0:14
+stepbystep pathway as to how you can go
+0:17
+from start to end. And even if you're a
+0:19
+seasoned researcher, this will make your
+0:22
+research process go from probably months
+0:25
+to weeks simply because we're doing it
+0:27
+the smart way. You see, using AI to
+0:29
+generate research is absolutely ethical
+0:31
+as long as you don't do it the wrong
+0:33
+way. So that's what we'll focus on. So
+0:35
+let's get right into it. So the first
+0:36
+thing we'll do is step one, find your
+Find Research Titles
+0:38
+research title. Let's assume that I am a
+0:41
+researcher who wants to work in the
+0:43
+field of AI plus healthcare. So here's
+0:45
+what I do. I tell Chad GPT, hey Chad,
+0:48
+can you send me some topics related to
+0:49
+AI or AI plus healthcare? And it already
+0:52
+gives me a good list of 27 good options
+0:55
+that research is already ongoing on.
+0:57
+Step two, this is where you want to do a
+Literature Review
+0:59
+literature review. Let's say you find
+1:01
+your topic. Okay, I like machine
+1:03
+learning in uh let's say Parkinson's
+1:05
+disease detection. And now I want to see
+1:07
+what kind of research is already done in
+1:09
+this field, right? Because I don't want
+1:10
+to do something that's already done. So
+1:12
+this is where you go on to semantic
+1:13
+scholar. You search for the research
+1:16
+project that you're interested in and
+1:17
+you already get to see what kind of
+1:19
+research is already ongoing or has
+1:21
+happened that again you can use as
+1:24
+reference for your literature review.
+1:25
+This is where you want to take the five
+1:27
+most popular papers from there. Read
+1:29
+them and understand what's already done.
+1:31
+This will also help you get more ideas
+1:33
+on what you can do. Okay, they use
+1:34
+process A in paper one, process B in
+1:37
+paper two. Maybe I can merge these and
+1:39
+produce something absolutely amazing
+1:41
+which which has a better success rate
+1:42
+than basically both of these papers
+1:44
+because I pipeline them together. So
+1:45
+this is where you do that sort of
+1:46
+brainstorming mostly. And mind you,
+1:48
+Semantic Scholar is absolutely free to
+1:50
+use just like Chad GPD. So we're not
+1:52
+spending any money till now. Step three
+1:53
+is to define your scope. Okay, what I
+Define your Scope
+1:56
+want to do is I want to compare the
+1:58
+performance of five different machine
+1:59
+learning algorithms uh when detecting
+2:01
+Parkinson's disease something like that.
+2:03
+What do you want to do exactly which
+2:05
+kind of are you trying to use a new
+2:07
+algorithm? I want to use XG boost to
+2:09
+check this. I want to do something very
+2:10
+specific, right? So maybe I want to use
+2:12
+neural networks. But you should know
+2:14
+exactly what you're doing so that it has
+2:16
+a bit more scope onto it rather than
+2:18
+keeping it very bland and broad as such.
+2:20
+So I chose okay I'm going to compare the
+2:22
+performances of different machine
+2:23
+learning algorithms in detecting
+2:24
+Parkinson's disease. That's my exact
+2:26
+research project. I've done the
+2:27
+research. I understand this is what I
+2:28
+need to do. Now this is where we move on
+Dataset Acquisition & Cleaning
+2:30
+to step four and that is data
+2:32
+acquisition and cleaning. Again now you
+2:35
+already might have some data sets that
+2:37
+other people worked on in their research
+2:39
+papers. You could just recycle their
+2:41
+data sets. Maybe they use something open
+2:42
+source. Maybe they use their own data.
+2:44
+You can take that up. That's completely
+2:45
+fine. You can just reference it. Or what
+2:47
+you can do is you can go back to Chad
+2:49
+GPT and ask it hey Chad GBT is there any
+2:52
+data set available you that I can use to
+2:54
+perform machine learning on Parkinson
+2:56
+Park Parkinson's disease detection if
+2:58
+yes please let us know and it will give
+3:00
+you a list of data sets that you can
+3:02
+choose from within these data sets I
+3:04
+chose the gate analysis one that was
+3:06
+available and then I clean the data a
+3:07
+little bit again you can use GBD's help
+3:09
+to clean it now once you have the data
+3:11
+set you've done cleaning it and
+3:12
+everything it looks good to you this is
+3:14
+where you want to start looking at model
+3:16
+training or experimentation essentially.
+Model Training
+3:19
+Now, in my case, since I'm doing AI, I
+3:20
+got to train a model. I got to see how
+3:22
+it performs, right? So, this is where
+3:23
+the experimentation happens. But you
+3:25
+don't need to do all of that yourself.
+3:27
+So, for instance, what I would do is
+3:29
+okay, let me try K means on this one
+3:31
+first. And you know, these are the
+3:33
+pupils. I gave the pupils to the chart
+3:35
+GPD that these are the headings of my
+3:36
+columns. Can you let me know how do I go
+3:39
+ahead and basically apply K means to
+3:42
+this particular data set? and it will
+3:44
+actually write the whole code for you.
+3:46
+All you have to do is to run it,
+3:47
+troubleshoot. If you get stuck again,
+3:48
+you can take Charge GB's help. But most
+3:50
+of the work is already done for you. And
+3:52
+mind you, this is still academically
+3:53
+ethical because I'm not really copying
+3:56
+someone's work. I'm doing it, but I'm
+3:58
+just taking the help of Charity to write
+3:59
+the code. For instance, after analyzing
+Analyse Results
+4:01
+the performance of K means, I'm going to
+4:03
+try five six more algorithms. And once
+4:05
+I've done that, there's my research
+4:06
+paper right there. I can just compare
+4:08
+all of those algorithms. And that's
+4:10
+actually a pretty good research already.
+4:12
+So step six is to analyze the results,
+4:13
+put them in a table, see which one
+4:15
+performs best, you know, which one is
+4:17
+number one, number two, all that. And
+4:18
+then step seven is to write the research
+Writing the Research
+4:20
+paper. You could write it yourself or
+4:23
+you could use chat GPT's help to write
+4:24
+it. That's completely okay. Uh it is in
+4:26
+the end your own work. You're not really
+4:28
+copying anything from anyone. But still,
+4:30
+if you want to remove AI percentage, you
+4:32
+can go onto the YMGrad humanizer, which
+4:34
+is free to use and you can basically use
+4:36
+paragraphs of your paper and you can
+4:38
+basically humanize it as well. All of
+4:39
+this for free without changing any part
+4:41
+of the meaning by the way. But please
+4:42
+make sure that when you write your
+4:44
+paper, you create all of these sections.
+Create these sections
+4:46
+You want to start with an abstract which
+4:47
+leads onto an introduction explaining
+4:49
+what's happening in the field, why why
+4:51
+the problem is important that you're
+4:52
+solving. Then you want to move on to a
+4:54
+literature review where you basically
+4:56
+describe what you've already studied,
+4:57
+what's happening in the field, and why
+4:59
+your work is still going to be important
+5:00
+because you're building on top of what's
+5:02
+already done. You move on to methodology
+5:03
+or analysis, and you actually show the
+5:05
+experimentation happen more than the
+5:07
+code itself. If you want to mention
+5:09
+exactly how you analyze each and
+5:11
+everything, what kind of alpha, gamma,
+5:13
+all these values you took essentially
+5:14
+and why. And then there's the results
+5:16
+section which shares all the results and
+5:19
+the comparison of which algorithm
+5:21
+performed best and which one was the
+5:22
+worst so on and so forth. Then there's
+5:24
+the conclusion where you conclude saying
+5:26
+that okay this is the focus of my work.
+5:28
+This is how I feel it can impact other
+5:30
+people and it's as compared to the
+5:32
+original works in the industry. this is
+5:34
+performing you know two times better
+5:36
+three times better whatever right and
+5:37
+that's where you add the references in
+5:39
+the end references by the way also you
+5:41
+can use JGBD support to add they should
+5:44
+be basically all the sources that you
+5:45
+use in the making of this paper all the
+5:47
+literature review that you studied all
+5:49
+these data sets that you took all these
+5:51
+sources come in as a part of the
+5:52
+references and finally if you put all
+5:54
+that together you're going to have a
+5:55
+whole paper in front of you looking a
+5:57
+little bit like this which basically is
+5:59
+your end toend paper you can actually go
+6:01
+ahead and publish this in one of the
+6:03
+very best scoopus index journals and
+6:05
+here's an example of my published paper
+6:06
+and we've done hundreds of these just
+6:08
+like this for many of you guys and I
+6:10
+know that it works this process works
+6:12
+extremely extremely well now conducting
+6:14
+research can be tough it's not an easy
+6:17
+process but having chd certainly helps
+6:20
+at the same point in time what you want
+6:22
+is sometimes a human touch a friend or a
+6:25
+colleague who you can work with and
+6:26
+sometimes it's difficult to find people
+6:28
+so make sure you go ahead and sign up on
+6:30
+biomegrad.com you will have the
+6:31
+discussions page where you can actually
+6:33
+post that hey I'm thinking of
+6:34
+researching on this topic and then other
+6:36
+people can chat with you and they can
+6:37
+start interacting and you can find your
+6:39
+next co-author over there so you can
+6:40
+research together with one or two other
+6:41
+people that you're interested in working
+6:42
+with and by the way that's absolutely
+6:44
+free but you can also go on to the
+6:45
+research groups facility create a group
+6:47
+now this is a more premium facility but
+6:48
+you get guaranteed publishing done in
+6:50
+scoop index sources like police
+6:53
+elsewhere pubmed till Francis really
+6:55
+good publications in the end if you by
+6:56
+the way practice this method that I
+6:58
+talked to you about today I strongly
+Conclusion
+7:00
+believe you can have the paper in your
+7:03
+hands in less than 1 to 2 months. You
+7:05
+could actually finish that research
+7:06
+yourself very very genuinely, very very
+7:08
+legitimately and it was not possible
+7:10
+just 5 years ago but now it is. Now if
+7:12
+this helps your research make sure you
+7:13
+let me know in the comments down below.
+7:14
+Subscribe to the channel. It helps me
+7:16
+make more such videos for you and make
+7:18
+sure you follow me on Instagram as well.
+7:19
+We have a lot more content over there.
+7:21
+Thank you so much for watching. I'll see
+7:22
+you in the next one. Goodbye and take
+7:24
+care until next time.
