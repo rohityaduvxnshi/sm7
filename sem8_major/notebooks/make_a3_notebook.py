@@ -71,7 +71,17 @@ def build(session):
     code([
         "# 2. Extras only - never upgrade Kaggle's torch/torchvision (CUDA build is matched)\n",
         "!pip install -q timm grad-cam\n",
-        "!nvidia-smi --query-gpu=name,memory.total --format=csv,noheader\n",
+        "\n",
+        "# Accelerator consistency: every matrix run must use the SAME GPU, or Paper 2's\n",
+        "# training-time comparison across architectures compares hardware, not models.\n",
+        "# Calibration and all earlier runs used T4 (Settings -> Accelerator -> GPU T4 x2).\n",
+        "import torch\n",
+        "gpu = torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"NO GPU\"\n",
+        "print(\"GPU:\", gpu)\n",
+        "if \"T4\" not in gpu:\n",
+        "    print(f\"\\n*** WARNING: this session is on {gpu}, not the T4 used for calibration\")\n",
+        "    print(\"*** Stop, switch Accelerator to GPU T4 x2, and restart - otherwise this\")\n",
+        "    print(\"*** run's training time is not comparable with the rest of the matrix.\")\n",
     ])
     code([
         "# 3. Pre-flight: matrix configs must be in matrix state, or a subset run could\n",
