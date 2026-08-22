@@ -353,6 +353,45 @@ run early-stopped (val loss still improving at epoch 30), so remaining sessions 
 at 1.25x worst case (~34 h remaining total) — the matrix **will** spill into the next quota
 week as §7a already allows. Quota used this week so far: ≈6.5 h of 30.
 
+### A3 amendment — Victus carve-out `[CONFIRMED — Rohit, 22 Aug 2026]`
+
+An RTX 4070 laptop (8 GB VRAM, HP Victus, Ryzen 7 8845HS, 32 GB RAM) replaced Kaggle for
+most of the remaining matrix. Victus environment (third environment Paper 2 reports, in
+`requirements_victus.lock`): Python 3.12.10, torch 2.11.0+cu128, torchvision 0.26.0+cu128,
+timm 1.0.28, driver 592.82/CUDA 13.1.
+
+**Reproducibility milestone:** the smoke run is bit-identical across all four environments —
+laptop CPU (torch 2.13.0+cpu), Kaggle T4 (2.10.0+cu128, timm 1.0.26), and Victus 4070
+(2.11.0+cu128, timm 1.0.28) all produce val_acc 0.7175 / test_acc 0.7925. Different
+hardware, torch and timm versions; same seed, same split, same numbers.
+
+`code/vram_probe.py` verdicts at committed batch sizes: resnet50 5.51 GB OK,
+efficientnet_b0 5.42 GB OK, vgg19 3.96 GB OK, vit 4.63 GB OK — and **densenet121 at batch
+128: 8.05 GB, which does not OOM but silently spills into driver system-memory fallback,
+measured at 14.60 ms/img vs 3.13 at batch 96 — 4.7x slower, i.e. unusable** (a ~6.5 h run
+would silently become ~30 h). At batch 96: 6.10 GB / 3.13 ms; at batch 64: 4.10 GB /
+3.04 ms. Measured compute reference: resnet50-ft 2.73 ms/img pure compute on the 4070 vs
+4.23 ms/img end-to-end on the T4.
+
+The split, and the trade-off it settles: **config fidelity beats hardware uniformity.**
+Batch size feeds the accuracy columns the four-CNN comparison rests on; hardware feeds only
+the training-time column, which `runs.csv` discloses per row.
+
+- **Local on the Victus (6 runs):** efficientnet_b0 fe/ft, vgg19 fe/ft, vit fe/ft — no
+  quota, no session caps, no 5–9 Oct blackout. Environment: `requirements_victus.lock`
+  (CUDA build; a third environment Paper 2 reports).
+- **Kept as-is:** resnet50 fe/ft T4 rows. Once densenet stays on the T4, a fully
+  hardware-consistent set is unachievable, so re-running resnet50 locally buys nothing.
+- **Kaggle:** densenet121 finishes in the already-running session 2 at its committed batch
+  128. Fallback if that session fails: densenet locally at batch 64 (4.10 GB peak),
+  recorded as a documented deviation.
+- Kaggle sessions 3–6 were never launched and are no longer needed; Kaggle stays available
+  as fallback. `make_a3_notebook.py` is retained for that fallback only.
+- **Paper 2 obligation created here:** the training-time table is annotated per GPU (T4
+  vs RTX 4070 laptop rows are not directly comparable); accuracy columns are unaffected.
+- A4 venue (tiny-genimage locally vs a Kaggle eval notebook) is decided when the matrix
+  completes; all checkpoints will be local either way.
+
 ### A3 [was B2–B4] — the 10-run matrix, batched into GPU sessions.
 
 - Run order = Table 2 (runs 1–10). Before any session: assert every matrix config has

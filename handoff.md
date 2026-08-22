@@ -88,22 +88,61 @@ the browser steps block the session.
 
 ---
 
-## Victus migration `[PREPARED — 22 August 2026, decision gate pending]`
+## Victus migration `[DECIDED — 22 August 2026; see plan §7a "A3 amendment — Victus carve-out"]`
 
-Rohit is bringing up a new HP Victus (RTX 4070 laptop 8 GB, Ryzen 7 8845HS, 32 GB) to
-replace Kaggle for training — roughly 1.5–2.5x faster per run with no quota, finishing the
-matrix in days instead of two quota weeks. A MacBook Air M4 was considered and rejected
-(no CUDA; MPS slower than the free T4; fanless throttling).
+Probe verdict on the 4070 (8 GB): effnet/vgg/vit fit at matrix batch sizes with headroom;
+**densenet121 at batch 128 does not fit**. Decision (Rohit, on the Victus session's
+analysis): 6 runs local (effnet fe/ft, vgg fe/ft, vit fe/ft); resnet50 T4 rows kept (full
+hardware consistency is unachievable once densenet stays on T4, so a rerun buys nothing);
+densenet finishes in Kaggle session 2 at its committed batch 128 (fallback: local bs64,
+documented). Principle recorded in the plan: config fidelity beats hardware uniformity;
+Paper 2's training-time table gets per-GPU annotation. The earlier "rerun resnet50 locally"
+idea in this file is superseded by this decision.
 
-- **Setup guide: `sem8_major/victus_setup.md`** — step-by-step for the new machine.
-- **Decision gate: `code/vram_probe.py`** (new) — one fwd+bwd step of all five backbones at
-  matrix batch sizes; VGG19-ft and ViT-ft at batch 64 are the 8 GB risk. Until it passes,
-  **Kaggle remains the plan of record**; nothing there is cancelled.
-- If it passes: rerun resnet50 fe/ft on the 4070 for hardware consistency, run the rest
-  locally, `canonical_runs.txt` selects the 4070 rows, T4 rows stay as history. Kaggle
-  session 2's densenet rows become a cross-hardware sanity check.
-- The Victus gets a **new Claude session** (chat does not move across machines); its kickoff
-  prompt is in the guide §9. Two-machine rule: pull before working, push after committing.
+**Full Victus verification record (its session, 22 Aug):** setup steps 1–8 all done except
+Omen power profile and Windows Update. Python 3.12.10 (machine's 3.13.6 untouched), torch
+2.11.0+cu128 / torchvision 0.26.0+cu128 / timm 1.0.28, driver 592.82. CIFAKE restored from
+a `cifake.zip` in the copied folder — all 120,000 committed split paths verified present;
+split not regenerated. Self-checks OK. GPU smoke **bit-identical to CPU and T4**
+(val 0.7175 / test 0.7925) → four-way reproducibility for Paper 2. Probe found
+densenet121@128 = 8.05 GB → silent driver system-memory fallback measured at **4.7x
+slower per image** (14.60 vs 3.13 ms at bs96) — "TIGHT" actually means unusable; the
+quarantine guard held (smoke rows only in smoke_runs.csv).
+
+**Victus state / pending there:**
+- Working copy is a ZIP extraction with NO git history — after the next push from the old
+  laptop, replace it with a real `git clone` (venv rebuild ~1 min, pip wheels cached; move
+  `data/cifake/` across instead of re-downloading).
+- **Two files exist only on the Victus and must survive the re-clone:**
+  `requirements_victus.lock` (copy into the fresh clone and commit it) and its
+  `results/smoke_runs.csv` row for the 4070 smoke (merge with
+  `python code/merge_runs.py <old-copy>/results/smoke_runs.csv --kind runs --into results/smoke_runs.csv`
+  — it documents the fourth leg of the reproducibility claim).
+- GPU is at its 80 W default of a 120 W maximum — Omen Gaming Hub performance profile not
+  yet set (Rohit, GUI action; ~50% throughput sitting unused).
+- Windows Update not yet run (needs reboots — Rohit).
+- New lock file `requirements_victus.lock` exists there; env recording for Paper 2 happens
+  when the first real run starts.
+- Doc updates for this decision were written on the OLD laptop (this commit) — the Victus
+  session should `git pull` them, not rewrite them.
+
+**PRIMARY MACHINE IS NOW THE VICTUS (Rohit, 22 Aug 2026).** The project continues there;
+the old laptop goes dormant (its repo stays valid — pull before any use). Execution rule
+amended the same day: Claude commits/pushes git itself, with no co-author line; Kaggle
+launches, quota spends and portal uploads remain Rohit's.
+
+**Transfer checklist to make the Victus clone complete** (things git does not carry):
+1. `data/cifake/` — already on the Victus (verified against the committed split).
+2. `requirements_victus.lock` + the 4070 smoke row — rescue from the ZIP copy (see above).
+3. **`results/resnet50_fe_20260822-0532/` and `results/resnet50_ft_20260822-0734/`
+   including `best.pt` (~90 MB each)** — exist ONLY on the old laptop (checkpoints are
+   gitignored). Copy both dirs into the Victus repo's `results/` via USB/cloud — A4's
+   Grad-CAM galleries and cross-generator table need these checkpoints.
+4. DenseNet checkpoints arrive later via the Kaggle session-2 zip — download it on the
+   Victus directly.
+
+Division of labour while both machines are active: Victus session drives training; **pull
+before working, push after committing, on both.**
 
 ## A3 — the 10-run matrix `[IN PROGRESS — opened 22 August 2026]`
 
