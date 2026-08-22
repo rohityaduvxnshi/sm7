@@ -88,6 +88,23 @@ the browser steps block the session.
 
 ---
 
+## Victus migration `[PREPARED — 22 August 2026, decision gate pending]`
+
+Rohit is bringing up a new HP Victus (RTX 4070 laptop 8 GB, Ryzen 7 8845HS, 32 GB) to
+replace Kaggle for training — roughly 1.5–2.5x faster per run with no quota, finishing the
+matrix in days instead of two quota weeks. A MacBook Air M4 was considered and rejected
+(no CUDA; MPS slower than the free T4; fanless throttling).
+
+- **Setup guide: `sem8_major/victus_setup.md`** — step-by-step for the new machine.
+- **Decision gate: `code/vram_probe.py`** (new) — one fwd+bwd step of all five backbones at
+  matrix batch sizes; VGG19-ft and ViT-ft at batch 64 are the 8 GB risk. Until it passes,
+  **Kaggle remains the plan of record**; nothing there is cancelled.
+- If it passes: rerun resnet50 fe/ft on the 4070 for hardware consistency, run the rest
+  locally, `canonical_runs.txt` selects the 4070 rows, T4 rows stay as history. Kaggle
+  session 2's densenet rows become a cross-hardware sanity check.
+- The Victus gets a **new Claude session** (chat does not move across machines); its kickoff
+  prompt is in the guide §9. Two-machine rule: pull before working, push after committing.
+
 ## A3 — the 10-run matrix `[IN PROGRESS — opened 22 August 2026]`
 
 Session 1 (`resnet50_fe` + `resnet50_ft`) is generated, pushed and waiting to be run:
@@ -106,6 +123,12 @@ quota week (~23.5 h left), 5–6 land after the weekly reset. Session estimates 
 Next: session 2 (densenet121 fe + ft, ~6.5 h worst case). Claude generates the notebook;
 **Rohit launches it** (a push auto-starts the batch run) and later downloads
 `results_a3_s2.zip`. Same G3-style spot check on val_acc, then session 3.
+
+**Session 2 first launch failed (22 Aug): Kaggle Secrets attach PER NOTEBOOK.** Each new
+session notebook needs `GITHUB_PAT` toggled on once in Add-ons → Secrets before its first
+run, or cell 1 dies with "No user secrets exist" (seconds of quota, harmless). The toggle
+then sticks across versions/pushes of that notebook. Generated notebooks now carry this
+warning in their header cell. Applies to sessions 3–6 too.
 
 **Session 1 second false start (22 Aug), resolved — root cause: Kaggle moved dataset
 mounts.** Batch runs mount datasets at `/kaggle/input/datasets/<owner>/<slug>` (verified by a

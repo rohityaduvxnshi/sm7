@@ -35,6 +35,10 @@ def build(session):
     md = [
         f"# AuthentiScan — A3 session {session} of {len(SESSIONS)}\n",
         "\n",
+        "**First run of this notebook?** Kaggle Secrets attach per notebook: open Add-ons →\n",
+        "Secrets and toggle `GITHUB_PAT` ON for this notebook first, or cell 1 fails with\n",
+        "'No user secrets exist'. One-time per session notebook.\n",
+        "\n",
         f"Runs: **{', '.join(configs)}** | worst-case (30 epochs) ~{hours:.1f} h | "
         f"per-run time budget {budget} min\n",
         "\n",
