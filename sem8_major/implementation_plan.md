@@ -167,7 +167,10 @@ Track B no longer waits for calendar build weeks. Phases A1–A6 below replace t
 calendar rows of Table 5 as the working schedule; the B labels are kept in brackets so older
 references stay readable. Rules that survive acceleration unchanged:
 
-- Every phase passes a review gate (G1–G6) before the next starts.
+- Every phase passes a review gate (G1–G6) before the next starts. **Closing a gate updates
+  three documents in the same pass, dated: `CLAUDE.md` §13, this plan, and `handoff.md` at
+  the repo root (sections: Goal / Current State / Active Files / Changes it made / Failed
+  Attempts / Next steps)** `[rule added 20 Aug 2026 at Rohit's request]`.
 - **WPRs:** Minor Project WPRs continue to report Track A literature work only, uploaded on
   their scheduled Wednesdays. No Track B artefact appears in ANY Minor WPR (5 through 12)
   unless the guide answers D3 yes — acceleration moves implementation work into
@@ -278,6 +281,13 @@ the A4 shared-set build.
    `[VERIFY in the session — believed ~9 h, changes over time]`; quota-reset day
    `[VERIFY on the quota page]`; whether outputs of multiple versions of the same notebook
    can be attached simultaneously `[VERIFY — A4 depends on it; fallback in A4]`.
+
+**Tooling prepared locally 20 Aug (ready before the session opens):** `code/calibrate.py`
+(times all five backbones, projects epochs), `code/record_env.py` (hardware + versions →
+`results/kaggle_env.md`), `code/run_session.py` (A3 driver: subprocess per config, continues
+on failure), and `notebooks/phase_a2_smoke.ipynb` (the eight-cell session: clone → deps →
+env → GPU smoke → Grad-CAM → calibrate → session plan → zip). Calibrate and the driver's
+failure isolation were tested locally on CPU.
 
 **Gate G2:** GPU smoke row complete and coherent (hardware string, versions, timing);
 smoke val_acc well above 50% (coarse pipeline check before any quota is spent on the

@@ -469,7 +469,14 @@ The semester is complete when all of the following exist:
 
 ---
 
-## 13. Current status and next to-dos (updated 18 August 2026)
+## 13. Current status and next to-dos (updated 20 August 2026)
+
+**Phase-completion rule `[CONFIRMED — Rohit, 20 Aug 2026]`:** at every Track B phase gate,
+three documents are updated in the same pass, each carrying the date: this file (§13),
+`sem8_major/implementation_plan.md`, and **`handoff.md`** at the repo root — the handoff
+carries Goal / Current State / Active Files / Changes it made / Failed Attempts / Next steps
+for the phase just closed, newest phase first. Read `handoff.md` after this file when
+resuming work.
 
 **15 Aug events:** draft v2 submitted for the department plagiarism check (result pending, open item 3). Dr. Richa Gupta instructed the team to begin preparing the implementation code now (see the §3 amendment). Two tracks now run in parallel; the detailed to-dos for both are at the end of this section.
 
