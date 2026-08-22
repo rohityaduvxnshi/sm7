@@ -337,6 +337,22 @@ Kaggle notebook per session, generated and pushed by API):
 Session 1 pushed 22 Aug as `yaduvxnshi/authentiscan-a3-session-1` (private, GPU + Internet
 on, CIFAKE attached). G3 fires after it.
 
+**Session 1 COMPLETE + G3 PASSED (22 Aug 2026),** after two false starts (a Kaggle
+notebook-storage glitch, then Kaggle's new namespaced dataset mounts — both documented in
+`handoff.md`; notebooks now autodetect the mount and hard-abort on non-T4 GPUs):
+
+| run | best epoch | stop | time | val_acc | test_acc | test_auc |
+|---|---|---|---|---|---|---|
+| resnet50_fe | 30 | max_epochs | 120 min | 0.9301 | 0.9283 | 0.9807 |
+| resnet50_ft | 30 | max_epochs | 190 min | **0.9566** | 0.9593 | 0.9925 |
+
+G3 read on val_acc: ft in the mid-90s and above the CIFAKE-paper small-CNN baseline (≈93%,
+C51); fe sensibly below ft; curves clean. Planning consequences, applied to the session
+table in `make_a3_notebook.py`: measured times ran ~1.25x the batch calibration and neither
+run early-stopped (val loss still improving at epoch 30), so remaining sessions are budgeted
+at 1.25x worst case (~34 h remaining total) — the matrix **will** spill into the next quota
+week as §7a already allows. Quota used this week so far: ≈6.5 h of 30.
+
 ### A3 [was B2–B4] — the 10-run matrix, batched into GPU sessions.
 
 - Run order = Table 2 (runs 1–10). Before any session: assert every matrix config has

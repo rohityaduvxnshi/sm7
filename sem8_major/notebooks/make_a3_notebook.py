@@ -17,14 +17,17 @@ import argparse
 import json
 from pathlib import Path
 
-# (configs, worst-case hours, time budget in minutes passed to train.py)
+# (configs, worst-case hours, advisory per-run time budget in minutes)
+# Hours = calibration x 1.25: session 1 measured ~20% over the batch-timing estimates
+# (per-epoch validation adds cost), and neither run early-stopped, so worst case is the
+# planning number. Single-run sessions must stay under the ~9 h session cap [VERIFY].
 SESSIONS = {
-    1: (["resnet50_fe", "resnet50_ft"], 4.32, 330),
-    2: (["densenet121_fe", "densenet121_ft"], 5.20, 330),
-    3: (["efficientnet_b0_fe", "efficientnet_b0_ft", "vit_base_patch16_224_fe"], 6.11, 340),
-    4: (["vgg19_fe"], 3.85, 330),
-    5: (["vgg19_ft"], 6.42, 330),          # heaviest run; alone by rule
-    6: (["vit_base_patch16_224_ft"], 5.43, 330),  # alone by rule
+    1: (["resnet50_fe", "resnet50_ft"], 5.2, 330),   # DONE 22 Aug: 120 + 190 min, G3 passed
+    2: (["densenet121_fe", "densenet121_ft"], 6.5, 330),
+    3: (["efficientnet_b0_fe", "efficientnet_b0_ft", "vit_base_patch16_224_fe"], 7.6, 340),
+    4: (["vgg19_fe"], 4.8, 330),
+    5: (["vgg19_ft"], 8.0, 460),           # heaviest run; alone by rule, tight vs the cap
+    6: (["vit_base_patch16_224_ft"], 6.8, 400),  # alone by rule
 }
 def build(session):
     configs, hours, budget = SESSIONS[session]

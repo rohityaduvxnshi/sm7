@@ -95,11 +95,33 @@ Kaggle notebook **`yaduvxnshi/authentiscan-a3-session-1`** (private, GPU + Inter
 CIFAKE attached). `notebooks/make_a3_notebook.py` generates and pushes each session's
 notebook; the six-session plan lives in that script and in plan §7a A3.
 
-Rohit: wait for the batch run, download `results_a3_s1.zip`, send it back. Then gate **G3** —
-the first accuracy sanity check, read on `val_acc` only (mid-90s expected for the fine-tuned
-CNN; near 0.50 means a pipeline bug, stop rather than spend quota).
+**Session 1 COMPLETE, G3 PASSED (22 Aug):** resnet50_fe val 93.01% / test 92.83%;
+resnet50_ft val **95.66%** / test 95.93% (AUC 0.9925). Rows merged into `results/runs.csv`
+(4 rows total incl. header context: 2 runs), artefact dirs archived locally with checkpoints
+(`best.pt` stays out of git). Times ran ~1.25x calibration and neither run early-stopped, so
+the remaining five sessions are re-budgeted at ~34 h total worst case — sessions 2–4 fit this
+quota week (~23.5 h left), 5–6 land after the weekly reset. Session estimates updated in
+`notebooks/make_a3_notebook.py`.
 
-**Session 1 false start (22 Aug), resolved.** The first push of the notebook was stored by
+Next: session 2 (densenet121 fe + ft, ~6.5 h worst case). Claude generates the notebook;
+**Rohit launches it** (a push auto-starts the batch run) and later downloads
+`results_a3_s2.zip`. Same G3-style spot check on val_acc, then session 3.
+
+**Session 1 second false start (22 Aug), resolved — root cause: Kaggle moved dataset
+mounts.** Batch runs mount datasets at `/kaggle/input/datasets/<owner>/<slug>` (verified by a
+CPU diagnostic kernel), not the classic `/kaggle/input/<slug>` the interactive A2 session
+used, so both runs died on missing image paths in seconds. Session notebooks now **autodetect**
+the CIFAKE root (walk `/kaggle/input` for the dir containing `train/REAL`) and hard-abort on
+any non-T4 GPU (a wrong assignment costs seconds, not a poisoned training-time table).
+Relaunched 22 Aug: **T4 assigned, CIFAKE found at the namespaced path, both configs
+validated, training in progress.** The retry monitor that pushed these relaunches was killed
+after Rohit's new execution rule (below); the training run itself is unaffected.
+
+**Execution rule change (Rohit, 22 Aug):** Claude edits and verifies locally, then hands
+Rohit exact commands; nothing is committed, pushed, or launched anywhere without asking him
+per action. Recorded in CLAUDE.md §1 and Claude's persistent memory.
+
+**Session 1 first false start (22 Aug), resolved.** The first push of the notebook was stored by
 Kaggle with cell 0 as **code** instead of markdown, so the run died instantly on
 `SyntaxError: invalid character '§'`. Investigated by pushing the same file to a throwaway
 kernel (`yaduvxnshi/authentiscan-nb-format-test`, private, GPU off — safe to delete): it
