@@ -11,7 +11,10 @@ mode: fe                     # fe = frozen backbone + new head; ft = every param
 seed: 42                     # one seed for split, init, shuffling and augmentation
 
 data:
-  root: data/cifake                          # dataset root; on Kaggle: /kaggle/input/cifake-real-and-ai-generated-synthetic-images
+  root: data/cifake                          # dataset root; on Kaggle NEVER hardcode the mount (it moved once
+                                             # already: classic /kaggle/input/<slug> vs namespaced
+                                             # /kaggle/input/datasets/<owner>/<slug>) - session notebooks
+                                             # autodetect it and pass --data-root
   split_file: data/cifake_split_seed42.csv   # committed split: 10k stratified val carved from the 100k train set
   num_workers: 2                             # Kaggle worker count [VERIFY at first login]
 

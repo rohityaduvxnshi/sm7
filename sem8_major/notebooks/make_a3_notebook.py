@@ -26,9 +26,6 @@ SESSIONS = {
     5: (["vgg19_ft"], 6.42, 330),          # heaviest run; alone by rule
     6: (["vit_base_patch16_224_ft"], 5.43, 330),  # alone by rule
 }
-DATA = "/kaggle/input/cifake-real-and-ai-generated-synthetic-images"
-
-
 def build(session):
     configs, hours, budget = SESSIONS[session]
     cfg_args = " ".join(f"configs/{c}.yaml" for c in configs)
@@ -74,14 +71,27 @@ def build(session):
         "\n",
         "# Accelerator consistency: every matrix run must use the SAME GPU, or Paper 2's\n",
         "# training-time comparison across architectures compares hardware, not models.\n",
-        "# Calibration and all earlier runs used T4 (Settings -> Accelerator -> GPU T4 x2).\n",
+        "# Calibration and A2 ran on T4. HARD abort on anything else: an aborted assignment\n",
+        "# costs seconds; a P100 run would poison the training-time table. Relaunch (or\n",
+        "# re-push) until Kaggle assigns a T4, or pin it in Settings -> Accelerator.\n",
         "import torch\n",
         "gpu = torch.cuda.get_device_name(0) if torch.cuda.is_available() else \"NO GPU\"\n",
         "print(\"GPU:\", gpu)\n",
-        "if \"T4\" not in gpu:\n",
-        "    print(f\"\\n*** WARNING: this session is on {gpu}, not the T4 used for calibration\")\n",
-        "    print(\"*** Stop, switch Accelerator to GPU T4 x2, and restart - otherwise this\")\n",
-        "    print(\"*** run's training time is not comparable with the rest of the matrix.\")\n",
+        "assert \"T4\" in gpu, f\"wrong accelerator: {gpu} - matrix runs are T4-only (plan 7a A3)\"\n",
+        "\n",
+        "# Dataset root autodetect: Kaggle moved dataset mounts (classic /kaggle/input/<slug>\n",
+        "# vs the namespaced /kaggle/input/datasets/<owner>/<slug> seen 22 Aug 2026 in batch\n",
+        "# runs), so never hardcode the path - find the dir that holds train/REAL.\n",
+        "import os\n",
+        "DATA = None\n",
+        "for root, dirs, _ in os.walk(\"/kaggle/input\"):\n",
+        "    if \"train\" in dirs and os.path.isdir(os.path.join(root, \"train\", \"REAL\")):\n",
+        "        DATA = root\n",
+        "        break\n",
+        "    if root.count(os.sep) > 5:   # don't descend into the dataset's image folders\n",
+        "        dirs.clear()\n",
+        "assert DATA, \"CIFAKE not found anywhere under /kaggle/input - is the dataset attached?\"\n",
+        "print(\"CIFAKE mounted at:\", DATA)\n",
     ])
     code([
         "# 3. Pre-flight: matrix configs must be in matrix state, or a subset run could\n",
@@ -98,8 +108,9 @@ def build(session):
     ])
     code([
         "# 4. The session. One subprocess per config; a failure does not stop the rest.\n",
+        "# {DATA} is the autodetected mount from cell 2 (IPython interpolates python vars).\n",
         f"!python code/run_session.py {cfg_args} \\\n",
-        f"    --data-root {DATA} --results-dir /kaggle/working/results\n",
+        "    --data-root \"{DATA}\" --results-dir /kaggle/working/results\n",
     ])
     code([
         "# 5. What this session produced\n",
