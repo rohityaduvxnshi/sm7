@@ -134,6 +134,10 @@ GPU pipeline proven and the whole matrix now has measured timings behind it.
 - The A2 notebook's own slug changed the same way (`notebook322addb147` →
   `authentiscan-a2-gpu-smoke-and-calibration`).
 - Two smoke runs landed in the zip (the session was run twice); both merged, harmless.
+- `results_a2 (1).zip` was sitting inside the repo folder and got swept into a commit by
+  `git add -A`; GitHub rejected the push (169 MB > 100 MB limit). Fixed by gitignoring `*.zip`
+  and amending the commit — the file stays on disk. Every future session zip will land the
+  same way, so keep downloads out of the repo folder or rely on the ignore rule.
 
 ---
 
