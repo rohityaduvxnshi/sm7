@@ -1,0 +1,6 @@
+model,mode,batch_size,resolution,amp,device,batches_timed,per_batch_s,est_epoch_min,est_30_epoch_h
+resnet50,ft,128,224,True,cuda,30,0.4598,5.4,2.7
+densenet121,ft,128,224,True,cuda,30,0.5532,6.49,3.25
+efficientnet_b0,ft,128,224,True,cuda,30,0.3033,3.56,1.78
+vgg19,ft,64,224,True,cuda,30,0.5475,12.84,6.42
+vit_base_patch16_224,ft,64,224,True,cuda,30,0.4628,10.85,5.43

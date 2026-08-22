@@ -124,6 +124,7 @@ Every finished run appends exactly one row to the runs CSV named in the config's
 | max_epochs | Epoch cap |
 | best_epoch | Epoch of the kept checkpoint |
 | early_stopped | Whether early stopping triggered |
+| stop_reason | `max_epochs` / `early_stopping` / `time_budget` — the last means the run stopped cleanly against a session-time budget rather than converging; disclosed in Paper 2 for any run carrying it |
 | train_time_min | Wall-clock training time, minutes |
 | total_params | Total parameter count of the model |
 | trainable_params | Trainable parameter count (differs by mode; Paper 2 reports it per the Karki et al. table) |
@@ -296,6 +297,45 @@ failure isolation were tested locally on CPU.
 smoke val_acc well above 50% (coarse pipeline check before any quota is spent on the
 matrix); Grad-CAM works on GPU; calibration table for all five backbones recorded; the three
 session facts resolved or explicitly still-open with fallbacks.
+
+**G2 PASSED 22 Aug 2026.** Session ran on a **Tesla T4 (15 GB)**, 4-core Xeon @ 2.00 GHz,
+31 GB RAM, CUDA 12.8, **torch 2.10.0+cu128, timm 1.0.26** (local lock is torch 2.13.0+cpu /
+timm 1.0.28 — logged per run, exactly why). Full capture in `results/kaggle_env.md`. GPU
+smoke: val_acc 0.7175, test_acc 0.7925 — **bit-identical to the CPU smoke**, and 0.09 min vs
+2.8 min wall clock. Grad-CAM verified on GPU. Calibration in `results/calibration.csv`.
+Of the three session facts, only the multi-version-attach question mattered, and A3's
+one-notebook-per-session design removes the dependency entirely (A4 attaches several
+*notebooks'* outputs, which is ordinary); session cap and quota-reset day stay `[VERIFY]`
+and are handled by time budgets instead of assumptions.
+
+**Measured 30-epoch worst case** (fe estimated at 60% of ft; ft measured):
+
+| Backbone | ft | fe (est) | Backbone | ft | fe (est) |
+|---|---|---|---|---|---|
+| EfficientNet-B0 | 1.78 h | 1.07 h | ViT-B/16 | 5.43 h | 3.26 h |
+| ResNet50 | 2.70 h | 1.62 h | VGG19 | 6.42 h | 3.85 h |
+| DenseNet121 | 3.25 h | 1.95 h | **Total** | **19.6 h** | **11.8 h** |
+
+**31.3 GPU-h worst case exceeds the 30 h weekly quota**, so the matrix is planned defensively:
+early stopping at a realistic ~12 epochs brings it to ≈12.5 h, and every run carries a
+`--time-budget-min` guard (new `time_budget_min` config field / CLI flag, `stop_reason`
+column) that stops cleanly with the best checkpoint kept rather than being killed at the
+session cap. Any run stopped that way is disclosed as such in Paper 2.
+
+**A3 session plan** (`notebooks/make_a3_notebook.py` is the single source of truth; one
+Kaggle notebook per session, generated and pushed by API):
+
+| Session | Runs | Worst case | Budget/run |
+|---|---|---|---|
+| 1 | resnet50 fe + ft | 4.3 h | 330 min |
+| 2 | densenet121 fe + ft | 5.2 h | 330 min |
+| 3 | efficientnet_b0 fe + ft, vit fe | 6.1 h | 340 min |
+| 4 | vgg19 fe | 3.9 h | 330 min |
+| 5 | vgg19 ft (alone by rule) | 6.4 h | 330 min |
+| 6 | vit ft (alone by rule) | 5.4 h | 330 min |
+
+Session 1 pushed 22 Aug as `yaduvxnshi/authentiscan-a3-session-1` (private, GPU + Internet
+on, CIFAKE attached). G3 fires after it.
 
 ### A3 [was B2–B4] — the 10-run matrix, batched into GPU sessions.
 

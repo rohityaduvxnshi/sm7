@@ -40,7 +40,7 @@ from eval import append_row, evaluate
 
 RUNS_COLUMNS = ["run_id", "date", "config_path", "model", "mode", "seed", "split_file",
                 "n_train_images", "resolution", "batch_size", "optimizer", "lr",
-                "weight_decay", "max_epochs", "best_epoch", "early_stopped",
+                "weight_decay", "max_epochs", "best_epoch", "early_stopped", "stop_reason",
                 "train_time_min", "total_params", "trainable_params", "hardware",
                 "torch_version", "timm_version", "val_acc", "val_loss", "test_acc",
                 "test_precision", "test_recall", "test_f1", "test_auc", "test_ap"]
@@ -107,6 +107,10 @@ def main():
     p.add_argument("--batch-size", type=int)
     p.add_argument("--max-epochs", type=int)
     p.add_argument("--num-workers", type=int)
+    p.add_argument("--time-budget-min", type=float,
+                   help="stop cleanly before this wall-clock budget is exhausted, keeping the "
+                        "best checkpoint and writing the row (a session killed at the Kaggle "
+                        "cap would lose the whole run instead)")
     args = p.parse_args()
 
     with open(args.config, encoding="utf-8") as f:  # explicit: Kaggle is UTF-8, Windows is not
@@ -127,6 +131,8 @@ def main():
         overrides["max_epochs"] = cfg["max_epochs"] = args.max_epochs
     if args.num_workers is not None:
         overrides["data.num_workers"] = cfg["data"]["num_workers"] = args.num_workers
+    if args.time_budget_min:
+        overrides["time_budget_min"] = cfg["time_budget_min"] = args.time_budget_min
 
     # smoke isolation guard — config discipline already failed once, so enforce in code
     if cfg.get("smoke_subset") and Path(cfg["output"]["runs_csv"]).name == "runs.csv":
@@ -164,6 +170,8 @@ def main():
 
     best = {"val_loss": float("inf"), "val_acc": 0.0, "epoch": 0}
     patience = cfg["early_stopping_patience"]
+    budget_min = cfg.get("time_budget_min")
+    stop_reason = "max_epochs"
     since_best = 0
     t0 = time.time()
     for epoch in range(1, cfg["max_epochs"] + 1):
@@ -187,9 +195,18 @@ def main():
             since_best += 1
             if since_best >= patience:
                 print(f"  early stop at epoch {epoch} (no val-loss gain for {patience})")
+                stop_reason = "early_stopping"
+                break
+        if budget_min:
+            elapsed = (time.time() - t0) / 60
+            # 1.15 covers epoch-time jitter plus the final test evaluation still to come
+            if elapsed + (elapsed / epoch) * 1.15 > budget_min:
+                print(f"  time budget: stopping after epoch {epoch} "
+                      f"({elapsed:.1f} of {budget_min:.0f} min used); best checkpoint kept")
+                stop_reason = "time_budget"
                 break
     train_time_min = (time.time() - t0) / 60
-    early_stopped = since_best >= patience
+    early_stopped = stop_reason == "early_stopping"
 
     # final evaluation: the untouched test split, on the best checkpoint
     model.load_state_dict(torch.load(run_dir / "best.pt", map_location=device,
@@ -205,7 +222,8 @@ def main():
         "resolution": cfg["resolution"], "batch_size": cfg["batch_size"],
         "optimizer": cfg["optimizer"], "lr": cfg["lr"], "weight_decay": cfg["weight_decay"],
         "max_epochs": cfg["max_epochs"], "best_epoch": best["epoch"],
-        "early_stopped": early_stopped, "train_time_min": f"{train_time_min:.2f}",
+        "early_stopped": early_stopped, "stop_reason": stop_reason,
+        "train_time_min": f"{train_time_min:.2f}",
         "total_params": n_total, "trainable_params": n_trainable,
         "hardware": hardware_string(), "torch_version": torch.__version__,
         "timm_version": timm.__version__,

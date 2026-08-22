@@ -52,6 +52,7 @@ Cross-generator evaluations write their `confusion_matrix.csv` and `roc_points.c
 | `max_epochs` | epoch ceiling from the config |
 | `best_epoch` | epoch the kept checkpoint came from |
 | `early_stopped` | true if patience triggered before `max_epochs` |
+| `stop_reason` | `max_epochs`, `early_stopping`, or `time_budget` (stopped cleanly before a Kaggle session cap — the run is valid, just shorter; Paper 2 must say so for any run with this value) |
 | `train_time_min` | wall-clock training time in minutes |
 | `total_params` | total parameter count of the model |
 | `trainable_params` | trainable parameter count (differs by mode; Paper 2 reports it) |

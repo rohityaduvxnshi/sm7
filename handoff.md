@@ -88,7 +88,56 @@ the browser steps block the session.
 
 ---
 
-## A2 — code transport + Kaggle GPU smoke `[IN PROGRESS — updated 20 August 2026]`
+## A3 — the 10-run matrix `[IN PROGRESS — opened 22 August 2026]`
+
+Session 1 (`resnet50_fe` + `resnet50_ft`) is generated, pushed and waiting to be run:
+Kaggle notebook **`yaduvxnshi/authentiscan-a3-session-1`** (private, GPU + Internet on,
+CIFAKE attached). `notebooks/make_a3_notebook.py` generates and pushes each session's
+notebook; the six-session plan lives in that script and in plan §7a A3.
+
+Rohit: open the notebook, Run All (~4.5 h worst case, likely ~2 h with early stopping),
+download `results_a3_s1.zip`, send it back. Then gate **G3** — the first accuracy sanity
+check, read on `val_acc` only (mid-90s expected for the fine-tuned CNN; near 0.50 means a
+pipeline bug, stop rather than spend quota).
+
+---
+
+## A2 — code transport + Kaggle GPU smoke `[G2 PASSED — 22 August 2026]`
+
+### Outcome
+
+GPU pipeline proven and the whole matrix now has measured timings behind it.
+
+- **Hardware/versions recorded** (`results/kaggle_env.md`): Tesla T4 15 GB, 4-core Xeon
+  @ 2.00 GHz, 31 GB RAM, CUDA 12.8, torch 2.10.0+cu128, timm 1.0.26, sklearn 1.6.1 — all
+  different from the local lock, which is why every run logs its own versions.
+- **GPU smoke:** val_acc 0.7175 / test_acc 0.7925, *bit-identical to the CPU smoke run*
+  (strong reproducibility evidence), 0.09 min vs 2.8 min. Grad-CAM verified on GPU.
+- **Calibration** (`results/calibration.csv`, 30-epoch projections): EfficientNet-B0 1.78 h,
+  ResNet50 2.70 h, DenseNet121 3.25 h, ViT 5.43 h, VGG19 6.42 h. With fe estimated at 60% of
+  ft, the full matrix is **31.3 h worst case — over the 30 h weekly quota**; ≈12.5 h at a
+  realistic 12-epoch early stop.
+- **Consequence, implemented:** `time_budget_min` config field + `--time-budget-min` flag and
+  a new `stop_reason` column (`max_epochs` / `early_stopping` / `time_budget`). A run now
+  stops cleanly with its best checkpoint and a valid row instead of being killed at the
+  session cap. Verified locally (stopped after epoch 1 under a 0.05 min budget).
+- Schema change was safe: `runs.csv` still had no data rows; `smoke_runs.csv` migrated to the
+  31-column header.
+
+### Failed attempts / watch-outs
+
+- `~/.kaggle/access_token` disappeared twice; recreating it silently failed. Something on the
+  laptop removes files whose contents match the token pattern — pass the token inline.
+- Kaggle derives a notebook's slug from its title: pushing "AuthentiScan A3 session 1" with
+  slug `authentiscan-a3-s1` created `authentiscan-a3-session-1`. The generator now uses the
+  title-derived slug so re-pushes update rather than duplicate.
+- The A2 notebook's own slug changed the same way (`notebook322addb147` →
+  `authentiscan-a2-gpu-smoke-and-calibration`).
+- Two smoke runs landed in the zip (the session was run twice); both merged, harmless.
+
+---
+
+## A2 (earlier note) — code transport `[20 August 2026]`
 
 **Done:** A2 tooling written and locally tested — `code/calibrate.py` (per-architecture
 timing), `code/record_env.py` (environment capture for Paper 2), `code/run_session.py`

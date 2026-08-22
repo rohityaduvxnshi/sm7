@@ -26,6 +26,9 @@ weight_decay: 0.0            # no regularisation in the baseline; revisit only i
 
 max_epochs: 30               # a ceiling, not a target — early stopping normally ends the run sooner
 early_stopping_patience: 5   # stop after 5 epochs with no validation-loss improvement, to save GPU quota
+time_budget_min: null        # optional wall-clock guard: stop cleanly (keeping the best checkpoint and
+                             # writing the row) rather than being killed at the Kaggle session cap.
+                             # Usually passed per session with --time-budget-min instead of set here
 amp: true                    # mixed precision: lower memory and shorter epochs on a T4 (estimate, confirm in Phase 1)
 checkpoint: best_val_loss    # keep the best-by-validation-loss checkpoint, discard the rest
 

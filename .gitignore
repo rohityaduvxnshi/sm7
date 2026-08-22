@@ -3,6 +3,10 @@ Thumbs.db
 Desktop.ini
 .DS_Store
 
+# downloaded Kaggle session archives - large, and their contents are merged into
+# sem8_major/results/ by code/merge_runs.py rather than committed as blobs
+*.zip
+
 # credentials must never enter history (Kaggle tokens are KGAT_-prefixed)
 KGAT_*
 *.token
