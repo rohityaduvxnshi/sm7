@@ -88,10 +88,25 @@ the browser steps block the session.
 
 ---
 
-## A2 — code transport + Kaggle GPU smoke `[IN PROGRESS — opened 20 August 2026]`
+## A2 — code transport + Kaggle GPU smoke `[IN PROGRESS — updated 20 August 2026]`
 
-Local half done ahead of the browser steps: `code/calibrate.py` (per-architecture timing,
-tested on CPU), `code/record_env.py` (environment capture for Paper 2), `code/run_session.py`
-(A3 driver; failure isolation verified — a bogus config failed while the next run still
-completed, exit 1 with a summary), `notebooks/phase_a2_smoke.ipynb` (8 cells, validated JSON).
-Blocked on: GitHub repo `sm7` + Kaggle GPU/Internet/Secret. Nothing has run on Kaggle yet.
+**Done:** A2 tooling written and locally tested — `code/calibrate.py` (per-architecture
+timing), `code/record_env.py` (environment capture for Paper 2), `code/run_session.py`
+(A3 driver; failure isolation verified: a bogus config failed while the next run still
+completed, exit 1 with a summary), `notebooks/phase_a2_smoke.ipynb` (9 cells).
+**Code transport resolved (D1):** private GitHub repo `rohityaduvxnshi/sm7` created; project
+history pushed as `750c522` after merging the repo's auto-created README (no force-push);
+full-history scan confirms no credential file was ever committed. The A2 notebook was pushed
+to Kaggle via the REST API as version 2 — verified private, GPU on, Internet on, CIFAKE still
+attached. The notebook's slug changed with its title:
+**`yaduvxnshi/authentiscan-a2-gpu-smoke-and-calibration`**.
+
+**Remaining before the session runs:** Rohit adds a Kaggle Secret `GITHUB_PAT` (fine-grained
+GitHub token, read access to `sm7`) and presses Run All. Nothing has run on Kaggle yet.
+
+**Watch-outs discovered:** something on the laptop deletes files whose contents match the
+Kaggle token pattern (`~/.kaggle/access_token` disappeared twice) — pass the token inline in
+API calls instead of storing it. A second working copy exists at
+`C:\Users\rohit\Documents\GitHub\sm7` (GitHub Desktop clone, README only); the real working
+copy is `C:\Users\rohit\Desktop\AuthentiScan` — deleting the other one avoids editing the
+wrong tree.

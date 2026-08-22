@@ -262,11 +262,14 @@ the A4 shared-set build.
 
 ### A2 [was B1 second half] — code transport + Kaggle GPU smoke. Needs Rohit once.
 
-1. **Code transport (D1):** default — private GitHub repository, cloned in the notebook via a
-   fine-grained personal access token stored in Kaggle Secrets. **The default applies unless
-   Rohit objects by 22 Aug**; fallback is zipping `code/` + `configs/` into a private Kaggle
-   dataset via the direct REST API (the local CLI's token auth is broken), re-uploaded on
-   each code change. D1 blocks only A2 onward; A1 proceeds regardless.
+1. **Code transport (D1): RESOLVED 20 Aug 2026** — private GitHub repo
+   `rohityaduvxnshi/sm7` created by Rohit; project history pushed (its auto-created README
+   merged in rather than force-overwritten). The notebook clones it with a Kaggle Secret
+   `GITHUB_PAT`; later code changes flow automatically via `git pull`. Fallback if the PAT
+   route ever fails: zip `code/` + `configs/` into a private Kaggle dataset via the REST API.
+   **Working copy warning:** `C:\Users\rohit\Documents\GitHub\sm7` is a second clone created
+   by GitHub Desktop — the real working copy is `C:\Users\rohit\Desktop\AuthentiScan`; do not
+   edit in the other one.
 2. Kaggle GPU smoke in `yaduvxnshi/notebook322addb147`: enable GPU + Internet, pip-install
    `timm`/`grad-cam` (never touch the preinstalled torch), fetch code, run
    `resnet50_fe_smoke.yaml` on GPU (AMP on via override). Record once into the repo: exact

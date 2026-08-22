@@ -1,8 +1,16 @@
 # notebooks/ — Kaggle notebooks
 
-Project notebook: `yaduvxnshi/notebook322addb147` (private; CIFAKE attached 19 Aug 2026;
-retitle it on Kaggle when convenient). GPU and Internet are off — enable both in the editor's
-Session options before the B1 GPU smoke run (Internet is needed to pip-install timm/grad-cam).
+Project notebook: **`yaduvxnshi/authentiscan-a2-gpu-smoke-and-calibration`** (was
+`notebook322addb147`; the slug changed when the title was set). Private; CIFAKE attached;
+GPU and Internet enabled; `phase_a2_smoke.ipynb` pushed as version 2 on 20 Aug 2026 via the
+Kaggle REST API. Push further versions the same way — the CLI's token auth does not work,
+the REST endpoint `POST /api/v1/kernels/push` does, and the push payload must always repeat
+`datasetDataSources` or the CIFAKE attachment is dropped.
+
+Code transport: the notebook clones the private GitHub repo
+`rohityaduvxnshi/sm7` using a Kaggle Secret named `GITHUB_PAT` (Add-ons → Secrets;
+fine-grained token with read access to that repo). After the first setup, later code changes
+reach Kaggle automatically — the clone cell falls through to `git pull`.
 
 One thin notebook per phase (`phase0_setup.ipynb`, `phase1_smoke.ipynb`, ...): install, fetch
 code, call the CLI. Logic lives in `code/`, not in cells, so runs stay reproducible.
