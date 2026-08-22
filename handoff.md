@@ -95,10 +95,29 @@ Kaggle notebook **`yaduvxnshi/authentiscan-a3-session-1`** (private, GPU + Inter
 CIFAKE attached). `notebooks/make_a3_notebook.py` generates and pushes each session's
 notebook; the six-session plan lives in that script and in plan §7a A3.
 
-Rohit: open the notebook, Run All (~4.5 h worst case, likely ~2 h with early stopping),
-download `results_a3_s1.zip`, send it back. Then gate **G3** — the first accuracy sanity
-check, read on `val_acc` only (mid-90s expected for the fine-tuned CNN; near 0.50 means a
-pipeline bug, stop rather than spend quota).
+Rohit: wait for the batch run, download `results_a3_s1.zip`, send it back. Then gate **G3** —
+the first accuracy sanity check, read on `val_acc` only (mid-90s expected for the fine-tuned
+CNN; near 0.50 means a pipeline bug, stop rather than spend quota).
+
+**Session 1 false start (22 Aug), resolved.** The first push of the notebook was stored by
+Kaggle with cell 0 as **code** instead of markdown, so the run died instantly on
+`SyntaxError: invalid character '§'`. Investigated by pushing the same file to a throwaway
+kernel (`yaduvxnshi/authentiscan-nb-format-test`, private, GPU off — safe to delete): it
+stored correctly as markdown, and so did both `ensure_ascii` serialisations, so the generator
+is not at fault and the cause was a one-off on Kaggle's side. Re-pushing produced a clean
+version 3, which is running. Lessons now baked in:
+
+- **Pushing a notebook auto-launches a run.** Version 1 auto-ran at push time before the
+  `GITHUB_PAT` secret was attached to that (new) notebook and errored on the clone. Useful
+  the other way round: with the secret attached, a push *is* the launch, so sessions 2–6 need
+  no browser at all. Push deliberately — every push spends quota.
+- **After any push, pull the notebook back and check the cell types** before relying on it.
+- **Run as a saved version, not an interactive session.** Rohit's first attempt was an
+  editor "Run All", which dies with the browser tab; the batch run does not.
+- **Accelerator must stay T4 for every run** (calibration and A2 used T4; the first
+  interactive attempt landed on a P100). Mixing GPUs would make Paper 2's per-model
+  training-time table compare hardware rather than architectures. The notebooks now print the
+  GPU and warn loudly if it is not a T4.
 
 ---
 
