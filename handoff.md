@@ -126,6 +126,13 @@ quarantine guard held (smoke rows only in smoke_runs.csv).
 - Doc updates for this decision were written on the OLD laptop (this commit) — the Victus
   session should `git pull` them, not rewrite them.
 
+**AMENDMENT (Rohit, 23 Aug 2026): Kaggle quota first.** The remaining six matrix runs go to
+Kaggle sessions 3–6 (plan §7a amendment 2) — if they all land on the T4, the whole 10-run
+matrix is hardware-consistent at committed batch sizes and the per-GPU caveat disappears.
+The Victus is the A4–A6 machine and the training fallback; its validated CUDA env stays.
+The checkpoint-transfer checklist below still applies (A4 needs every checkpoint wherever
+A4 runs); session 3–6 zips can be downloaded on either machine.
+
 **PRIMARY MACHINE IS NOW THE VICTUS (Rohit, 22 Aug 2026).** The project continues there;
 the old laptop goes dormant (its repo stays valid — pull before any use). Execution rule
 amended the same day: Claude commits/pushes git itself, with no co-author line; Kaggle

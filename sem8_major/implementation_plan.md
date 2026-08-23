@@ -353,7 +353,26 @@ run early-stopped (val loss still improving at epoch 30), so remaining sessions 
 at 1.25x worst case (~34 h remaining total) — the matrix **will** spill into the next quota
 week as §7a already allows. Quota used this week so far: ≈6.5 h of 30.
 
-### A3 amendment — Victus carve-out `[CONFIRMED — Rohit, 22 Aug 2026]`
+### A3 amendment 2 — Kaggle-first `[CONFIRMED — Rohit, 23 Aug 2026; supersedes the carve-out below for run placement]`
+
+With the T4 already holding 4 of 10 rows, Rohit decided to **exhaust the Kaggle quota on the
+remaining six runs before touching the Victus for training**. If all six complete on the T4,
+the matrix is BOTH hardware-consistent and config-faithful — the carve-out's trade-off
+dissolves and Paper 2's training-time table needs no per-GPU caveat. Session 2's early
+stopping (~35% of worst case) makes the six fit a realistic 11–16 GPU-h. Placement now:
+
+- **Kaggle sessions 3–6** (as originally designed in `make_a3_notebook.py`): session 3
+  effnet fe+ft + vit fe (7.6 h worst), session 4 vgg fe (4.8 h), session 5 vgg ft (8.0 h,
+  alone), session 6 vit ft (6.8 h, alone). Launch sequentially; check remaining quota
+  before session 5 (the heaviest).
+- **Victus**: A4–A6 machine (Grad-CAM, cross-generator, consolidation — its CUDA env is
+  validated and stays) and training fallback: any run the quota cannot absorb, or any
+  failed session, runs there per the carve-out rules below (densenet-only batch caveat
+  still applies if it ever reruns locally).
+
+The carve-out below is retained for the record and for the fallback rules.
+
+### A3 amendment — Victus carve-out `[CONFIRMED — Rohit, 22 Aug 2026; run placement superseded 23 Aug by amendment 2 above]`
 
 An RTX 4070 laptop (8 GB VRAM, HP Victus, Ryzen 7 8845HS, 32 GB RAM) replaced Kaggle for
 most of the remaining matrix. Victus environment (third environment Paper 2 reports, in
