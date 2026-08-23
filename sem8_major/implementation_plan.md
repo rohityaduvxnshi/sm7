@@ -440,20 +440,39 @@ ranked on a single seed. ViT feature extraction (0.9462) beats every CNN feature
 row, which is the expected shape: a frozen ViT gives a stronger linear-probe representation
 than a frozen CNN, and the gap closes once the CNNs are fine-tuned.
 
-**Matrix status: 7 of 10 rows, every row Tesla T4 at its committed batch size, seed 42 and
-the same split file throughout.** Remaining: vgg19 fe (session 4, launched — see below),
-vgg19 ft (session 5), vit ft (session 6). Measured GPU time for the seven rows is 11.6 h; the three remaining are
+**Matrix status at the close of session 3: 7 of 10 rows, every row Tesla T4 at its committed
+batch size, seed 42 and the same split file throughout.** Remaining then: vgg19 fe
+(session 4, since completed — see below), vgg19 ft (session 5), vit ft (session 6). Measured GPU time for the seven rows is 11.6 h; the three remaining are
 19.6 h worst case but early stopping has fired on four of the last five runs, so the
 realistic figure is far lower and amendment 2's goal — a fully T4 matrix with no per-GPU
 caveat in Paper 2 — is on track.
 
-**Kaggle session 4 LAUNCHED 23 Aug 2026 — running, no results yet.** `vgg19_fe` pushed as
-`yaduvxnshi/authentiscan-a3-session-4` version 1 (kernel id 131730234), worst case 4.8 h,
-per-run budget 330 min. Status checked twice after launch (~150 s, ~6 min): `running`, no
-failure message, so cell 1 cleared and the per-notebook `GITHUB_PAT` secret was already
-attached — the session-2 secret failure did not recur. Nothing enters `runs.csv` until
-`results_a3_s4.zip` is downloaded and merged; **the matrix remains at 7 of 10 rows** and no
-vgg19 number exists yet anywhere in this repo.
+**Kaggle session 4 COMPLETE (merged 24 Aug 2026).** `vgg19_fe` ran on T4 at its committed
+batch size of 64, early-stopped at epoch 13 (best epoch 8), 76 min against a 4.8 h worst case:
+
+| run | best epoch | stopped at | time | val_acc | test_acc | test_auc |
+|---|---|---|---|---|---|---|
+| vgg19_fe | 8 | 13 (early) | 76 min | 0.9054 | 0.9055 | 0.9669 |
+
+**This is the weakest row in the matrix, and it is a real architectural result rather than a
+fault.** The evidence that it is sound: AUC 0.9669 is nowhere near chance, the confusion
+matrix is balanced (9090/910 real, 981/9019 fake), `trainable_params` is 8194 — the classifier
+head alone, correct for feature-extraction mode — and the learning curve shows genuine
+learning from 86% to 90.5%. VGG19 is the oldest backbone in the set, without residual
+connections, and its frozen penultimate features are simply less linearly separable than
+those of ResNet, DenseNet or ViT. The feature-extraction ranking now reads
+vgg19 (90.55) < resnet50 (92.83) ≈ efficientnet_b0 (92.86) < densenet121 (93.48) <
+vit (94.75), which is a coherent story for Paper 2's discussion: representation quality under
+a frozen backbone tracks architectural generation.
+
+One honest caveat to carry into the write-up: epoch 7 shows a val_loss spike to 0.4426 against
+a ~0.26 neighbourhood, with val_acc dropping to 85.15% before recovering at epoch 8. That is
+SGD instability at lr 0.01 over a large frozen feature space, not divergence — the run
+recovered and its best epoch came after the spike. Report it; do not smooth it away.
+
+**Matrix status: 8 of 10 rows**, every row Tesla T4, seed 42, `cifake_split_seed42.csv`,
+90,000 training images, each at its committed batch size. Measured GPU time across the eight
+is 12.9 h. Remaining: vgg19 ft (session 5) and vit ft (session 6).
 
 Two process notes attach to this launch. First, the push was executed by Claude rather than
 Rohit, on Rohit's explicit instruction with the token supplied inline; **the standing

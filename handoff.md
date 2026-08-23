@@ -168,12 +168,18 @@ curves, fe below ft as expected. EfficientNet-B0-ft is effectively tied with Den
 (97.56 vs 97.60 test) — one seed cannot separate them, and Paper 2 should say so rather than
 declaring a winner.
 
-**Session 4 LAUNCHED and running (23 Aug 2026), no results yet.** `vgg19_fe` pushed as
-`yaduvxnshi/authentiscan-a3-session-4` version 1 (kernel id 131730234); worst case 4.8 h,
-per-run budget 330 min. Two status checks (~150 s and ~6 min after launch) both returned
-`running` with no failure message, so cell 1 cleared — **the `GITHUB_PAT` secret was already
-attached to this notebook and the session-2 secret failure did not recur.** Matrix stays at
-**7 of 10 rows** until Rohit downloads `results_a3_s4.zip` and it is merged.
+**Session 4 COMPLETE (merged 24 Aug 2026) — 8 of 10 rows, all T4.** `vgg19_fe` val 90.54 /
+test 90.55 (AUC 0.9669), 76 min against a 4.8 h worst case, early-stopped at epoch 13 (best
+epoch 8). Run dir with its **558 MB** `best.pt` is on the old laptop only. The `GITHUB_PAT`
+secret was already attached to that notebook, so the session-2 secret failure did not recur.
+
+**vgg19_fe is the weakest row in the matrix and that is a genuine architectural finding, not
+a bug** — AUC 0.9669, balanced confusion matrix, `trainable_params` 8194 (head only, correct
+for fe), curve climbing 86% → 90.5%. Frozen VGG19 features are simply less linearly separable
+than newer backbones'. The fe ranking is now a clean story: vgg19 90.55 < resnet50 92.83 ≈
+efficientnet_b0 92.86 < densenet121 93.48 < vit 94.75. Carry the epoch-7 val_loss spike
+(0.4426 vs ~0.26, val_acc dipping to 85.15% then recovering) into Paper 2 as reported SGD
+instability — do not smooth it away.
 
 **Execution-split deviation, recorded for honesty:** this Kaggle push was performed by Claude,
 not Rohit, on Rohit's explicit in-chat instruction with the token supplied inline. The
@@ -189,8 +195,19 @@ Neither reached a public remote, but both are exposed and should be regenerated.
 Kaggle token requires no notebook changes; rotating the PAT means updating the `GITHUB_PAT`
 secret value once in Kaggle's secrets manager (the value is shared, so attachments survive).
 
-Then sessions 5 (vgg19_ft, alone) and 6 (vit_ft, alone). **Check remaining quota before
-session 5** — it is the heaviest run in the matrix and the one least worth losing to the cap.
+**Session 5 (vgg19_ft) initialised 24 Aug 2026** — notebook `notebooks/phase_a3_s5.ipynb`,
+worst case 8.0 h, per-run budget 460 min (the heaviest run in the matrix). Launched on
+Rohit's instruction; see the launch note appended below once its status is confirmed. After
+it, only session 6 (vit_ft, alone) remains.
+
+**Quota caveat that could not be resolved from here:** Kaggle exposes no API for remaining
+GPU hours — the quota page is browser-only, so Claude cannot verify it. Measured training
+time across the eight finished rows is 12.9 h, and session wall-clock runs roughly 1.25x
+training time, so the rough consumption estimate is ~16 h of the 30 h weekly allowance, plus
+the false starts. That is an estimate, not a reading. The protection if it is wrong: the
+notebook hard-aborts on any non-T4 accelerator and `train.py` carries a `time_budget_min`
+guard, so an exhausted quota produces a fast harmless failure or a cleanly stopped run with
+`stop_reason=time_budget` and a valid best checkpoint — never a corrupted row.
 
 
 Session 1 (`resnet50_fe` + `resnet50_ft`) is generated, pushed and waiting to be run:
