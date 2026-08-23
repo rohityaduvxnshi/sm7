@@ -141,18 +141,38 @@ launches, quota spends and portal uploads remain Rohit's.
 **Transfer checklist to make the Victus clone complete** (things git does not carry):
 1. `data/cifake/` — already on the Victus (verified against the committed split).
 2. `requirements_victus.lock` + the 4070 smoke row — rescue from the ZIP copy (see above).
-3. **All four Kaggle run dirs — exist ONLY on the old laptop** (checkpoints are
-   gitignored): `resnet50_fe_20260822-0532/`, `resnet50_ft_20260822-0734/` (~90 MB each)
-   and `densenet121_fe_20260822-1534/`, `densenet121_ft_20260822-1617/` (~27 MB each),
-   all under `sem8_major/results/`. Copy the four dirs into the Victus repo's `results/`
-   via USB/cloud — A4's Grad-CAM galleries and cross-generator table need these
-   checkpoints. (Session 2 was processed on the old laptop 23 Aug; rows are in git,
-   binaries are not.)
+3. **All seven Kaggle run dirs — exist ONLY on the old laptop** (checkpoints are
+   gitignored): `resnet50_fe_20260822-0532/`, `resnet50_ft_20260822-0734/` (~90 MB each),
+   `densenet121_fe_20260822-1534/`, `densenet121_ft_20260822-1617/` (~27 MB each),
+   `efficientnet_b0_fe_20260823-0248/`, `efficientnet_b0_ft_20260823-0427/` (~16 MB each)
+   and `vit_base_patch16_224_fe_20260823-0553/` (**343 MB**), all under
+   `sem8_major/results/`. Copy the dirs into the Victus repo's `results/` via USB/cloud —
+   A4's Grad-CAM galleries and cross-generator table need these checkpoints. Sessions 2 and
+   3 were processed on the old laptop 23 Aug; rows are in git, binaries are not. Total to
+   move is now ~600 MB and grows by ~550 MB for vgg19 fe+ft and ~343 MB for vit_ft.
 
 Division of labour while both machines are active: Victus session drives training; **pull
 before working, push after committing, on both.**
 
 ## A3 — the 10-run matrix `[IN PROGRESS — opened 22 August 2026]`
+
+**Session 3 COMPLETE (merged 23 Aug 2026) — 7 of 10 rows done, all T4.** efficientnet_b0_fe
+val 92.67 / test 92.87; efficientnet_b0_ft val **97.50** / test 97.56 (AUC 0.9971);
+vit_base_patch16_224_fe val 94.62 / test 94.75 (AUC 0.9881). 4.2 h against a 7.6 h worst
+case; two of the three early-stopped. Rows merged into `results/runs.csv`, run dirs (with
+`best.pt`) copied into `sem8_major/results/` **on the old laptop** — add these three to the
+checkpoint-transfer checklist below; the ViT checkpoint alone is 343 MB.
+
+G3-style check passed on all three: balanced confusion matrices, monotone-then-flat val
+curves, fe below ft as expected. EfficientNet-B0-ft is effectively tied with DenseNet121-ft
+(97.56 vs 97.60 test) — one seed cannot separate them, and Paper 2 should say so rather than
+declaring a winner.
+
+Next: **session 4 (vgg19_fe)** — notebook generated at `notebooks/phase_a3_s4.ipynb`. Rohit
+pushes it (a push auto-launches the run) and must toggle the `GITHUB_PAT` secret on that new
+notebook once before the first run. Then sessions 5 (vgg19_ft, alone) and 6 (vit_ft, alone).
+Check remaining quota before session 5 — it is the heaviest run in the matrix.
+
 
 Session 1 (`resnet50_fe` + `resnet50_ft`) is generated, pushed and waiting to be run:
 Kaggle notebook **`yaduvxnshi/authentiscan-a3-session-1`** (private, GPU + Internet on,

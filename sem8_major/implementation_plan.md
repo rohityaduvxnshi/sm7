@@ -421,8 +421,31 @@ finished.** Early stopping fired this time (~2.3 h total vs 6.5 h worst case):
 
 DenseNet121-ft is the matrix leader so far, ahead of ResNet50-ft (0.9593). G3-style check
 passes (val-based, mid-90s, clean curves). **Matrix status: 4 of 10 rows in `runs.csv`**
-(resnet50 + densenet121, both modes, all T4 at committed batch sizes). The remaining six
-(effnet/vgg/vit, fe+ft) run on the Victus per the carve-out.
+(resnet50 + densenet121, both modes, all T4 at committed batch sizes). Run placement for the
+remaining six was reopened the same day by amendment 2 above (Kaggle-first).
+
+**Kaggle session 3 COMPLETE (merged 23 Aug 2026).** Three runs, all on T4 at committed batch
+sizes, 4.2 h against a 7.6 h worst case:
+
+| run | best epoch | stopped at | time | val_acc | test_acc | test_auc |
+|---|---|---|---|---|---|---|
+| efficientnet_b0_fe | 29 | 30 (max_epochs) | 98 min | 0.9267 | 0.9287 | 0.9802 |
+| efficientnet_b0_ft | 15 | 20 (early) | 85 min | **0.9750** | 0.9756 | 0.9971 |
+| vit_base_patch16_224_fe | 6 | 11 (early) | 69 min | 0.9462 | 0.9475 | 0.9881 |
+
+G3-style check passes: ft in the mid-to-high 90s, fe sensibly below it, confusion matrices
+balanced (no collapsed class), curves clean. EfficientNet-B0-ft lands 0.0004 test-accuracy
+behind DenseNet121-ft — close enough that Paper 2 should treat the two as tied rather than
+ranked on a single seed. ViT feature extraction (0.9462) beats every CNN feature-extraction
+row, which is the expected shape: a frozen ViT gives a stronger linear-probe representation
+than a frozen CNN, and the gap closes once the CNNs are fine-tuned.
+
+**Matrix status: 7 of 10 rows, every row Tesla T4 at its committed batch size, seed 42 and
+the same split file throughout.** Remaining: vgg19 fe (session 4), vgg19 ft (session 5),
+vit ft (session 6). Measured GPU time for the seven rows is 11.6 h; the three remaining are
+19.6 h worst case but early stopping has fired on four of the last five runs, so the
+realistic figure is far lower and amendment 2's goal — a fully T4 matrix with no per-GPU
+caveat in Paper 2 — is on track.
 
 ### A3 [was B2–B4] — the 10-run matrix, batched into GPU sessions.
 
