@@ -392,6 +392,19 @@ the training-time column, which `runs.csv` discloses per row.
 - A4 venue (tiny-genimage locally vs a Kaggle eval notebook) is decided when the matrix
   completes; all checkpoints will be local either way.
 
+**Kaggle session 2 COMPLETE (merged 23 Aug 2026) — the Kaggle portion of the matrix is
+finished.** Early stopping fired this time (~2.3 h total vs 6.5 h worst case):
+
+| run | best epoch | stopped at | time | val_acc | test_acc | test_auc |
+|---|---|---|---|---|---|---|
+| densenet121_fe | 4 | 9 (early) | 41 min | 0.9359 | 0.9349 | 0.9848 |
+| densenet121_ft | 7 | 12 (early) | 95 min | **0.9764** | **0.9760** | 0.9972 |
+
+DenseNet121-ft is the matrix leader so far, ahead of ResNet50-ft (0.9593). G3-style check
+passes (val-based, mid-90s, clean curves). **Matrix status: 4 of 10 rows in `runs.csv`**
+(resnet50 + densenet121, both modes, all T4 at committed batch sizes). The remaining six
+(effnet/vgg/vit, fe+ft) run on the Victus per the carve-out.
+
 ### A3 [was B2–B4] — the 10-run matrix, batched into GPU sessions.
 
 - Run order = Table 2 (runs 1–10). Before any session: assert every matrix config has

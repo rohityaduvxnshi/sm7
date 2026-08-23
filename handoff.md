@@ -134,12 +134,13 @@ launches, quota spends and portal uploads remain Rohit's.
 **Transfer checklist to make the Victus clone complete** (things git does not carry):
 1. `data/cifake/` — already on the Victus (verified against the committed split).
 2. `requirements_victus.lock` + the 4070 smoke row — rescue from the ZIP copy (see above).
-3. **`results/resnet50_fe_20260822-0532/` and `results/resnet50_ft_20260822-0734/`
-   including `best.pt` (~90 MB each)** — exist ONLY on the old laptop (checkpoints are
-   gitignored). Copy both dirs into the Victus repo's `results/` via USB/cloud — A4's
-   Grad-CAM galleries and cross-generator table need these checkpoints.
-4. DenseNet checkpoints arrive later via the Kaggle session-2 zip — download it on the
-   Victus directly.
+3. **All four Kaggle run dirs — exist ONLY on the old laptop** (checkpoints are
+   gitignored): `resnet50_fe_20260822-0532/`, `resnet50_ft_20260822-0734/` (~90 MB each)
+   and `densenet121_fe_20260822-1534/`, `densenet121_ft_20260822-1617/` (~27 MB each),
+   all under `sem8_major/results/`. Copy the four dirs into the Victus repo's `results/`
+   via USB/cloud — A4's Grad-CAM galleries and cross-generator table need these
+   checkpoints. (Session 2 was processed on the old laptop 23 Aug; rows are in git,
+   binaries are not.)
 
 Division of labour while both machines are active: Victus session drives training; **pull
 before working, push after committing, on both.**
