@@ -441,11 +441,27 @@ row, which is the expected shape: a frozen ViT gives a stronger linear-probe rep
 than a frozen CNN, and the gap closes once the CNNs are fine-tuned.
 
 **Matrix status: 7 of 10 rows, every row Tesla T4 at its committed batch size, seed 42 and
-the same split file throughout.** Remaining: vgg19 fe (session 4), vgg19 ft (session 5),
-vit ft (session 6). Measured GPU time for the seven rows is 11.6 h; the three remaining are
+the same split file throughout.** Remaining: vgg19 fe (session 4, launched — see below),
+vgg19 ft (session 5), vit ft (session 6). Measured GPU time for the seven rows is 11.6 h; the three remaining are
 19.6 h worst case but early stopping has fired on four of the last five runs, so the
 realistic figure is far lower and amendment 2's goal — a fully T4 matrix with no per-GPU
 caveat in Paper 2 — is on track.
+
+**Kaggle session 4 LAUNCHED 23 Aug 2026 — running, no results yet.** `vgg19_fe` pushed as
+`yaduvxnshi/authentiscan-a3-session-4` version 1 (kernel id 131730234), worst case 4.8 h,
+per-run budget 330 min. Status checked twice after launch (~150 s, ~6 min): `running`, no
+failure message, so cell 1 cleared and the per-notebook `GITHUB_PAT` secret was already
+attached — the session-2 secret failure did not recur. Nothing enters `runs.csv` until
+`results_a3_s4.zip` is downloaded and merged; **the matrix remains at 7 of 10 rows** and no
+vgg19 number exists yet anywhere in this repo.
+
+Two process notes attach to this launch. First, the push was executed by Claude rather than
+Rohit, on Rohit's explicit instruction with the token supplied inline; **the standing
+execution split in CLAUDE.md §1 is unchanged** and this is recorded as a one-off override, not
+a precedent. Second, two credentials were exposed during the session and await rotation — a
+GitHub fine-grained PAT that had been pasted into `.gitignore` (never committed; confirmed by
+a full-history `git log -S` scan) and the Kaggle API token used for this push. Details and
+rotation steps are in `handoff.md`.
 
 ### A3 [was B2–B4] — the 10-run matrix, batched into GPU sessions.
 

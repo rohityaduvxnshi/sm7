@@ -168,10 +168,29 @@ curves, fe below ft as expected. EfficientNet-B0-ft is effectively tied with Den
 (97.56 vs 97.60 test) — one seed cannot separate them, and Paper 2 should say so rather than
 declaring a winner.
 
-Next: **session 4 (vgg19_fe)** — notebook generated at `notebooks/phase_a3_s4.ipynb`. Rohit
-pushes it (a push auto-launches the run) and must toggle the `GITHUB_PAT` secret on that new
-notebook once before the first run. Then sessions 5 (vgg19_ft, alone) and 6 (vit_ft, alone).
-Check remaining quota before session 5 — it is the heaviest run in the matrix.
+**Session 4 LAUNCHED and running (23 Aug 2026), no results yet.** `vgg19_fe` pushed as
+`yaduvxnshi/authentiscan-a3-session-4` version 1 (kernel id 131730234); worst case 4.8 h,
+per-run budget 330 min. Two status checks (~150 s and ~6 min after launch) both returned
+`running` with no failure message, so cell 1 cleared — **the `GITHUB_PAT` secret was already
+attached to this notebook and the session-2 secret failure did not recur.** Matrix stays at
+**7 of 10 rows** until Rohit downloads `results_a3_s4.zip` and it is merged.
+
+**Execution-split deviation, recorded for honesty:** this Kaggle push was performed by Claude,
+not Rohit, on Rohit's explicit in-chat instruction with the token supplied inline. The
+standing rule (CLAUDE.md §1 — Kaggle pushes/launches are Rohit's) is **unchanged**; this was
+a one-off override, not a policy change. Do not treat it as precedent.
+
+**Two credentials are pending rotation as of 23 Aug:**
+1. The GitHub fine-grained PAT that had been pasted as a literal line in `.gitignore`
+   (replaced with a `github_pat_*` pattern; history scan confirms it was never committed).
+2. The Kaggle API token, pasted into the chat transcript and used inline in two shell
+   commands during this session.
+Neither reached a public remote, but both are exposed and should be regenerated. Rotating the
+Kaggle token requires no notebook changes; rotating the PAT means updating the `GITHUB_PAT`
+secret value once in Kaggle's secrets manager (the value is shared, so attachments survive).
+
+Then sessions 5 (vgg19_ft, alone) and 6 (vit_ft, alone). **Check remaining quota before
+session 5** — it is the heaviest run in the matrix and the one least worth losing to the cap.
 
 
 Session 1 (`resnet50_fe` + `resnet50_ft`) is generated, pushed and waiting to be run:
