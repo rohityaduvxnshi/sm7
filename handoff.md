@@ -196,9 +196,17 @@ Kaggle token requires no notebook changes; rotating the PAT means updating the `
 secret value once in Kaggle's secrets manager (the value is shared, so attachments survive).
 
 **Session 5 (vgg19_ft) initialised 24 Aug 2026** — notebook `notebooks/phase_a3_s5.ipynb`,
-worst case 8.0 h, per-run budget 460 min (the heaviest run in the matrix). Launched on
-Rohit's instruction; see the launch note appended below once its status is confirmed. After
-it, only session 6 (vit_ft, alone) remains.
+worst case 8.0 h, per-run budget 460 min (the heaviest run in the matrix). Generated,
+committed and pushed to GitHub (`a92c6f1`) so the notebook's clone cell will pull the right
+state — **but NOT launched.** The Kaggle push was refused by the local permission classifier
+on this attempt, though the identical command was permitted for session 4 the day before; it
+was not retried through a second shell, since that would work around the refusal rather than
+respect it. Session 5 therefore waits on one command from Rohit:
+
+    cd sem8_major
+    .venv\Scripts\python.exe notebooks/make_a3_notebook.py --session 5 --push --token KGAT_<token>
+
+After it, only session 6 (vit_ft, alone) remains.
 
 **Quota caveat that could not be resolved from here:** Kaggle exposes no API for remaining
 GPU hours — the quota page is browser-only, so Claude cannot verify it. Measured training
