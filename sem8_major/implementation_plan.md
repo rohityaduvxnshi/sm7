@@ -159,7 +159,7 @@ The hard Semester 7 commitment is **B0 and B1** — environment, data, split, re
 | B6 | 28 Sep–4 Oct | Ablations (augmentation, resolution); buffer for reruns | Ablation rows in `runs.csv` | NOT STARTED |
 | B7 | 5–9 Oct | Consolidation only — result tables and figures generated from the CSVs. Deliberately light: this is Semester 7 guide-review week for the paper | `results/tables/`, `figures/` | NOT STARTED |
 | S8-1 | relative | Re-verification runs; any ablations not finished | Updated `runs.csv` | NOT STARTED |
-| S8-2 | relative | Paper 2 draft following the Karki et al. schema | Paper 2 sections | NOT STARTED |
+| S8-2 | relative | Paper 2 draft following the Karki et al. schema (= §10 phase P1; feeds both the major report and the merged publication) | Paper 2 sections | NOT STARTED |
 | S8-3 | relative | Major project report, viva and demo preparation | Report DOCX → PDF | NOT STARTED |
 
 ## 7a. Acceleration amendment `[CONFIRMED — adopted 20 August 2026 at Rohit's request; verified by a 5-lens adversarial review the same day, 32 findings fixed]`
@@ -634,3 +634,51 @@ Concrete form of the CLAUDE.md §6 rules:
 | 3 | Role split between Rohit, Vishal and Hardik (CLAUDE.md open item 4) — no task in this plan is assigned until it is settled | Before B2 |
 | 4 | Semester 8 calendar dates are unknown, so phases S8-1 to S8-3 carry relative weeks only; convert to dates when the calendar is published | Start of Semester 8 |
 | 5 | Guide's decision on whether early implementation work may be reported in the Minor Project WPR track | Before WPR 12 |
+
+## 10. Publication merge plan `[CONFIRMED — Rohit, 25 Aug 2026; guide-approved]`
+
+The publication goal changed on 25 August 2026, with Dr. Richa Gupta's approval: **one
+published research paper**, merging the Semester 7 review (Paper 1) and this track's
+experimental work (Paper 2), instead of two separate submissions. Nothing changes on the
+Amity side — two semester projects, two reports, two WPR tracks — and nothing changes in
+phases A4–A6 or the §8 rules. Paper 2 is still drafted in full: it is the core of the
+Semester 8 major project report and the experimental half of the merged paper. Neither
+paper is submitted to a venue on its own.
+
+### Session 7 — rerun session (slots between session 6 and A6 consolidation)
+
+Three matrix rows are lower bounds, not converged results: `resnet50_fe`, `resnet50_ft`
+and `efficientnet_b0_fe` stopped at the 30-epoch ceiling with validation loss still
+improving (§7a session-5 note). For a published paper Rohit decided on 25 Aug to rerun
+them rather than carry the disclosure:
+
+- **Kaggle T4 only**, preserving the all-T4 matrix (amendment 2's goal); the Victus is
+  not used for these.
+- Launched only after session 6's results are downloaded and merged.
+- The three configs at `max_epochs: 50`; early stopping patience 5 and every other
+  hyperparameter unchanged.
+- Worst case ~7–11 GPU-h — check remaining weekly quota first; if the week cannot absorb
+  it, the session waits for the quota reset.
+- Reruns get new timestamped run_ids; the old rows stay in `runs.csv` untouched, and
+  A6's `results/canonical_runs.txt` manifest selects which rows the tables use — the
+  mechanism §7a A6 already defines.
+- Generated via `notebooks/make_a3_notebook.py` (new session entry); Claude prepares,
+  Rohit pushes/launches per the execution split.
+
+### P-phases (after A6/G6; replaces the two-paper endpoint of S8-2)
+
+| Phase | Content |
+|---|---|
+| P1 | **Paper 2 draft** (was S8-2, unchanged in content): full experimental paper per the Karki et al. schema; every number generated from `runs.csv`/`crossgen.csv` by the A6 scripts, never hand-transcribed. Feeds the Sem 8 major report and the merge. |
+| P2 | **Shape + venue gate**, with the guide, in one sitting: (a) merged-paper shape — hybrid review+experiment (review survives as condensed taxonomy + 48-study table + gap analysis; ~12–14k words; needs a length-tolerant venue) vs experimental paper with deep related work (review compressed to 2–3 pages; 48-row table trimmed or moved to supplementary); (b) venue (CLAUDE.md open item 5); (c) authorship order; (d) AI-assistance disclosure requirement (CLAUDE.md open item 18). The shape decision is deliberately deferred to here — Rohit, 25 Aug: decide from how the results turn out. |
+| P3 | **Content map**: Paper 1 §§0–8 × Paper 2 sections → merged outline, keep/condense/drop per block, with an explicit dedupe list. Known duplications to resolve: CIFAKE/GenImage described in both papers (once, in Methods); metrics equations in both (once, in Methods); Paper 1's gap analysis rewritten from future tense into the merged paper's contributions; conclusions merged. Gate: Rohit approves the map before any prose is assembled. |
+| P4 | **Merged draft assembly** in a new top-level `publication/` directory (created then, not before): sections from the Sem 7 section files + P1's sections; reuse `sem7_minor/submission/build/build_v2.py` (citation conversion, figure/table renumbering) and the `make_docx.ps1` export path, retargeted at the merged manuscript. References = union of the C-keyed sets, trimmed to venue norms; every kept reference re-verified in `verification_log.md` fashion. |
+| P5 | **Integrity pass**: Rohit's own-voice rewrite over all prose (mandatory regardless of any checker result); citation re-verification after the rewrite; every number traced to its CSV; terminology consistency; no duplicated tables or figures. |
+| P6 | **Venue formatting + similarity check.** Known risk, handled by disclosure: the Sem 7 report went through the department plagiarism check and the final reports are submitted to Amity — if those land in a Turnitin-style repository, the merged paper will self-match Rohit's own coursework. Standard handling is disclosure to the venue (prior coursework/thesis reuse); ask the department whether submissions are stored. Never any rewording/humanizer tool. |
+| P7 | **Guide sign-off → submission.** All portal and submission actions are Rohit's, per the execution split. |
+
+All P-phases are relative until the Semester 8 calendar is known. Risks carried openly:
+venue length limit if the hybrid shape wins (mitigation: supplementary material, decided
+at P2); review staleness by submission time (a bounded literature refresh at P3 only if
+the guide asks; default is no new literature); self-similarity with Amity submissions
+(P6 disclosure route).

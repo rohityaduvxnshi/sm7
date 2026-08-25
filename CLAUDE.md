@@ -97,9 +97,9 @@ If any draft text implies the team obtained its own experimental results this se
 
 **Amendment `[CONFIRMED — guide instruction, 15 August 2026]`:** Dr. Richa Gupta has instructed the team to begin preparing the implementation code now, ahead of the original Semester 8 start. This pulls the Setup/early-coding phases of §6 into the Semester 7 calendar. It does **not** change Paper 1: the review paper (draft v2 submitted for plagiarism check on 15 Aug 2026) reports no experimental results, and no number produced by early code may be added to it. All results belong to Paper 2 and the Semester 8 major report. The no-results rule above now protects Paper 1 specifically, not the calendar.
 
-### Publication goal `[CONFIRMED]`
+### Publication goal `[CONFIRMED — amended 25 Aug 2026, guide-approved]`
 
-Two co-authored research papers, one from each semester. Target venue not yet chosen — see open items.
+**One co-authored research paper**, merging the Semester 7 review (Paper 1) and the Semester 8 experimental work (Paper 2). The two semester projects stay fully separate on the Amity side — separate reports, separate WPR tracks — but the external publication is a single merged paper. Paper 1 and Paper 2 are still both drafted in full (Paper 1 is the Sem 7 report; Paper 2 is the core of the Sem 8 report); neither is submitted to a venue on its own. Merge pipeline: `sem8_major/implementation_plan.md` §10. The merged paper's shape (hybrid review+experiment vs experimental paper with deep related work) is deliberately undecided until major-project development completes (Rohit, 25 Aug 2026). Target venue not yet chosen — see open items.
 
 ---
 
@@ -456,7 +456,7 @@ The semester is complete when all of the following exist:
 | 2 | Word/page limit for the Semester 7 report | Before Week 11 |
 | 3 | Plagiarism / AI-content threshold enforced by the department. Draft v2 was submitted for the check on 15 Aug 2026 — result pending; threshold number itself still unknown | Result pending |
 | 4 | Role split between Rohit, Vishal, and Hardik Mehlawat | ASAP (WPRs currently name no per-member tasks) |
-| 5 | Target journal or conference for Paper 1 (affects reference style and length) | Week 4 |
+| 5 | Target journal or conference for the **merged paper** (affects reference style and length; decided with the guide at merge gate P2 — `sem8_major/implementation_plan.md` §10) | P2, Semester 8 |
 | 6 | Whether the guide wants a mid-semester review checkpoint | Week 3–4 |
 | 8 | Whether WPR signatures may be digital, or must be physical and scanned | Before next upload |
 | 9 | Whether Amity mandates a PDF file-naming convention or size limit | Before Week 12 |
@@ -467,10 +467,11 @@ The semester is complete when all of the following exist:
 | 15 | Final reference list has 73 entries vs the 45–60 target in §11. Not an error (48 primary + support set), but decide with the guide whether to trim secondary/background support citations at the template pass | Before Week 12 |
 | 17 | ~~Table 6.1 legibility~~ RESOLVED 15 Aug: draft v2 restyles it full-width Elsevier-fashion (Table 2, pp. 12–15); apply the same treatment in the Amity template | — |
 | 18 | Whether Amity and/or the target venue require an AI-assistance disclosure statement (AI-assisted drafting and code with human verification). Ask the guide; if yes, draft the statement | Before Week 11 upload / with venue choice |
+| 19 | Merged-paper shape: hybrid review+experiment (review survives as condensed taxonomy + 48-study table + gap analysis, ~12–14k words) vs experimental paper with deep related work (review compressed to 2–3 pages). Decided after major-project development completes, at merge gate P2 (`implementation_plan.md` §10) | P2, Semester 8 |
 
 ---
 
-## 13. Current status and next to-dos (updated 20 August 2026)
+## 13. Current status and next to-dos (updated 25 August 2026)
 
 **Phase-completion rule `[CONFIRMED — Rohit, 20 Aug 2026]`:** at every Track B phase gate,
 three documents are updated in the same pass, each carrying the date: this file (§13),
@@ -516,6 +517,8 @@ The acceleration run of 12–13 Aug (see §5 "Acceleration mode") completed all 
 **23 Aug — Kaggle DenseNet session COMPLETE.** Session 2 merged: densenet121_fe val 93.59/test 93.49; densenet121_ft val **97.64/test 97.60** (AUC 0.9972) — matrix leader, ahead of resnet50_ft. Early stopping fired (2.3 h vs 6.5 worst case). `runs.csv` = 4 of 10 rows, all T4 at committed batch sizes. Remaining six runs (effnet/vgg/vit fe+ft) are the Victus's job. All four checkpoint dirs live on the old laptop only — transfer checklist in `handoff.md`.
 
 **23 Aug — Kaggle session 3 COMPLETE; matrix 7 of 10, all T4.** efficientnet_b0_fe val 92.67/test 92.87; efficientnet_b0_ft val **97.50**/test 97.56 (AUC 0.9971); vit_base_patch16_224_fe val 94.62/test 94.75 (AUC 0.9881). 4.2 h against a 7.6 h worst-case budget, two of three early-stopped. EfficientNet-B0-ft is statistically tied with the DenseNet121-ft leader (97.56 vs 97.60 test on one seed) — Paper 2 reports them as tied, not ranked. ViT-fe beats every CNN fe row, the expected linear-probe result. Every row so far is Tesla T4 at its committed batch size, seed 42, same split file, so amendment 2's no-per-GPU-caveat goal is holding. Remaining: vgg19 fe (session 4, notebook generated), vgg19 ft (session 5), vit ft (session 6). Also fixed this pass: a GitHub PAT had been pasted into `.gitignore` as a literal line — replaced with a `github_pat_*` pattern; the token was never committed, but it must be treated as exposed and revoked.
+
+**25 Aug (later) — single-paper publication plan ADOPTED (guide-approved); session 7 reruns decided.** The publication goal is amended (§3): one merged research paper instead of two — Amity deliverables and WPR tracks unchanged, Paper 2 still drafted in full as the Sem 8 report core. Merge pipeline recorded as `implementation_plan.md` §10 (P1 Paper 2 draft → P2 shape+venue gate with the guide → P3 content map → P4 assembly in a new `publication/` dir reusing the `build_v2.py`/`make_docx.ps1` pipeline → P5 Rohit's rewrite + citation re-verify → P6 venue formatting + self-similarity disclosure → P7 sign-off and submission, all portal actions Rohit's). Merge shape deferred to P2 (open item 19). **Session 7 decision (Rohit):** after session 6 — which runs to completion untouched — a new Kaggle T4 session reruns the three lower-bound rows (resnet50_fe, resnet50_ft, efficientnet_b0_fe) at `max_epochs: 50`, patience 5, all else identical; ~7–11 GPU-h worst case, quota-checked before launch; new run_ids, with A6's `canonical_runs.txt` selecting the table rows. No repo change beyond the three governing documents; no Kaggle action taken.
 
 **25 Aug — session 5 COMPLETE, matrix 9 of 10; session 6 prepared (final run).** vgg19_ft val 98.19/test **97.91** (AUC 0.9979), 216 min against an 8.0 h worst case, early-stopped at epoch 14 — **the new matrix leader**, ahead of densenet121_ft (97.60) and efficientnet_b0_ft (97.56). **The matrix's headline finding is an inversion worth building Paper 2's discussion around:** VGG19 is *last* under feature extraction (90.55) and *first* under fine-tuning (97.91), a +7.36 gain versus +4.69 (effnet), +4.11 (densenet), +3.10 (resnet50). Frozen VGG features encode ImageNet object semantics that transfer poorly to CIFAKE, where the signal is low-level generative artefact; unfrozen, its plain conv stack has the capacity and inductive bias to relearn those filters. Scope that claim to this dataset — it is not a general ranking. **Disclosure item:** resnet50_fe, resnet50_ft and efficientnet_b0_fe stopped at `max_epochs` with best epoch at/next to the ceiling and val loss still improving, so those three are **lower bounds, not converged results**; this matters most for resnet50_ft, whose last place among ft runs is partly an epoch-budget artefact. State it wherever the ft ranking appears, or rerun the three at a higher ceiling. All nine rows: Tesla T4, seed 42, `cifake_split_seed42.csv`, 90,000 train images, committed batch sizes; 16.5 h measured GPU time. **Session 6 (vit_base_patch16_224_ft) generated and verified, awaiting Rohit's Kaggle push**; when it merges A3 closes at 10 of 10 and A4 (Grad-CAM, cross-generator) begins. Checkpoint pile to transfer to the Victus is now ~1.75 GB, ~2.1 GB after session 6.
 

@@ -6,6 +6,51 @@ Read CLAUDE.md first; this file is the fast-moving state on top of it.
 
 ---
 
+## Plan change — single-paper publication + session 7 reruns `[ADOPTED — 25 August 2026]`
+
+### 1. Goal
+
+Record the 25 Aug plan change (Rohit; guide-approved): **one published research paper**,
+merging the Sem 7 review (Paper 1) and the Sem 8 experimental work (Paper 2), instead of
+two separate submissions. Amity side unchanged: two semester projects, two reports, two
+WPR tracks. Full detail: `sem8_major/implementation_plan.md` §10; CLAUDE.md §3/§12/§13
+amended in the same pass.
+
+### 2. Current State
+
+- Matrix 9 of 10 rows, all Tesla T4; session 6 (vit_base_patch16_224_ft) running on
+  Kaggle — left untouched to completion by explicit decision (25 Aug).
+- Rerun decision (Rohit, 25 Aug): after session 6 merges, **session 7 on Kaggle T4**
+  reruns the three lower-bound rows — resnet50_fe, resnet50_ft, efficientnet_b0_fe — at
+  `max_epochs: 50` (patience 5 and all other hyperparameters unchanged). Worst case
+  ~7–11 GPU-h; check remaining quota first, else it waits for the reset. Reruns get new
+  run_ids; A6's `canonical_runs.txt` manifest selects which rows the tables use.
+- Merged-paper shape (hybrid review+experiment vs experimental paper with deep related
+  work) deliberately deferred to merge gate P2, after development completes.
+- No publication artefact exists yet; the `publication/` directory is created only at P4.
+
+### 3. Changes it made
+
+- CLAUDE.md: §3 publication goal amended; §12 item 5 reworded + new item 19 (merge
+  shape); §13 dated entry.
+- `sem8_major/implementation_plan.md`: new §10 (session 7 spec + P1–P7 merge pipeline);
+  Table 5 S8-2 row annotated.
+- This entry. No code, configs, notebooks or Kaggle state touched.
+
+### 4. Next steps
+
+1. Rohit: when session 6 finishes, download `results_a3_s6.zip` — Claude merges; A3
+   closes at 10 of 10.
+2. Claude: generate the session 7 notebook (three rerun configs, `max_epochs: 50`) via
+   `make_a3_notebook.py` — Rohit launches after a quota check.
+3. Then A4 per §7a (checkpoint transfer to the Victus is the practical gate).
+
+Known issue, fix separately: this file's newest-first ordering had drifted (the A3 block
+sits below A1); this entry restores a current block at the top, but the older blocks
+remain out of order.
+
+---
+
 ## A1 — full local implementation + CPU smoke `[G1 PASSED — 20 August 2026]`
 
 ### 1. Goal
