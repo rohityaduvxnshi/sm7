@@ -144,12 +144,14 @@ launches, quota spends and portal uploads remain Rohit's.
 3. **All seven Kaggle run dirs — exist ONLY on the old laptop** (checkpoints are
    gitignored): `resnet50_fe_20260822-0532/`, `resnet50_ft_20260822-0734/` (~90 MB each),
    `densenet121_fe_20260822-1534/`, `densenet121_ft_20260822-1617/` (~27 MB each),
-   `efficientnet_b0_fe_20260823-0248/`, `efficientnet_b0_ft_20260823-0427/` (~16 MB each)
-   and `vit_base_patch16_224_fe_20260823-0553/` (**343 MB**), all under
-   `sem8_major/results/`. Copy the dirs into the Victus repo's `results/` via USB/cloud —
-   A4's Grad-CAM galleries and cross-generator table need these checkpoints. Sessions 2 and
-   3 were processed on the old laptop 23 Aug; rows are in git, binaries are not. Total to
-   move is now ~600 MB and grows by ~550 MB for vgg19 fe+ft and ~343 MB for vit_ft.
+   `efficientnet_b0_fe_20260823-0248/`, `efficientnet_b0_ft_20260823-0427/` (~16 MB each),
+   `vit_base_patch16_224_fe_20260823-0553/` (**343 MB**), `vgg19_fe_20260823-1605/` and
+   `vgg19_ft_20260824-0047/` (**558 MB each**), all under `sem8_major/results/`. Copy the
+   dirs into the Victus repo's `results/` via USB/cloud — A4's Grad-CAM galleries and
+   cross-generator table need these checkpoints. Sessions 2–5 were processed on the old
+   laptop; rows are in git, binaries are not. **Total to move is now ~1.75 GB**, growing by
+   a further ~343 MB when session 6 (vit_ft) lands. Plan for ~2.1 GB and use a USB stick
+   rather than a cloud sync.
 
 Division of labour while both machines are active: Victus session drives training; **pull
 before working, push after committing, on both.**
@@ -195,18 +197,43 @@ Neither reached a public remote, but both are exposed and should be regenerated.
 Kaggle token requires no notebook changes; rotating the PAT means updating the `GITHUB_PAT`
 secret value once in Kaggle's secrets manager (the value is shared, so attachments survive).
 
-**Session 5 (vgg19_ft) initialised 24 Aug 2026** — notebook `notebooks/phase_a3_s5.ipynb`,
-worst case 8.0 h, per-run budget 460 min (the heaviest run in the matrix). Generated,
-committed and pushed to GitHub (`a92c6f1`) so the notebook's clone cell will pull the right
-state — **but NOT launched.** The Kaggle push was refused by the local permission classifier
-on this attempt, though the identical command was permitted for session 4 the day before; it
-was not retried through a second shell, since that would work around the refusal rather than
-respect it. Session 5 therefore waits on one command from Rohit:
+**Session 5 COMPLETE (merged 25 Aug 2026) — 9 of 10 rows; `vgg19_ft` is the matrix leader.**
+val 98.19 / test 97.91 (AUC 0.9979), 216 min against an 8.0 h worst case, early-stopped at
+epoch 14. Run dir with its **558 MB** `best.pt` is on the old laptop only.
 
-    cd sem8_major
-    .venv\Scripts\python.exe notebooks/make_a3_notebook.py --session 5 --push --token KGAT_<token>
+**The matrix's headline result is an inversion:** VGG19 is last on feature extraction (90.55)
+and first on fine-tuning (97.91), a +7.36 gain against +4.69 / +4.11 / +3.10 for
+efficientnet / densenet / resnet. Frozen VGG features suit CIFAKE poorly; unfrozen, its plain
+conv stack relearns the low-level artefact filters the task actually needs. Scope the claim to
+this dataset in the write-up.
 
-After it, only session 6 (vit_ft, alone) remains.
+**Disclosure item, do not bury it:** `resnet50_fe`, `resnet50_ft` and `efficientnet_b0_fe`
+stopped at `max_epochs` with best epoch at/next to the ceiling, so their val loss was still
+improving — **those three are lower bounds, not converged numbers.** It matters most for
+`resnet50_ft`, the weakest ft row (95.93) and the only ft run that never early-stopped: its
+last place is partly an epoch-budget artefact. Either state this wherever the ft ranking
+appears in Paper 2, or rerun the three at a higher ceiling. The other six converged on their
+own and compare cleanly.
+
+**PowerShell gotcha that cost a launch attempt (24 Aug):** `cd sem8_major` followed by
+`.venv\Scripts\python.exe ...` fails two ways — the `cd` may not take, and PowerShell reads a
+relative exe path without a `.\` prefix as a module name
+(`CouldNotAutoLoadModule`). Use the fully-qualified call operator form instead, which works
+from any directory:
+
+    & "C:\Users\rohit\Desktop\AuthentiScan\sem8_major\.venv\Scripts\python.exe" "C:\Users\rohit\Desktop\AuthentiScan\sem8_major\notebooks\make_a3_notebook.py" --session <N> --push --token KGAT_<token>
+
+**Session 6 (`vit_base_patch16_224_ft`) prepared 25 Aug 2026 — the final run of the matrix.**
+Notebook `notebooks/phase_a3_s6.ipynb`, worst case 6.8 h, per-run budget 400 min. Generated
+and verified but **not launched** — the Kaggle push stays with Rohit (CLAUDE.md §1), using the
+command form above with `--session 6`. Toggle `GITHUB_PAT` on for that new notebook first.
+Session 6 will likely run well under its worst case: `vit_fe` early-stopped at epoch 11 in
+69 min, and four of the last six runs early-stopped.
+
+When session 6 merges, **A3 closes at 10 of 10 and A4 begins** (Grad-CAM galleries across all
+models on shared correct/incorrect examples, then the cross-generator evaluation on the
+tiny-genimage subset). A4 needs every checkpoint present on one machine — see the transfer
+checklist below.
 
 **Quota caveat that could not be resolved from here:** Kaggle exposes no API for remaining
 GPU hours — the quota page is browser-only, so Claude cannot verify it. Measured training

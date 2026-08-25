@@ -470,9 +470,49 @@ a ~0.26 neighbourhood, with val_acc dropping to 85.15% before recovering at epoc
 SGD instability at lr 0.01 over a large frozen feature space, not divergence — the run
 recovered and its best epoch came after the spike. Report it; do not smooth it away.
 
-**Matrix status: 8 of 10 rows**, every row Tesla T4, seed 42, `cifake_split_seed42.csv`,
-90,000 training images, each at its committed batch size. Measured GPU time across the eight
-is 12.9 h. Remaining: vgg19 ft (session 5) and vit ft (session 6).
+**Matrix status at the close of session 4: 8 of 10 rows**, every row Tesla T4, seed 42,
+`cifake_split_seed42.csv`, 90,000 training images, each at its committed batch size.
+
+**Kaggle session 5 COMPLETE (merged 25 Aug 2026) — `vgg19_ft` is the new matrix leader.**
+216 min against an 8.0 h worst case, early-stopped at epoch 14 (best epoch 9):
+
+| run | best epoch | stopped at | time | val_acc | test_acc | test_auc |
+|---|---|---|---|---|---|---|
+| vgg19_ft | 9 | 14 (early) | 216 min | **0.9819** | **0.9791** | **0.9979** |
+
+**The headline finding of the matrix is an inversion, and it belongs in Paper 2's discussion.**
+VGG19 is *last* under feature extraction (90.55%, the weakest row in the whole matrix) and
+*first* under fine-tuning (97.91%, the strongest). Its fe→ft gain of +7.36 points is nearly
+double the next largest:
+
+| backbone | fe | ft | gain |
+|---|---|---|---|
+| vgg19 | 90.55 | **97.91** | **+7.36** |
+| efficientnet_b0 | 92.86 | 97.56 | +4.69 |
+| densenet121 | 93.48 | 97.60 | +4.11 |
+| resnet50 | 92.83 | 95.93 | +3.10 |
+
+The reading that fits the evidence: VGG19's *frozen* ImageNet features encode object-level
+semantics that transfer poorly to CIFAKE, where the discriminative signal is low-level
+generative texture and frequency artefact. Once all 139 M parameters are unfrozen, its plain
+stacked-convolution design has both the capacity and the inductive bias to relearn exactly
+those low-level filters. This is a claim about *this dataset at 32→224 upsampling*, not a
+general statement that VGG19 beats modern backbones — say so explicitly.
+
+**A limitation that must be disclosed, not buried.** Three runs stopped at `max_epochs` with
+their best epoch at or adjacent to the ceiling — `resnet50_fe` (best 30/30), `resnet50_ft`
+(best 30/30) and `efficientnet_b0_fe` (best 29/30). Their validation loss was still improving
+when the 30-epoch budget ended, so **those three numbers are lower bounds, not converged
+results.** This matters most for `resnet50_ft`: it is the weakest fine-tuned row (95.93%) and
+it is also the only fine-tuned run that never early-stopped, so its last-place ranking among
+the ft configurations is partly an artefact of the epoch budget. Paper 2 must either say this
+plainly wherever the ft ranking appears, or rerun those three at a higher ceiling. The
+remaining six runs converged and early-stopped on their own, so they are directly comparable.
+
+**Matrix status: 9 of 10 rows**, 16.5 h measured GPU time, every row Tesla T4 / seed 42 /
+same split / 90,000 train images / committed batch size. **Only `vit_base_patch16_224_ft`
+(session 6) remains**, after which A3 closes and A4 (Grad-CAM galleries, cross-generator
+evaluation) begins.
 
 Two process notes attach to this launch. First, the push was executed by Claude rather than
 Rohit, on Rohit's explicit instruction with the token supplied inline; **the standing
