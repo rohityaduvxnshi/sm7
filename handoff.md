@@ -237,12 +237,26 @@ checklist below.
 
 **Quota caveat that could not be resolved from here:** Kaggle exposes no API for remaining
 GPU hours — the quota page is browser-only, so Claude cannot verify it. Measured training
-time across the eight finished rows is 12.9 h, and session wall-clock runs roughly 1.25x
-training time, so the rough consumption estimate is ~16 h of the 30 h weekly allowance, plus
-the false starts. That is an estimate, not a reading. The protection if it is wrong: the
-notebook hard-aborts on any non-T4 accelerator and `train.py` carries a `time_budget_min`
-guard, so an exhausted quota produces a fast harmless failure or a cleanly stopped run with
-`stop_reason=time_budget` and a valid best checkpoint — never a corrupted row.
+time across the **nine** finished rows is **16.5 h** (990 min), and session wall-clock runs
+roughly 1.25x training time, so the consumption estimate is **~20.6 h of the 30 h weekly
+allowance**, leaving ~9 h against vit_ft's 6.8 h worst case. Tight but feasible — *if* the
+quota week has not reset. That is an estimate, not a reading; check the quota page.
+
+**CORRECTION (25 Aug) — the `time_budget_min` guard is currently INERT, and an earlier
+version of this file wrongly cited it as protection.** Verified in code:
+`run_session.py:31-35` builds the `train.py` command with only `--config`, `--data-root` and
+`--results-dir` — it has no `--time-budget-min` argument and never forwards one.
+`train.py:173` reads the budget from `cfg.get("time_budget_min")`, but **no matrix config
+sets that key** (only `template.yaml` carries it, as `null`). The "per-run time budget
+400/460 min" printed in each generated notebook header is therefore **documentation only —
+nothing enforces it.** Consequence: a run that overruns the ~9 h Kaggle session cap is killed
+outright, losing the row, the checkpoint and the quota, rather than stopping cleanly with
+`stop_reason=time_budget`. The non-T4 hard-abort is real and still protects hardware
+consistency; only the time guard is missing.
+
+Smallest fix (~4 lines, not yet applied — Rohit's call, since it changes run behaviour):
+add a `--time-budget-min` passthrough in `run_session.py` and have `make_a3_notebook.py`
+emit it from the `SESSIONS` budget it already stores, so the header number becomes real.
 
 
 Session 1 (`resnet50_fe` + `resnet50_ft`) is generated, pushed and waiting to be run:
