@@ -730,6 +730,47 @@ them rather than carry the disclosure:
 - Generated via `notebooks/make_a3_notebook.py` (new session entry); Claude prepares,
   Rohit pushes/launches per the execution split.
 
+### Session 7 result `[COMPLETE — merged 26 Aug 2026; session 8 (resnet50_ft) still pending]`
+
+Both session-7 runs finished; the outcome splits into a genuine fix and a genuine
+confirmation, and the two must not be described the same way.
+
+| run | original (30 ep) | rerun (50 ep) | delta |
+|---|---|---|---|
+| resnet50_fe | best 30/30, `max_epochs`, val 93.01, test 92.83, AUC 0.9807 | best 49/50, `max_epochs`, val 93.17, test 92.98, AUC 0.9815 | +0.16pp val, +0.15pp test |
+| efficientnet_b0_fe | best 29/30, `max_epochs`, val 92.67, test 92.86, AUC 0.9802 | best 29/50, **`early_stopping`**, val 92.67, test 92.86, AUC 0.9802 | +0.00pp — identical |
+
+**`efficientnet_b0_fe` is now CONFIRMED CONVERGED, and its lower-bound flag is retracted.**
+Given 20 more epochs of room, training found the same best epoch (29) and produced bit-for-
+bit identical validation and test numbers, this time with `stop_reason=early_stopping`
+instead of `max_epochs`. The original number was never a lower bound — it was the converged
+result; the 30-epoch ceiling simply cut off the run one epoch before the patience-5 window
+could formally close. This row needs no further disclosure in Paper 2 beyond noting the
+confirmation.
+
+**`resnet50_fe` improved, but the epoch-ceiling problem is NOT fully resolved — say so
+plainly.** It ran the full 50 epochs and `best_epoch` landed at 49 of 50: by the strict
+`stop_reason=max_epochs` criterion, it is technically still not converged. The learning curve
+tells the practical story, though: `val_loss` moves only 0.1775 → 0.1740 across the final ten
+epochs and `val_acc` sits in a 93.04–93.24% noise band with no clear upward trend. This is
+diminishing returns, not an open trajectory — the model has, for practical purposes, plateaued
+even though patience-5 never formally triggered. **Recommendation: do not chase this further
+with another epoch-ceiling increase.** The gain from 30→50 epochs was +0.15pp test accuracy;
+a further extension would cost more GPU-hours for a return this analysis expects to be smaller
+still. Paper 2 reports the 50-epoch number and states the epoch-ceiling caveat narrowly for
+this one row, rather than implying it applies to the matrix broadly.
+
+**Consequence for `resnet50_ft` (session 8, not yet run):** no inference is drawn about it
+from this result. It is the heaviest of the three original lower-bound rows and the only
+fine-tuned one — session 8 stands on its own evidence when it lands.
+
+**Matrix status: unchanged, still closed at 10 canonical rows** (`runs.csv` now holds 12 —
+the 10 matrix rows plus these two 50-epoch reruns as additional, separately timestamped rows,
+per the plan's rerun-and-manifest design). No `canonical_runs.txt` exists yet (created at A6);
+when it is, it should point at the 50-epoch `resnet50_fe` row (the confirmed-better number)
+and either the 50-epoch or 30-epoch `efficientnet_b0_fe` row (now provably identical, so the
+choice is immaterial) — recorded here so A6 does not have to re-derive this reasoning.
+
 ### P-phases (after A6/G6; replaces the two-paper endpoint of S8-2)
 
 | Phase | Content |

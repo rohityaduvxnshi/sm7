@@ -316,7 +316,36 @@ that at A6.
 **Quota: neither session fits this week.** ~5 h remains of 30 after session 6; session 7
 needs 6.04 h. Both wait for the reset unless the week has rolled over — check the page.
 
-**Then A4.** A4's practical gate is the checkpoint
+**Then A4.**
+
+---
+
+## Session 7 COMPLETE `[merged 26 Aug 2026]` — one confirmation, one partial fix, one still pending
+
+Both session-7 runs finished. Read them as two different outcomes, not one blanket "fixed":
+
+**`efficientnet_b0_fe` — CONFIRMED CONVERGED, lower-bound flag retracted.** Given 20 more
+epochs, training landed on the identical best epoch (29) with bit-for-bit identical val/test
+numbers (92.67 / 92.86, AUC 0.9802) — this time via `stop_reason=early_stopping` rather than
+`max_epochs`. The original 30-epoch number was correct all along; the ceiling just cut the run
+off one epoch before patience-5 could formally close. Nothing to disclose going forward.
+
+**`resnet50_fe` — improved +0.15pp test, but STILL hit the new ceiling (best epoch 49 of
+50).** Technically still not "converged" by the strict stop_reason test. Practically: the
+learning curve is flat over the last 10 epochs (val_loss 0.1775→0.1740, val_acc bouncing
+93.0–93.2% with no trend) — diminishing returns, not an open trajectory. **Recommendation:
+do not extend the ceiling again** — the 30→50 gain was +0.15pp; a further stretch is expected
+to buy less than that for real GPU cost. Paper 2 states this row's epoch-ceiling caveat
+narrowly, not as a matrix-wide issue.
+
+**`resnet50_ft` (session 8) is still pending** — no inference drawn from this result; it
+stands on its own when it lands. Session 8 notebook is prepared and pushed
+(`authentiscan-a3-session-8`, `resnet50_ft_e50`, 5.28 h worst case) — needs the same
+`GITHUB_PAT` secret toggle as a fresh notebook, and a quota check first.
+
+`runs.csv` is now 12 rows (10 matrix + 2 reruns, separately timestamped, nothing overwritten).
+No `canonical_runs.txt` exists yet — A6 creates it; when it does, it should select the
+50-epoch `resnet50_fe` row and either `efficientnet_b0_fe` row (now provably interchangeable). A4's practical gate is the checkpoint
 transfer — the pile is now **~2.1 GB** and complete.
 
 **(Historical) Session 6 prepared 25 Aug 2026 — the final run of the matrix.**
