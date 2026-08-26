@@ -1,0 +1,37 @@
+# resnet50_fe, SESSION 7 RERUN at a 50-epoch ceiling. Identical to configs/resnet50_fe.yaml in
+# every respect except max_epochs (30 -> 50). The original run stopped at the 30-epoch
+# ceiling with validation loss still improving, making its result a lower bound rather
+# than a converged one (see implementation_plan.md 7a session-5 note and 10).
+# Only the epoch BUDGET changes -- no hyperparameter differs -- so this rerun remains
+# directly comparable to the rest of the matrix. Early stopping (patience 5) is
+# unchanged and is expected to end the run before epoch 50.
+
+model: resnet50
+mode: fe                     # backbone frozen, only the new 2-class head trains
+seed: 42
+
+data:
+  root: data/cifake
+  split_file: data/cifake_split_seed42.csv
+  num_workers: 2             # [VERIFY at first Kaggle login]
+
+resolution: 224              # ImageNet-pretrained weights expect 224x224
+batch_size: 128              # ResNet50 at 224 fits comfortably on a T4 at this size
+augment: hflip               # horizontal flip only; anything stronger is an ablation, not the baseline
+
+optimizer: sgd
+lr: 0.01                     # higher lr is safe here: only the freshly initialised head is being trained
+momentum: 0.9
+weight_decay: 0.0
+
+max_epochs: 50
+early_stopping_patience: 5
+amp: true
+checkpoint: best_val_loss
+
+output:
+  results_dir: results       # on Kaggle: /kaggle/working/results
+  runs_csv: results/runs.csv
+
+smoke_subset: null           # never non-null in a matrix config; smoke runs live in *_smoke.yaml
+                             # and must point runs_csv at results/smoke_runs.csv (train.py enforces this)

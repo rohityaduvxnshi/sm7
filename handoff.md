@@ -295,7 +295,28 @@ three at `max_epochs: 50`.
 30 h**, leaving ~5 h. **Session 7's 7–11 h worst case does not fit** — it waits for the
 weekly reset unless the week has rolled over. Check the quota page first.
 
-**Next: session 7 (the three reruns), then A4.** A4's practical gate is the checkpoint
+**Sessions 7 and 8 PREPARED 26 Aug 2026 — the lower-bound reruns, split in two.** Notebooks
+`notebooks/phase_a3_s7.ipynb` (`resnet50_fe_e50` + `efficientnet_b0_fe_e50`, 6.04 h worst
+case) and `phase_a3_s8.ipynb` (`resnet50_ft_e50`, 5.28 h). Generated and verified (7 cells,
+cell 0 markdown, T4 hard-abort and mount autodetect intact, every named config present and
+passing the pre-flight assertions) but **not launched** — Kaggle pushes are Rohit's.
+
+**Why two sessions and not one:** the three reruns project to 11.3 h at the 50-epoch ceiling
+(measured per-epoch × 50: 200 + 317 + 163 min), which is over the ~9 h session cap, and the
+A3 batching rule requires ≥30% margin under it. Session 7 carries 33% margin, session 8 41%.
+
+**These reruns are a convergence fix, not an ablation.** Each `_e50` config was generated
+from its original with only `max_epochs` changed 30 → 50 — proven by diff, no other line
+differs. No hyperparameter changes, so the rerun rows stay directly comparable to the other
+seven. Note this differs from the `canonical_runs.txt` answer given for the *weight-decay*
+case: since nothing but the epoch budget moved, a converged rerun is strictly the better
+number and the A6 manifest should point at it, otherwise the reruns achieve nothing. Confirm
+that at A6.
+
+**Quota: neither session fits this week.** ~5 h remains of 30 after session 6; session 7
+needs 6.04 h. Both wait for the reset unless the week has rolled over — check the page.
+
+**Then A4.** A4's practical gate is the checkpoint
 transfer — the pile is now **~2.1 GB** and complete.
 
 **(Historical) Session 6 prepared 25 Aug 2026 — the final run of the matrix.**

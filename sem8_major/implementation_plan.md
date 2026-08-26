@@ -706,8 +706,24 @@ them rather than carry the disclosure:
 - Launched only after session 6's results are downloaded and merged.
 - The three configs at `max_epochs: 50`; early stopping patience 5 and every other
   hyperparameter unchanged.
-- Worst case ~7–11 GPU-h — check remaining weekly quota first; if the week cannot absorb
-  it, the session waits for the quota reset.
+- **Split into TWO sessions (decided 26 Aug, forced by the A3 batching rule).** Projected
+  from measured per-epoch times × 50 epochs: resnet50_fe 200 min, resnet50_ft 317 min,
+  efficientnet_b0_fe 163 min — **11.3 h for all three, which exceeds the ~9 h session cap
+  outright**, and A3 requires at least 30% margin under it. Therefore:
+
+  | Session | Runs | Projected | Margin under 9 h |
+  |---|---|---|---|
+  | 7 | `resnet50_fe_e50` + `efficientnet_b0_fe_e50` | 363 min (6.04 h) | 33% |
+  | 8 | `resnet50_ft_e50` | 317 min (5.28 h) | 41% |
+
+  Both are worst cases at the full 50-epoch ceiling; early stopping (patience 5, unchanged)
+  should end them sooner. Check remaining weekly quota first — after session 6 roughly 5 h
+  of the 30 h allowance remains, so **neither session fits until the quota resets**.
+- **Configs:** `resnet50_fe_e50.yaml`, `resnet50_ft_e50.yaml`, `efficientnet_b0_fe_e50.yaml`,
+  each generated from its original with **only `max_epochs` changed (30 → 50)** — verified by
+  diff against the originals, no other line differs. Because only the epoch *budget* changes
+  and no hyperparameter does, the reruns stay directly comparable to the other seven matrix
+  rows; this is a convergence fix, not an ablation.
 - Reruns get new timestamped run_ids; the old rows stay in `runs.csv` untouched, and
   A6's `results/canonical_runs.txt` manifest selects which rows the tables use — the
   mechanism §7a A6 already defines.

@@ -28,6 +28,15 @@ SESSIONS = {
     4: (["vgg19_fe"], 4.8, 330),
     5: (["vgg19_ft"], 8.0, 460),           # heaviest run; alone by rule, tight vs the cap
     6: (["vit_base_patch16_224_ft"], 6.8, 400),  # alone by rule
+    # Sessions 7-8: the lower-bound reruns (plan 10). resnet50_fe, resnet50_ft and
+    # efficientnet_b0_fe stopped at the 30-epoch ceiling with val loss still improving, so
+    # they are rerun at max_epochs 50 - only the epoch BUDGET changes, no hyperparameter -
+    # keeping them comparable to the rest of the matrix. Projections from measured
+    # per-epoch times x 50: resnet50_fe 200 min, resnet50_ft 317 min, effnet_fe 163 min.
+    # All three in one session would be 11.3 h, over the ~9 h cap, so the A3 batching rule
+    # (>=30% margin under the cap) forces the split below.
+    7: (["resnet50_fe_e50", "efficientnet_b0_fe_e50"], 6.1, 220),  # 363 min, 33% margin
+    8: (["resnet50_ft_e50"], 5.3, 340),                            # 317 min, 41% margin
 }
 def build(session):
     configs, hours, budget = SESSIONS[session]
