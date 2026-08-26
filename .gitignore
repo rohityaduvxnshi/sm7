@@ -12,3 +12,6 @@ KGAT_*
 *.token
 kaggle.json
 github_pat_*
+
+# format-template sample supplied by Rohit (another group's document) - do not commit
+Project Progress Report*.docx
