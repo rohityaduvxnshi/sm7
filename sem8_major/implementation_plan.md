@@ -509,10 +509,9 @@ the ft configurations is partly an artefact of the epoch budget. Paper 2 must ei
 plainly wherever the ft ranking appears, or rerun those three at a higher ceiling. The
 remaining six runs converged and early-stopped on their own, so they are directly comparable.
 
-**Matrix status: 9 of 10 rows**, 16.5 h measured GPU time, every row Tesla T4 / seed 42 /
-same split / 90,000 train images / committed batch size. **Only `vit_base_patch16_224_ft`
-(session 6) remains**, after which A3 closes and A4 (Grad-CAM galleries, cross-generator
-evaluation) begins.
+**Matrix status at the close of session 5: 9 of 10 rows**, 16.5 h measured GPU time, every
+row Tesla T4 / seed 42 / same split / 90,000 train images / committed batch size. Only
+`vit_base_patch16_224_ft` (session 6) remained at that point.
 
 Two process notes attach to this launch. First, the push was executed by Claude rather than
 Rohit, on Rohit's explicit instruction with the token supplied inline; **the standing
@@ -521,6 +520,56 @@ a precedent. Second, two credentials were exposed during the session and await r
 GitHub fine-grained PAT that had been pasted into `.gitignore` (never committed; confirmed by
 a full-history `git log -S` scan) and the Kaggle API token used for this push. Details and
 rotation steps are in `handoff.md`.
+
+**Kaggle session 6 COMPLETE (merged 26 Aug 2026) — THE MATRIX IS CLOSED AT 10 OF 10, and
+`vit_base_patch16_224_ft` is the final leader.** 204 min against a 6.8 h worst case,
+early-stopped at epoch 15 (best epoch 10):
+
+| run | best epoch | stopped at | time | val_acc | test_acc | test_auc |
+|---|---|---|---|---|---|---|
+| vit_base_patch16_224_ft | 10 | 15 (early) | 204 min | **0.9898** | **0.9889** | **0.9994** |
+
+**The completed matrix.** Every row: Tesla T4 15 GB, seed 42, `cifake_split_seed42.csv`,
+90,000 training images, committed batch size. Total measured GPU time **19.89 h**.
+
+| backbone | fe | ft | fe→ft gain |
+|---|---|---|---|
+| ViT-B/16 | **94.75** | **98.89** | +4.14 |
+| VGG19 | 90.55 | 97.91 | **+7.36** |
+| DenseNet121 | 93.48 | 97.60 | +4.11 |
+| EfficientNet-B0 | 92.86 | 97.56 | +4.69 |
+| ResNet50 | 92.83 | 95.93 | +3.10 |
+
+**Three findings the discussion should be built on, in order of strength.**
+
+1. **ViT wins both modes outright** — best frozen representation (94.75, above every CNN) and
+   best fine-tuned model (98.89). On 20,000 test images the standard error of a proportion at
+   this accuracy is about 0.1 pp, so ViT-ft's ~1 pp lead over VGG19-ft is roughly 7 standard
+   errors: a real separation, not seed noise. This is the cleanest headline in the matrix and
+   it directly answers the CNN-vs-transformer question the project set out to ask.
+2. **The VGG19 inversion survives completion** — last under feature extraction, second under
+   fine-tuning, the largest fe→ft gain in the matrix at +7.36. Interpretation unchanged (see
+   the session-5 note); scope it to this dataset.
+3. **The 97.5–97.9 band is a three-way tie, not a ranking.** VGG19-ft 97.91, DenseNet121-ft
+   97.60 and EfficientNet-B0-ft 97.56 sit within 0.35 pp — at ~0.1 pp standard error, only
+   VGG19-ft is even marginally separable from the other two, and DenseNet vs EfficientNet
+   (0.04 pp apart) is pure noise. Paper 2 must report these three as statistically
+   indistinguishable on one seed rather than ordering them.
+
+**The lower-bound disclosure is now confirmed against the complete matrix.** Exactly three of
+the ten runs stopped at `max_epochs` with the best epoch at or next to the ceiling —
+`resnet50_fe` (30/30), `resnet50_ft` (30/30), `efficientnet_b0_fe` (29/30). All seven other
+runs early-stopped on their own. Session 7 (§10) reruns those three at `max_epochs: 50`.
+
+**Gate G3 is fully closed:** all ten rows sane on validation accuracy, every confusion matrix
+balanced, no collapsed class, fe below ft in every backbone pair, one hardware string across
+the whole matrix. **A4 (Grad-CAM galleries + cross-generator evaluation) is now unblocked**,
+with the checkpoint transfer as its practical gate.
+
+**Quota position after session 6 (estimate, not a reading).** 19.89 h measured training time
+× the observed ~1.25 session overhead ≈ **24.9 h of the 30 h weekly allowance**, leaving
+roughly 5 h. **Session 7's 7–11 h worst case does not fit what remains** — it waits for the
+quota reset unless the week has already rolled over. Check the quota page before launching.
 
 ### A3 [was B2–B4] — the 10-run matrix, batched into GPU sessions.
 

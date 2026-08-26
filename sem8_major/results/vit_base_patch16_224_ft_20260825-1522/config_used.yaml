@@ -1,0 +1,28 @@
+model: vit_base_patch16_224
+mode: ft
+seed: 42
+data:
+  root: /kaggle/input/datasets/birdy654/cifake-real-and-ai-generated-synthetic-images
+  split_file: data/cifake_split_seed42.csv
+  num_workers: 2
+resolution: 224
+batch_size: 64
+augment: hflip
+optimizer: adamw
+lr: 3.0e-05
+weight_decay: 0.0
+max_epochs: 30
+early_stopping_patience: 5
+amp: true
+checkpoint: best_val_loss
+output:
+  results_dir: /kaggle/working/results
+  runs_csv: /kaggle/working/results/runs.csv
+smoke_subset: null
+run_id: vit_base_patch16_224_ft_20260825-1522
+cli_overrides:
+  data.root: /kaggle/input/datasets/birdy654/cifake-real-and-ai-generated-synthetic-images
+  output.results_dir: /kaggle/working/results
+  output.runs_csv: /kaggle/working/results/runs.csv
+n_train_images: 90000
+device: cuda

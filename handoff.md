@@ -191,12 +191,12 @@ launches, quota spends and portal uploads remain Rohit's.
    `densenet121_fe_20260822-1534/`, `densenet121_ft_20260822-1617/` (~27 MB each),
    `efficientnet_b0_fe_20260823-0248/`, `efficientnet_b0_ft_20260823-0427/` (~16 MB each),
    `vit_base_patch16_224_fe_20260823-0553/` (**343 MB**), `vgg19_fe_20260823-1605/` and
-   `vgg19_ft_20260824-0047/` (**558 MB each**), all under `sem8_major/results/`. Copy the
-   dirs into the Victus repo's `results/` via USB/cloud — A4's Grad-CAM galleries and
-   cross-generator table need these checkpoints. Sessions 2–5 were processed on the old
-   laptop; rows are in git, binaries are not. **Total to move is now ~1.75 GB**, growing by
-   a further ~343 MB when session 6 (vit_ft) lands. Plan for ~2.1 GB and use a USB stick
-   rather than a cloud sync.
+   `vgg19_ft_20260824-0047/` (**558 MB each**) and `vit_base_patch16_224_ft_20260825-1522/`
+   (**343 MB**), all under `sem8_major/results/`. Copy the dirs into the Victus repo's
+   `results/` via USB/cloud — A4's Grad-CAM galleries and cross-generator table need these
+   checkpoints. Sessions 2–6 were processed on the old laptop; rows are in git, binaries are
+   not. **The set is now COMPLETE at ten checkpoints, ~2.1 GB.** Use a USB stick rather than
+   a cloud sync. This transfer is the practical gate on starting A4.
 
 Division of labour while both machines are active: Victus session drives training; **pull
 before working, push after committing, on both.**
@@ -268,7 +268,37 @@ from any directory:
 
     & "C:\Users\rohit\Desktop\AuthentiScan\sem8_major\.venv\Scripts\python.exe" "C:\Users\rohit\Desktop\AuthentiScan\sem8_major\notebooks\make_a3_notebook.py" --session <N> --push --token KGAT_<token>
 
-**Session 6 (`vit_base_patch16_224_ft`) prepared 25 Aug 2026 — the final run of the matrix.**
+**Session 6 COMPLETE (merged 26 Aug 2026) — A3 IS CLOSED AT 10 OF 10 ROWS.**
+`vit_base_patch16_224_ft` val 98.98 / test **98.89** (AUC 0.9994), 204 min against a 6.8 h
+worst case, early-stopped at epoch 15. Run dir with its **343 MB** `best.pt` is on the old
+laptop only. Total matrix: **19.89 h** measured GPU time, every row Tesla T4 15 GB / seed 42 /
+`cifake_split_seed42.csv` / 90,000 train images / committed batch size — amendment 2's
+no-per-GPU-caveat goal achieved in full.
+
+**Final standings.** ft: vit 98.89 > vgg19 97.91 > densenet121 97.60 ≈ efficientnet_b0 97.56 >
+resnet50 95.93. fe: vit 94.75 > densenet121 93.48 > efficientnet_b0 92.86 ≈ resnet50 92.83 >
+vgg19 90.55.
+
+**Three things Paper 2's discussion rests on.** (1) **ViT wins both modes** — at ~0.1 pp
+standard error on 20,000 test images, its ~1 pp lead over VGG19-ft is ~7 SE, a real
+separation. (2) The **VGG19 inversion** holds: last on fe, second on ft, biggest gain
+(+7.36). (3) The **97.5–97.9 band is a tie, not a ranking** — vgg19/densenet/effnet sit
+within 0.35 pp and densenet-vs-effnet (0.04 pp) is noise; report them as indistinguishable
+on one seed.
+
+**Lower-bound disclosure, now confirmed against the full matrix:** exactly three runs hit
+`max_epochs` with best epoch at/next to the ceiling — resnet50_fe (30/30), resnet50_ft
+(30/30), efficientnet_b0_fe (29/30). The other seven early-stopped. Session 7 reruns those
+three at `max_epochs: 50`.
+
+**Quota after session 6 (estimate, not a reading):** 19.89 h train × ~1.25 ≈ **24.9 h of
+30 h**, leaving ~5 h. **Session 7's 7–11 h worst case does not fit** — it waits for the
+weekly reset unless the week has rolled over. Check the quota page first.
+
+**Next: session 7 (the three reruns), then A4.** A4's practical gate is the checkpoint
+transfer — the pile is now **~2.1 GB** and complete.
+
+**(Historical) Session 6 prepared 25 Aug 2026 — the final run of the matrix.**
 Notebook `notebooks/phase_a3_s6.ipynb`, worst case 6.8 h, per-run budget 400 min. Generated
 and verified but **not launched** — the Kaggle push stays with Rohit (CLAUDE.md §1), using the
 command form above with `--session 6`. Toggle `GITHUB_PAT` on for that new notebook first.
