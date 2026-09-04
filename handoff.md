@@ -6,6 +6,62 @@ Read CLAUDE.md first; this file is the fast-moving state on top of it.
 
 ---
 
+## Session 8 COMPLETE `[merged 4 Sep 2026]` — rerun phase closed (3 of 3); A4 is next
+
+### 1. Goal
+
+Merge the session-8 result (`resnet50_ft` at a 50-epoch ceiling), the last of the three
+lower-bound reruns decided on 25 Aug, and close the rerun phase so A4 can start.
+
+### 2. Current State
+
+- `runs.csv` = 13 rows (10 matrix + 3 reruns), every row `Tesla T4, 15 GB` / torch
+  2.10.0+cu128 / timm 1.0.26 / seed 42 / `cifake_split_seed42.csv` / 90,000 train images.
+  Measured GPU time 30.12 h (19.89 matrix + 10.23 reruns). **Nothing is pending on Kaggle.**
+- `resnet50_ft_20260827-0206`: val 96.32 / test **96.51** (AUC 0.9941), up from 95.66 /
+  95.93. Best epoch 48/50, `stop_reason=max_epochs` — the same outcome as `resnet50_fe`.
+  Tail is diminishing returns (val_loss −0.0143 over epochs 31–40, −0.0042 over 41–50;
+  train/val gap 0.9 pp). 323 min actual vs 317 projected (1.02×).
+  **Decision: no third ceiling increase for either ResNet50 row.** Paper 2 carries one
+  architecture-level caveat (ResNet50 converges slowest under the committed SGD rates and
+  never triggered patience-5 within 50 epochs) instead of two row caveats.
+- The rerun's first 30 epochs are bit-identical to the original run's curve (diff-verified)
+  — the 30-epoch row is a strict prefix of the 50-epoch row. Reproducibility evidence for
+  Paper 2.
+- The 25 Aug "epoch-budget artefact" worry is settled: resnet50_ft stays last among ft rows
+  by 1.05 pp (~8 SE). Canonical ft: vit 98.89 > vgg19 97.91 > densenet121 97.60 ≈
+  efficientnet_b0 97.56 > resnet50 96.51. Canonical fe: vit 94.75 > densenet121 93.48 >
+  resnet50 92.98 ≈ efficientnet_b0 92.86 > vgg19 90.55.
+- **This machine (DESKTOP-GKS9MUQ, the old laptop, no GPU; repo now at
+  `d:\Desktop\AuthentiScan`) holds all 13 `best.pt` checkpoints, 2.2 GB** — the ten in the
+  Victus transfer checklist below plus `resnet50_fe_20260826-0457/` (90 MB),
+  `efficientnet_b0_fe_20260826-0749/` (16 MB) and `resnet50_ft_20260827-0206/` (90 MB).
+  A4 needs the canonical set on whichever machine runs it; the USB transfer is still A4's
+  practical gate.
+- The `time_budget_min` guard is still inert (25 Aug correction, further down). It did not
+  matter for session 8 (323 min actual vs 340 budget) and no training session remains.
+
+### 3. Changes it made
+
+- `results/runs.csv`: +1 row via `merge_runs.py` (selfcheck run first, passed). Run dir
+  `results/resnet50_ft_20260827-0206/` copied in — four CSV/YAML files committed, `best.pt`
+  gitignored as always. `results_a3_s8.zip` left at the repo root, ignored by `*.zip`.
+- CLAUDE.md §13 dated entry; `implementation_plan.md` §10 "Session 8 result" subsection;
+  the transfer checklist below amended from 10 to 13 checkpoints.
+- No code, config or notebook changes. No Kaggle action.
+
+### 4. Next steps
+
+1. **A4** per plan §7a: Grad-CAM galleries from each backbone's better checkpoint by
+   val_loss (for ResNet50 that is now the 50-epoch checkpoints), then the cross-generator
+   evaluation on `yangsangtai/tiny-genimage` — 10 canonical checkpoints × 4 generators × 2
+   conditions = 80 `crossgen.csv` rows (use the three 50-epoch checkpoints for the rerun
+   pairs; do not score the superseded 30-epoch ones).
+2. Checkpoint transfer (USB) from this laptop to the Victus if A4 runs there.
+3. A6 later: `canonical_runs.txt` per the plan §10 note.
+
+---
+
 ## Plan change — single-paper publication + session 7 reruns `[ADOPTED — 25 August 2026]`
 
 ### 1. Goal
@@ -196,7 +252,8 @@ launches, quota spends and portal uploads remain Rohit's.
    `results/` via USB/cloud — A4's Grad-CAM galleries and cross-generator table need these
    checkpoints. Sessions 2–6 were processed on the old laptop; rows are in git, binaries are
    not. **The set is now COMPLETE at ten checkpoints, ~2.1 GB.** Use a USB stick rather than
-   a cloud sync. This transfer is the practical gate on starting A4.
+   a cloud sync. This transfer is the practical gate on starting A4. *(Amended 4 Sep: plus
+   the three session 7–8 rerun dirs — 13 checkpoints, 2.2 GB; see the top block.)*
 
 Division of labour while both machines are active: Victus session drives training; **pull
 before working, push after committing, on both.**

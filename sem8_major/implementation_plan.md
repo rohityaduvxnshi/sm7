@@ -730,7 +730,7 @@ them rather than carry the disclosure:
 - Generated via `notebooks/make_a3_notebook.py` (new session entry); Claude prepares,
   Rohit pushes/launches per the execution split.
 
-### Session 7 result `[COMPLETE — merged 26 Aug 2026; session 8 (resnet50_ft) still pending]`
+### Session 7 result `[COMPLETE — merged 26 Aug 2026; session 8 result follows]`
 
 Both session-7 runs finished; the outcome splits into a genuine fix and a genuine
 confirmation, and the two must not be described the same way.
@@ -770,6 +770,58 @@ per the plan's rerun-and-manifest design). No `canonical_runs.txt` exists yet (c
 when it is, it should point at the 50-epoch `resnet50_fe` row (the confirmed-better number)
 and either the 50-epoch or 30-epoch `efficientnet_b0_fe` row (now provably identical, so the
 choice is immaterial) — recorded here so A6 does not have to re-derive this reasoning.
+
+### Session 8 result `[COMPLETE — merged 4 Sep 2026; rerun phase closed, 3 of 3]`
+
+| run | original (30 ep) | rerun (50 ep) | delta |
+|---|---|---|---|
+| resnet50_ft | best 30/30, `max_epochs`, val 95.66, test 95.93, AUC 0.9925, 190 min | best 48/50, `max_epochs`, val 96.32, test 96.51, AUC 0.9941, 323 min | +0.66pp val, +0.58pp test |
+
+Run `resnet50_ft_20260827-0206`: Tesla T4 15 GB, torch 2.10.0+cu128, timm 1.0.26, seed 42,
+`cifake_split_seed42.csv`, 90,000 train images, batch 128 — identical to the matrix row in
+every logged field except `max_epochs`, `best_epoch`, time and the metrics (config diff:
+only `max_epochs` and `run_id`). Wall-clock 323 min against the 317 min projection (1.02×),
+inside the 340 min session budget.
+
+**Reproducibility evidence — record it in Paper 2:** the rerun's `learning_curve.csv`
+matches the original run epoch-for-epoch across all 30 shared epochs (verified by diff,
+4 September 2026). Same seed, same hardware and same library versions reproduced the same
+trajectory, so the 30-epoch row is a strict prefix of the 50-epoch row and the whole
+improvement is attributable to the extra 20 epochs.
+
+**Convergence verdict: improved, still formally at the ceiling, not worth a third run.**
+`best_epoch` 48 of 50 with `stop_reason=max_epochs` — the same outcome as `resnet50_fe`. The
+tail is diminishing returns: `val_loss` fell 0.0143 over epochs 31–40 but only 0.0042 over
+41–50 (0.1004 → 0.0962, band 0.096–0.104); `val_acc` sat in a 95.99–96.35% band; train
+accuracy 97.17% vs validation 96.32% at epoch 50 — a 0.9 pp gap, no overfitting. A further
+20 epochs would be expected to buy well under the +0.58 pp this one did, for another ~5 GPU-h.
+**Decision recorded: the epoch ceiling is not extended again for either ResNet50 row.**
+
+**How Paper 2 words it:** one architecture-level caveat rather than two row caveats —
+ResNet50 under the committed SGD learning rates (0.01 fe, 0.001 ft) converges more slowly
+than the other four backbones and did not trigger patience-5 within 50 epochs in either
+mode; both ResNet50 rows are therefore reported at the 50-epoch ceiling with a flat tail,
+while the seven other matrix rows early-stopped on their own and EfficientNet-B0-fe is
+confirmed converged (session 7).
+
+**The 25 Aug concern is settled: resnet50_ft's last place among the ft rows is NOT an
+epoch-budget artefact.** Twenty extra epochs closed 0.58 pp of the 1.63 pp gap to the
+three-way tie band (vgg19 / densenet121 / efficientnet_b0, 97.56–97.91); 1.05 pp remains,
+about 8 standard errors on the 20,000-image test set (SE ≈ 0.13 pp at 96.5%). Canonical ft
+ranking: vit 98.89 > vgg19 97.91 > densenet121 97.60 ≈ efficientnet_b0 97.56 > resnet50
+96.51. Canonical fe ranking: vit 94.75 > densenet121 93.48 > resnet50 92.98 ≈
+efficientnet_b0 92.86 > vgg19 90.55. ResNet50's fe→ft gain becomes +3.53 (was +3.10 on the
+30-epoch rows), still the smallest of the five; the VGG19 inversion (+7.36) and the ViT lead
+are unaffected.
+
+**Matrix status after session 8:** `runs.csv` holds 13 rows — the 10 matrix rows plus three
+separately timestamped 50-epoch reruns, nothing overwritten. Every row: `Tesla T4, 15 GB`,
+torch 2.10.0+cu128, timm 1.0.26. Measured GPU training time 19.89 h (matrix) + 10.23 h
+(reruns) = 30.12 h. **`canonical_runs.txt` (created at A6) should list
+`resnet50_fe_20260826-0457`, `resnet50_ft_20260827-0206`, either `efficientnet_b0_fe` row
+(metrics identical), and the seven original rows for the remaining (model, mode) pairs.**
+No Kaggle run is pending; the next phase is A4 (§7a), whose practical gate is getting all
+canonical checkpoints onto one machine (the complete 2.2 GB pile is on the old laptop).
 
 ### P-phases (after A6/G6; replaces the two-paper endpoint of S8-2)
 
