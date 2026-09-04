@@ -151,8 +151,7 @@ def build(session):
 
 
 def push(session, nb_text, token):
-    import subprocess, tempfile, os
-    payload = {
+    push_payload({
         # slug must match what Kaggle derives from the title, or a re-push creates a second
         # kernel instead of updating this one
         "slug": f"yaduvxnshi/authentiscan-a3-session-{session}",
@@ -161,7 +160,12 @@ def push(session, nb_text, token):
         "isPrivate": True, "enableGpu": True, "enableInternet": True,
         "datasetDataSources": ["birdy654/cifake-real-and-ai-generated-synthetic-images"],
         "competitionDataSources": [], "kernelDataSources": [], "categoryIds": [],
-    }
+    }, token)
+
+
+def push_payload(payload, token):
+    """POST a kernel push request (also used by make_a4_notebook.py)."""
+    import subprocess, tempfile, os
     fd, p = tempfile.mkstemp(suffix=".json")
     os.close(fd)
     Path(p).write_text(json.dumps(payload), encoding="utf-8")

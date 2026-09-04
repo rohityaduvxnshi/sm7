@@ -353,6 +353,61 @@ run early-stopped (val loss still improving at epoch 30), so remaining sessions 
 at 1.25x worst case (~34 h remaining total) — the matrix **will** spill into the next quota
 week as §7a already allows. Quota used this week so far: ≈6.5 h of 30.
 
+### A3/A4 amendment 3 — Victus withdrawn; Kaggle + laptop only `[CONFIRMED — Rohit, 4 Sep 2026; supersedes the carve-out below for A4–A6 placement]`
+
+The Victus cannot be arranged. Everything from A4 onward runs on the Kaggle free tier or the
+old laptop (i5-1135G7, no CUDA GPU; the repo now lives at `d:\Desktop\AuthentiScan` and holds
+all 13 checkpoints). Placement was decided from a measured CPU inference benchmark on the
+laptop (4 threads, 224×224, 4 Sep 2026): efficientnet_b0 15.8, densenet121 7.5, resnet50 5.5,
+vgg19 2.4, vit_base_patch16_224 2.0 images/s. At those rates the 80-cell cross-generator sweep
+(20,000 images per checkpoint) is ~15 h of CPU and the five full-test-set Grad-CAM prediction
+passes another ~7 h, against well under 2 h for both on a T4.
+
+| Phase | Machine | Why |
+|---|---|---|
+| A4 cross-generator sweep + Grad-CAM galleries | Kaggle, one evaluation session (any GPU — no training-time table depends on it) | ~2 h GPU vs ~22 h CPU; tiny-genimage (8.35 GB) attaches natively instead of being downloaded |
+| A5 ablations (three training runs) | Kaggle T4, sessions sized per the A3 rule | Training; T4 keeps the training-time table hardware-consistent |
+| A6 consolidation, all merging, Paper 2 drafting | Laptop | CSV → tables/figures needs no GPU |
+| Checkpoint archive | Laptop (2.2 GB, 13 `best.pt`) + the session notebooks' outputs on Kaggle | Two copies, neither machine a single point of failure |
+
+**A4 mechanism — no checkpoint upload.** Each A3 session notebook's output holds its run
+dirs (`best.pt` + `config_used.yaml`), so the A4 notebook lists the eight session notebooks
+as `kernelDataSources` next to CIFAKE and `yangsangtai/tiny-genimage`. Cell 2 autodetects
+the three mounts (`eval.find_checkpoints` walks `/kaggle/input`, pruning image folders) and
+asserts every id in `results/canonical_runs.txt` is present before anything runs, so a wrong
+attachment costs seconds. Two facts only the first push can confirm `[VERIFY at push]`: that
+Kaggle accepts eight kernel sources plus two datasets on one notebook, and the mount path of
+kernel outputs (autodetected either way).
+
+**Built 4 Sep 2026, CPU-verified, not launched:**
+- `results/canonical_runs.txt` — the A6 manifest, created now because A4 needs the same
+  list (see §10 session 8 result for the selection; efficientnet_b0_fe's 50-epoch row chosen
+  because it stopped via early_stopping).
+- `code/eval.py` — `read_manifest()`, `find_checkpoints()`.
+- `code/run_crossgen.py` — writes `genimage_verification.csv` (per directory: target
+  generator, val ai/nature counts, extension histogram, sizes of the first 20 files —
+  closes the A1 `[VERIFY]` and exposes any ai-vs-nature format asymmetry), then one
+  `eval.py` subprocess per cell, failure-isolated, skipping cells already in `crossgen.csv`.
+- `code/make_galleries.py` — better checkpoint per backbone by val_loss among manifest rows
+  (all five are ft); pass 1 `--dump-correct` per model, intersection sampled with seed 42
+  (n/2 real + n/2 fake) into `results/gradcam_shared_list.txt`, pass 2 galleries via
+  `gradcam.py --shared-list`.
+- `notebooks/make_a4_notebook.py` → `phase_a4_crossgen_gradcam.ipynb` (7 cells: clone,
+  mounts + manifest check, sweep, galleries, summary, zip → `results_a4.zip`).
+- Tests: 16-cell sweep on a synthetic GenImage tree (official folder names, mixed JPEG/PNG,
+  one non-target generator) with two real checkpoints; resume skipped all 16;
+  `merge_runs.py --kind crossgen` merged 16 and refused the re-merge; galleries on a
+  50-image subset (`smoke_subset` in a scratch copy of two run dirs) produced identical
+  correct panels across the two models and per-model incorrect panels.
+
+**Return path:** `results_a4.zip` → `merge_runs.py <zip>/results/crossgen.csv --kind crossgen`
+(80 rows expected); copy `genimage_verification.csv`, `gradcam_shared_list.txt`,
+`gradcam_correct/`, every `<run_id>/genimage_<generator>_<condition>/` dir and
+`figures/gradcam/` into the repo. Gate G4 is unchanged.
+
+**Open before A5:** the inert `time_budget_min` guard (25 Aug correction in `handoff.md`)
+does not matter for A4 (evaluation only) but should be decided before any ablation session.
+
 ### A3 amendment 2 — Kaggle-first `[CONFIRMED — Rohit, 23 Aug 2026; supersedes the carve-out below for run placement]`
 
 With the T4 already holding 4 of 10 rows, Rohit decided to **exhaust the Kaggle quota on the
@@ -621,6 +676,9 @@ quota reset unless the week has already rolled over. Check the quota page before
 **Gate G4:** 80 crossgen rows merged into the repo, spot-checked against two manually
 recomputed cells; galleries committed and reproducible from the seeded selection; the three
 tiny-genimage verifications recorded (closing the A1 `[VERIFY]`).
+
+**Status (4 Sep 2026): prepared as one Kaggle evaluation session, CPU-verified, not
+launched — see amendment 3 above.**
 
 ### A5 [was B6] — ablations (if the matrix behaved).
 

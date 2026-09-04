@@ -105,6 +105,34 @@ def load_run(run_id, results_dir, checkpoint=None):
     return cfg, model
 
 
+def read_manifest(path="results/canonical_runs.txt"):
+    """run_ids from the canonical-run manifest (plan 7a A6): one per line, '#' comments."""
+    lines = Path(path).read_text(encoding="utf-8").splitlines()
+    ids = [l.strip() for l in lines if l.strip() and not l.lstrip().startswith("#")]
+    if len(ids) != len(set(ids)):
+        raise SystemExit(f"duplicate run_id in {path}")
+    return ids
+
+
+_IMAGE_DIRS = {"train", "test", "val", "real", "fake", "ai", "nature"}
+
+
+def find_checkpoints(root):
+    """run_id -> best.pt under root: a results/ dir, or /kaggle/input with several session
+    outputs mounted. Dataset image folders are pruned so the walk stays cheap. A run_id met
+    twice is refused - two candidate checkpoints would make its rows ambiguous."""
+    import os
+    found = {}
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirnames[:] = [d for d in dirnames if d.lower() not in _IMAGE_DIRS]
+        if "best.pt" in filenames and "config_used.yaml" in filenames:
+            rid = Path(dirpath).name
+            if rid in found:
+                raise SystemExit(f"run_id {rid} found twice: {found[rid]} and {dirpath}")
+            found[rid] = Path(dirpath) / "best.pt"
+    return found
+
+
 def main():
     import data
     p = argparse.ArgumentParser()

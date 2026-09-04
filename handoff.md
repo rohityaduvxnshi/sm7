@@ -6,6 +6,69 @@ Read CLAUDE.md first; this file is the fast-moving state on top of it.
 
 ---
 
+## A4 PREPARED `[4 Sep 2026]` — Victus withdrawn; Kaggle + laptop only; awaiting Rohit's push
+
+### 1. Goal
+
+Rohit (4 Sep): the Victus cannot be arranged — continue on Kaggle and this laptop only.
+Decide placement for A4–A6 from measured cost, record it (plan §7a amendment 3), and
+prepare A4 so that one Kaggle push runs the whole phase.
+
+### 2. Current State
+
+- **Placement:** A4 (cross-generator sweep + Grad-CAM) = one Kaggle evaluation session;
+  A5 ablation training = Kaggle T4; A6 + merging + drafting = this laptop. Laptop CPU
+  benchmark (4 threads, 224×224): effnet 15.8 / densenet 7.5 / resnet50 5.5 / vgg19 2.4 /
+  vit 2.0 img/s → sweep ~15 h + Grad-CAM passes ~7 h on CPU vs < 2 h on a T4.
+- **A4 is built and CPU-verified, NOT launched.** Notebook
+  `notebooks/phase_a4_crossgen_gradcam.ipynb` (generator `make_a4_notebook.py`); slug will
+  be `yaduvxnshi/authentiscan-a4-crossgen-and-gradcam`. Data sources: CIFAKE,
+  `yangsangtai/tiny-genimage`, and the outputs of `authentiscan-a3-session-1` … `-8` as
+  kernel data sources — **no checkpoint upload**. Cell 2 asserts all ten canonical
+  checkpoints are mounted before anything runs.
+- `results/canonical_runs.txt` exists now (A6 manifest, needed by A4): the three 50-epoch
+  reruns plus the seven original rows.
+- New drivers: `code/run_crossgen.py` (tiny-genimage verification CSV + 80 resumable,
+  failure-isolated `eval.py` cells) and `code/make_galleries.py` (better checkpoint per
+  backbone by val_loss, shared correct set, five galleries); `eval.py` gained
+  `read_manifest`/`find_checkpoints`; `make_a3_notebook.push` split into `push_payload`
+  (reused by A4) with A3 behaviour unchanged.
+- `[VERIFY at push]`: Kaggle accepting eight kernel sources + two datasets on one notebook,
+  and the mount path of kernel outputs (autodetected). A failure shows in cell 2 within
+  seconds of the run starting.
+- Session zip `results_a3_s8.zip` still sits at the repo root (ignored).
+
+### 3. Changes it made
+
+- Added: `results/canonical_runs.txt`, `code/run_crossgen.py`, `code/make_galleries.py`,
+  `notebooks/make_a4_notebook.py`, `notebooks/phase_a4_crossgen_gradcam.ipynb`.
+- Edited: `code/eval.py` (two helpers), `notebooks/make_a3_notebook.py` (push refactor),
+  `notebooks/README.md` (A4 paragraph), CLAUDE.md §13, plan §7a amendment 3 + A4 status.
+- No Kaggle action. No result file touched.
+
+### 4. Failed Attempts
+
+None on the project side. Tooling note: a long heredoc through the Bash tool fails on this
+machine; edit scripts go to the scratchpad and run from there.
+
+### 5. Next steps
+
+1. **Rohit — launch A4** (a push auto-starts the run; toggle `GITHUB_PAT` ON for the new
+   notebook under Add-ons → Secrets first — the push creates the notebook, so push once,
+   toggle, then push again or press Run):
+
+       & "d:\Desktop\AuthentiScan\sem8_major\.venv\Scripts\python.exe" "d:\Desktop\AuthentiScan\sem8_major\notebooks\make_a4_notebook.py" --push --token KGAT_<token>
+
+   Quota impact is small (evaluation only, estimated 1–2 h).
+2. Download `results_a4.zip`; Claude merges: `merge_runs.py --kind crossgen` (80 rows),
+   copies the verification CSV, shared list, dump files, per-cell dirs and galleries in;
+   spot-checks two cells by recomputation (gate G4); records the tiny-genimage counts and
+   any ai-vs-nature format asymmetry in the plan.
+3. Then A5 (three ablation configs, Kaggle T4; decide the `time_budget_min` fix first) or,
+   if time is short, straight to A6 on the laptop.
+
+---
+
 ## Session 8 COMPLETE `[merged 4 Sep 2026]` — rerun phase closed (3 of 3); A4 is next
 
 ### 1. Goal

@@ -1,0 +1,19 @@
+# Canonical run manifest (implementation_plan.md 7a A6 and 10): the exact run_ids Paper 2's
+# tables, the A4 Grad-CAM galleries and the A4 cross-generator sweep use. One per line,
+# exactly one per (model, mode); '#' lines are comments. make_tables.py fails loudly if a
+# listed id is missing from runs.csv or a (model, mode) pair has no entry.
+#
+# Created 4 Sep 2026 after session 8. The three 50-epoch reruns (sessions 7-8) replace their
+# 30-epoch rows: resnet50 fe/ft are the better numbers; efficientnet_b0_fe's two rows carry
+# identical metrics, and the 50-epoch one is listed because it stopped via early_stopping
+# rather than max_epochs, so the table carries no ceiling flag for it.
+resnet50_fe_20260826-0457
+resnet50_ft_20260827-0206
+densenet121_fe_20260822-1534
+densenet121_ft_20260822-1617
+efficientnet_b0_fe_20260826-0749
+efficientnet_b0_ft_20260823-0427
+vgg19_fe_20260823-1605
+vgg19_ft_20260824-0047
+vit_base_patch16_224_fe_20260823-0553
+vit_base_patch16_224_ft_20260825-1522
