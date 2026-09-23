@@ -48,11 +48,43 @@ prepare A4 so that one Kaggle push runs the whole phase.
 
 ### 4. Failed Attempts
 
-None on the project side. Tooling note: a long heredoc through the Bash tool fails on this
-machine; edit scripts go to the scratchpad and run from there.
+- **23 Sep 2026 — first A4 push refused: `{"code":401,"message":"Unauthorized access"}`.**
+  Diagnosed the same day without the token (three-angle investigation plus an adversarial
+  round, all credential-free). That body is the legacy write gateway's credential rejection:
+  `kernels/push`, `datasets/create/new` and `models/create/new` all return it byte-identically
+  for no header, a bogus Bearer and a bogus Basic, and it is emitted before the payload is
+  parsed (no `X-Kaggle-*` headers, unlike the application's own 401 "Unauthenticated" on GET
+  routes). Resource-level refusals look different (403 "Permission '...' was denied") and bad
+  kernel/dataset sources are reported non-fatally inside a 200 (`invalidKernelSources` in the
+  SDK's `ApiSaveKernelResponse`), so the eight `kernelDataSources` and the second dataset
+  (`yangsangtai/tiny-genimage`, confirmed public, 8.36 GB) cannot have produced it.
+  Remaining explanations, most likely first: (1) the token is dead — expired under an
+  undocumented settings-page lifetime, or deleted on the settings page after the 23 Aug
+  exposure note (generating a new token does NOT revoke old ones, kaggle-api PR #863, so only
+  deletion or expiry); (2) the value was mis-pasted (this laptop deletes token files, so it is
+  retyped every time); (3) Kaggle's legacy `www.kaggle.com/api/v1` write gateway stopped
+  accepting this token class between 26 Aug and 23 Sep — the official client 2.2.4 now posts
+  to `api.kaggle.com/v1/kernels.KernelsApiService/SaveKernel` and an OAuth rollout landed
+  around 10 Sep; no evidence either way. Discriminating check (Rohit, with the token; spends
+  nothing; `curl.exe`, because in PowerShell plain `curl` is Invoke-WebRequest):
+
+      curl.exe -s -w "\nHTTP %{http_code}\n" -H "Authorization: Bearer KGAT_<token>" "https://www.kaggle.com/api/v1/kernels/status?userName=yaduvxnshi&kernelSlug=authentiscan-a3-session-1"
+
+  401 "Unauthenticated" → token dead or mis-pasted → generate a new one (kaggle.com/settings,
+  API section) and re-run the push command in step 1 below. 200 with a status JSON → token
+  alive → the legacy push route is the problem → Claude switches `push_payload` to the
+  SaveKernel route (request model in the installed kagglesdk 0.1.37) before the next attempt.
+- Tooling note: a long heredoc through the Bash tool fails on this machine; edit scripts go
+  to the scratchpad and run from there.
+- For A4's verification step: the tiny-genimage card says 5,000 images per generator
+  *including* train and val, so a val slice may hold fewer than the loader's 1,250-per-class
+  cap; the loader then caps both classes equally and warns, and `genimage_verification.csv`
+  records the realised counts.
 
 ### 5. Next steps
 
+0. **Rohit — run the token check in "Failed Attempts" above first** (23 Sep: the push was
+   refused with a 401 before anything ran). Regenerate the token if it fails.
 1. **Rohit — launch A4** (a push auto-starts the run; toggle `GITHUB_PAT` ON for the new
    notebook under Add-ons → Secrets first — the push creates the notebook, so push once,
    toggle, then push again or press Run):
