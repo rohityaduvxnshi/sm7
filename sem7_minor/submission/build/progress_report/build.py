@@ -5,8 +5,10 @@ by splicing new content into the exact XML skeleton of the supplied sample.
 Styles, fonts, margins, table borders, heading styles and the Amity logo all
 come from the sample package unchanged; only word/document.xml is rewritten.
 """
-import json, re, shutil, zipfile, os
-import content as C
+import json, re, shutil, zipfile, os, sys, importlib
+# python build.py                  -> Review 1: report + diary (content.py)
+# python build.py content_review2  -> Review 2: report only (content_review2.py)
+C = importlib.import_module(sys.argv[1] if len(sys.argv) > 1 else "content")
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
@@ -227,8 +229,9 @@ def build_report():
     for i, ref in enumerate(REFS, 1):
         body.append(para(SEG[45], [run("[%d] %s" % (i, ref))]))
     body.extend(signature_block())
-    write_docx(body, os.path.join(OUTDIR, "G148_Sem7_ProjectProgressReport.docx"),
-               "Project Progress Report - Group 148")
+    name = getattr(C, "REPORT_NAME", "G148_Sem7_ProjectProgressReport")
+    write_docx(body, os.path.join(OUTDIR, name + ".docx"),
+               getattr(C, "REPORT_TITLE", "Project Progress Report - Group 148"))
 
 
 # ============================================================ 2. NTCC diary
@@ -262,5 +265,6 @@ def build_diary():
 
 if __name__ == "__main__":
     build_report()
-    build_diary()
+    if len(sys.argv) == 1:      # the diary belongs to Review 1 only
+        build_diary()
     print("built ->", OUTDIR)
