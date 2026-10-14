@@ -4,7 +4,7 @@
 
 This document is the build plan for the experimental work behind Paper 2 (the implementation paper) and the Semester 8 major project report. It covers environment, data, the experiment matrix, training defaults, the results pipeline, and a dated build schedule.
 
-Status: `[CONFIRMED]` — written 18 August 2026 in response to Dr. Richa Gupta's instruction of 15 August 2026 that implementation code preparation begins now, during Semester 7, rather than at the start of Semester 8 (see CLAUDE.md §3 amendment and §13 Track B). This session produces the plan and the repository skeleton only. No training code is written yet, and no experiment has been run.
+Status: `[CONFIRMED]` — written 18 August 2026 in response to Dr. Richa Gupta's instruction of 15 August 2026 that implementation code preparation begins now, during Semester 7, rather than at the start of Semester 8 (see CLAUDE.md §3 amendment and §13 Track B). This session produces the plan and the repository skeleton only. No training code is written yet, and no experiment has been run. *(Status line as written 18 Aug 2026; superseded by §7a — as of 14 Oct 2026 the pipeline is implemented, the 10-run matrix and three reruns are complete with 13 rows in `results/runs.csv`, and A4 is running on Kaggle.)*
 
 **Integrity statement:** no number produced by any run described here goes into Paper 1. Paper 1 is a review, it was submitted for the department plagiarism check on 15 August 2026, and it stays result-free. Everything generated under `sem8_major/results/` belongs to Paper 2 and the major project report.
 
@@ -39,7 +39,7 @@ Split specification, fixed at Phase 0 and never changed afterwards:
 
 **GenImage** provides the cross-generator test set only — no training, no fine-tuning on it. Four generators unseen during training are used: Midjourney, ADM, BigGAN, VQDM. Stable Diffusion v1.4/1.5 subsets are excluded because they are the same family CIFAKE was generated with. Target size is roughly 2,000–3,000 balanced images per generator, which is enough for a cross-generator table without a large download. The real half of each generator subset is drawn from GenImage's paired ImageNet real images and passes through the same preprocessing condition as the fakes, so real and fake are treated identically.
 
-Access path resolved 18 Aug 2026 (see `data/genimage_access_note.md`): primary route is the Tiny-GenImage Hugging Face mirror, fallback the official Google Drive release; SD-family and Wukong subsets excluded either way. Per-generator counts and real-image provenance remain `[VERIFY at download]`.
+Access path resolved 18 Aug 2026 (see `data/genimage_access_note.md`): primary route is the Kaggle-native `yangsangtai/tiny-genimage` (updated the same day; the Tiny-GenImage Hugging Face parquet is a mirror of it), fallback the official Google Drive release; SD-family and Wukong subsets excluded either way. Per-generator counts and real-image provenance remain `[VERIFY at download]`.
 
 Preprocessing confound and how it is handled: CIFAKE is 32x32 upscaled to 224x224 for the ImageNet-pretrained backbones, while GenImage images are much higher resolution. If GenImage images were fed in at native resolution, a drop in accuracy could be caused by resolution rather than by the generator. Two conditions are therefore run:
 
@@ -152,12 +152,12 @@ The hard Semester 7 commitment is **B0 and B1** — environment, data, split, re
 |---|---|---|---|---|
 | B0 | 17–23 Aug | Phase 0 — local venv + requirements; Kaggle account and notebook set up; CIFAKE attached and loading; split file written and committed; `runs.csv` schema created; GenImage access path verified | `requirements.txt`, `requirements.lock`, `data/cifake_split_seed42.csv`, empty `results/runs.csv`, GenImage access note | DONE 20 Aug (split 45k/45k/5k/5k/10k/10k; quota 30 h/week confirmed; notebook `yaduvxnshi/notebook322addb147` with CIFAKE attached — GPU and Internet still to enable at B1) |
 | B1 | 24–30 Aug | Phase 1 — end-to-end smoke run: ResNet50 feature extraction on a small subset, CPU locally first, then one short Kaggle GPU run. Proves data → train → eval → CSV append → Grad-CAM on one batch. Nothing else starts until this passes | Smoke-run row in `smoke_runs.csv` (isolation rule, §7a A1.8), one Grad-CAM image | superseded by §7a A1–A2 |
-| B2 | 31 Aug–6 Sep | ResNet50 + DenseNet121, both modes (runs 1–4) | 4 rows in `runs.csv` + 4 artefact dirs | NOT STARTED |
-| B3 | 7–13 Sep | EfficientNet-B0 + VGG19, both modes (runs 5–8) | 4 rows + 4 artefact dirs | NOT STARTED |
-| B4 | 14–20 Sep | ViT-B/16, both modes (runs 9–10); 10-run matrix complete | 2 rows + 2 artefact dirs | NOT STARTED |
-| B5 | 21–27 Sep | Grad-CAM galleries; cross-generator GenImage evaluation, both preprocessing conditions | `figures/gradcam/`, `results/crossgen.csv` | NOT STARTED |
-| B6 | 28 Sep–4 Oct | Ablations (augmentation, resolution); buffer for reruns | Ablation rows in `runs.csv` | NOT STARTED |
-| B7 | 5–9 Oct | Consolidation only — result tables and figures generated from the CSVs. Deliberately light: this is Semester 7 guide-review week for the paper | `results/tables/`, `figures/` | NOT STARTED |
+| B2 | 31 Aug–6 Sep | ResNet50 + DenseNet121, both modes (runs 1–4) | 4 rows in `runs.csv` + 4 artefact dirs | DONE 22–23 Aug (§7a A3 sessions 1–2, ahead of date) |
+| B3 | 7–13 Sep | EfficientNet-B0 + VGG19, both modes (runs 5–8) | 4 rows + 4 artefact dirs | DONE 23–25 Aug (A3 sessions 3–5) |
+| B4 | 14–20 Sep | ViT-B/16, both modes (runs 9–10); 10-run matrix complete | 2 rows + 2 artefact dirs | DONE 23–26 Aug (A3 sessions 3 and 6); matrix closed 26 Aug, reruns 26 Aug–4 Sep (§10) |
+| B5 | 21–27 Sep | Grad-CAM galleries; cross-generator GenImage evaluation, both preprocessing conditions | `figures/gradcam/`, `results/crossgen.csv` | superseded by §7a A4 — prepared 4 Sep, launched 14 Oct 2026 (date lapsed) |
+| B6 | 28 Sep–4 Oct | Ablations (augmentation, resolution); buffer for reruns | Ablation rows in `runs.csv` | superseded by §7a A5 — NOT STARTED (date lapsed) |
+| B7 | 5–9 Oct | Consolidation only — result tables and figures generated from the CSVs. Deliberately light: this is Semester 7 guide-review week for the paper | `results/tables/`, `figures/` | superseded by §7a A6 — NOT STARTED (date lapsed; only `canonical_runs.txt` exists) |
 | S8-1 | relative | Re-verification runs; any ablations not finished | Updated `runs.csv` | NOT STARTED |
 | S8-2 | relative | Paper 2 draft following the Karki et al. schema (= §10 phase P1; feeds both the major report and the merged publication) | Paper 2 sections | NOT STARTED |
 | S8-3 | relative | Major project report, viva and demo preparation | Report DOCX → PDF | NOT STARTED |
@@ -317,10 +317,13 @@ and are handled by time budgets instead of assumptions.
 | DenseNet121 | 3.25 h | 1.95 h | **Total** | **19.6 h** | **11.8 h** |
 
 **31.3 GPU-h worst case exceeds the 30 h weekly quota**, so the matrix is planned defensively:
-early stopping at a realistic ~12 epochs brings it to ≈12.5 h, and every run carries a
-`--time-budget-min` guard (new `time_budget_min` config field / CLI flag, `stop_reason`
-column) that stops cleanly with the best checkpoint kept rather than being killed at the
-session cap. Any run stopped that way is disclosed as such in Paper 2.
+early stopping at a realistic ~12 epochs brings it to ≈12.5 h, and a
+`--time-budget-min` guard was added (new `time_budget_min` config field / CLI flag, `stop_reason`
+column) so a run can stop cleanly with the best checkpoint kept rather than being killed at the
+session cap. Any run stopped that way is disclosed as such in Paper 2. *(Correction, 25 Aug and
+audit of 14 Oct: the guard was never active for any of the 13 matrix and rerun runs — no matrix
+config sets `time_budget_min` and `run_session.py` does not pass the flag; the budgets printed in
+the notebooks were documentation only. No run was killed, so no row is affected. Fix before A5.)*
 
 **A3 session plan** (`notebooks/make_a3_notebook.py` is the single source of truth; one
 Kaggle notebook per session, generated and pushed by API):
@@ -375,9 +378,11 @@ dirs (`best.pt` + `config_used.yaml`), so the A4 notebook lists the eight sessio
 as `kernelDataSources` next to CIFAKE and `yangsangtai/tiny-genimage`. Cell 2 autodetects
 the three mounts (`eval.find_checkpoints` walks `/kaggle/input`, pruning image folders) and
 asserts every id in `results/canonical_runs.txt` is present before anything runs, so a wrong
-attachment costs seconds. Two facts only the first push can confirm `[VERIFY at push]`: that
+attachment costs seconds. Two facts only the first push could confirm: that
 Kaggle accepts eight kernel sources plus two datasets on one notebook, and the mount path of
-kernel outputs (autodetected either way).
+kernel outputs (autodetected either way). **Resolved 14 Oct 2026:** the push response accepted all
+ten sources (every `invalid*` list empty) and the run proceeded past cell 2's mount and manifest
+assertions, so both hold; the exact mount path is read from the run log at merge.
 
 **Built 4 Sep 2026, CPU-verified, not launched:**
 - `results/canonical_runs.txt` — the A6 manifest, created now because A4 needs the same
@@ -677,8 +682,10 @@ quota reset unless the week has already rolled over. Check the quota page before
 recomputed cells; galleries committed and reproducible from the seeded selection; the three
 tiny-genimage verifications recorded (closing the A1 `[VERIFY]`).
 
-**Status (4 Sep 2026): prepared as one Kaggle evaluation session, CPU-verified, not
-launched — see amendment 3 above.**
+**Status: prepared 4 Sep 2026 as one Kaggle evaluation session (amendment 3); first push on 23 Sep
+refused with a Kaggle 401 (dead token, see `handoff.md`); launched 14 Oct 2026 with a new token as
+`yaduvxnshi/authentiscan-a4-crossgen-and-gradcam` v1 (kernel id 138590125), all ten sources
+accepted; running at the time of writing. G4 opens when `results_a4.zip` is merged.**
 
 ### A5 [was B6] — ablations (if the matrix behaved).
 
@@ -729,14 +736,14 @@ Concrete form of the CLAUDE.md §6 rules:
 5. The split file is committed and never regenerated. Regenerating it invalidates every earlier run.
 6. **Paper 1 firewall.** No result, figure or number from this track appears in Paper 1 or in any Semester 7 report section. Results live under `sem8_major/results/` only.
 7. **WPR question for the guide.** Semester 7 WPRs are the Minor Project track and cover literature work. Whether the early code work may be reported in the Minor track is the guide's decision — under acceleration (§7a) this applies to **every** remaining Minor WPR (5–12), not just WPR 12. Ask before writing it into any of them. If the answer is no, the work is still recorded here and carries into the Major Project WPR track.
-8. **Git.** The project folder is not currently a git repository. `git init` is now a scheduled step: §7a A1 step 0, with `sem8_major/data/` and checkpoint files gitignored, so config and split changes are traceable.
+8. **Git.** Done 20 Aug 2026 (initial commit `0d7fa93`, private remote `rohityaduvxnshi/sm7`): `sem8_major/data/` and checkpoint files are gitignored, so config and split changes are traceable.
 9. Role assignment is deliberately absent from this plan. Open item 4 (role split between the three team members) is unresolved, and tasks are not assigned to individuals until Rohit defines it.
 
 ## 9. Open points
 
 | # | Item | Needed by |
 |---|---|---|
-| 1 | GenImage access path — RESOLVED 18 Aug 2026, see `data/genimage_access_note.md`: primary route is the Tiny-GenImage Hugging Face mirror (35k images, all four target generators, CC-BY-NC-SA-4.0), fallback is the official Google Drive release; per-generator counts and real-image provenance still `[VERIFY at download]` | — |
+| 1 | GenImage access path — RESOLVED 18 Aug 2026, see `data/genimage_access_note.md`: primary route (updated the same day) is the Kaggle-native `yangsangtai/tiny-genimage` (8.35 GB, all four target generators, CC-BY-NC-SA-4.0; the Hugging Face Tiny-GenImage parquet is a mirror of it), fallback is the official Google Drive release; per-generator counts and real-image provenance still `[VERIFY at download]` | — |
 | 2 | Kaggle GPU quota — RESOLVED 20 Aug 2026: 30 h GPU + 20 h TPU per week, confirmed from the account quota page | — |
 | 3 | Role split between Rohit, Vishal and Hardik (CLAUDE.md open item 4) — no task in this plan is assigned until it is settled | Before B2 |
 | 4 | Semester 8 calendar dates are unknown, so phases S8-1 to S8-3 carry relative weeks only; convert to dates when the calendar is published | Start of Semester 8 |
@@ -824,8 +831,8 @@ fine-tuned one — session 8 stands on its own evidence when it lands.
 
 **Matrix status: unchanged, still closed at 10 canonical rows** (`runs.csv` now holds 12 —
 the 10 matrix rows plus these two 50-epoch reruns as additional, separately timestamped rows,
-per the plan's rerun-and-manifest design). No `canonical_runs.txt` exists yet (created at A6);
-when it is, it should point at the 50-epoch `resnet50_fe` row (the confirmed-better number)
+per the plan's rerun-and-manifest design). `canonical_runs.txt` was created on 4 Sep 2026, ahead of A6, because A4 needs the same list;
+it points at the 50-epoch `resnet50_fe` row (the confirmed-better number)
 and either the 50-epoch or 30-epoch `efficientnet_b0_fe` row (now provably identical, so the
 choice is immaterial) — recorded here so A6 does not have to re-derive this reasoning.
 
@@ -875,11 +882,11 @@ are unaffected.
 **Matrix status after session 8:** `runs.csv` holds 13 rows — the 10 matrix rows plus three
 separately timestamped 50-epoch reruns, nothing overwritten. Every row: `Tesla T4, 15 GB`,
 torch 2.10.0+cu128, timm 1.0.26. Measured GPU training time 19.89 h (matrix) + 10.23 h
-(reruns) = 30.12 h. **`canonical_runs.txt` (created at A6) should list
+(reruns) = 30.12 h. **`canonical_runs.txt` (created 4 Sep 2026, ahead of A6) lists
 `resnet50_fe_20260826-0457`, `resnet50_ft_20260827-0206`, either `efficientnet_b0_fe` row
 (metrics identical), and the seven original rows for the remaining (model, mode) pairs.**
-No Kaggle run is pending; the next phase is A4 (§7a), whose practical gate is getting all
-canonical checkpoints onto one machine (the complete 2.2 GB pile is on the old laptop).
+The next phase is A4 (§7a); per amendment 3 it mounts the checkpoints from the A3 session
+outputs, so no transfer is needed (the complete 2.2 GB pile also sits on the old laptop).
 
 ### P-phases (after A6/G6; replaces the two-paper endpoint of S8-2)
 
