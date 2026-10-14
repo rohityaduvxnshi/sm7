@@ -155,7 +155,7 @@ The hard Semester 7 commitment is **B0 and B1** — environment, data, split, re
 | B2 | 31 Aug–6 Sep | ResNet50 + DenseNet121, both modes (runs 1–4) | 4 rows in `runs.csv` + 4 artefact dirs | DONE 22–23 Aug (§7a A3 sessions 1–2, ahead of date) |
 | B3 | 7–13 Sep | EfficientNet-B0 + VGG19, both modes (runs 5–8) | 4 rows + 4 artefact dirs | DONE 23–25 Aug (A3 sessions 3–5) |
 | B4 | 14–20 Sep | ViT-B/16, both modes (runs 9–10); 10-run matrix complete | 2 rows + 2 artefact dirs | DONE 23–26 Aug (A3 sessions 3 and 6); matrix closed 26 Aug, reruns 26 Aug–4 Sep (§10) |
-| B5 | 21–27 Sep | Grad-CAM galleries; cross-generator GenImage evaluation, both preprocessing conditions | `figures/gradcam/`, `results/crossgen.csv` | superseded by §7a A4 — prepared 4 Sep, launched 14 Oct 2026 (date lapsed) |
+| B5 | 21–27 Sep | Grad-CAM galleries; cross-generator GenImage evaluation, both preprocessing conditions | `figures/gradcam/`, `results/crossgen.csv` | superseded by §7a A4 — prepared 4 Sep; first run 14 Oct 2026 failed on the secret, relaunch pending (date lapsed) |
 | B6 | 28 Sep–4 Oct | Ablations (augmentation, resolution); buffer for reruns | Ablation rows in `runs.csv` | superseded by §7a A5 — NOT STARTED (date lapsed) |
 | B7 | 5–9 Oct | Consolidation only — result tables and figures generated from the CSVs. Deliberately light: this is Semester 7 guide-review week for the paper | `results/tables/`, `figures/` | superseded by §7a A6 — NOT STARTED (date lapsed; only `canonical_runs.txt` exists) |
 | S8-1 | relative | Re-verification runs; any ablations not finished | Updated `runs.csv` | NOT STARTED |
@@ -282,7 +282,7 @@ the A4 shared-set build.
    backward cost, per-image cost); mis-sizing a session against the cap can lose finished
    work.
 4. Session facts, recorded in this file: free-tier maximum single-session GPU duration
-   `[VERIFY in the session — believed ~9 h, changes over time]`; quota-reset day
+   `12 h for CPU/GPU Save & Run All sessions, 9 h for TPU — Kaggle docs, read 14 Oct 2026`; quota-reset day
    `[VERIFY on the quota page]`; whether outputs of multiple versions of the same notebook
    can be attached simultaneously `[VERIFY — A4 depends on it; fallback in A4]`.
 
@@ -380,9 +380,10 @@ the three mounts (`eval.find_checkpoints` walks `/kaggle/input`, pruning image f
 asserts every id in `results/canonical_runs.txt` is present before anything runs, so a wrong
 attachment costs seconds. Two facts only the first push could confirm: that
 Kaggle accepts eight kernel sources plus two datasets on one notebook, and the mount path of
-kernel outputs (autodetected either way). **Resolved 14 Oct 2026:** the push response accepted all
-ten sources (every `invalid*` list empty) and the run proceeded past cell 2's mount and manifest
-assertions, so both hold; the exact mount path is read from the run log at merge.
+kernel outputs (autodetected either way). **14 Oct 2026:** the push response accepted all
+ten sources (every `invalid*` list empty), so the first fact holds. The second (mount path) is
+still `[VERIFY at run]`: v1 died in cell 1 on the missing per-notebook `GITHUB_PAT` secret
+before any mount was read.
 
 **Built 4 Sep 2026, CPU-verified, not launched:**
 - `results/canonical_runs.txt` — the A6 manifest, created now because A4 needs the same
@@ -685,7 +686,9 @@ tiny-genimage verifications recorded (closing the A1 `[VERIFY]`).
 **Status: prepared 4 Sep 2026 as one Kaggle evaluation session (amendment 3); first push on 23 Sep
 refused with a Kaggle 401 (dead token, see `handoff.md`); launched 14 Oct 2026 with a new token as
 `yaduvxnshi/authentiscan-a4-crossgen-and-gradcam` v1 (kernel id 138590125), all ten sources
-accepted; running at the time of writing. G4 opens when `results_a4.zip` is merged.**
+accepted; v1 failed in cell 1 (`GITHUB_PAT` not attached to the new notebook) after ten hours in
+`running` status — elapsed time in that status is not execution; v2 follows Rohit's secret
+toggle. G4 opens when `results_a4.zip` is merged.**
 
 ### A5 [was B6] — ablations (if the matrix behaved).
 

@@ -56,6 +56,6 @@ Sat Aug 22 04:02:20 2026
 
 ## Still to record by hand (browser-only facts)
 
-- Maximum single-session GPU duration: [VERIFY in session]
+- Maximum single-session GPU duration: 12 h for CPU/GPU Save & Run All sessions, 9 h for TPU (Kaggle docs, read 14 Oct 2026)
 - Weekly quota reset day: [VERIFY on the quota page]
 - Can outputs of multiple versions of one notebook be attached at once? [VERIFY — A4 depends on it; fallback is forward-copying artefact dirs]

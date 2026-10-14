@@ -6,7 +6,7 @@ Read CLAUDE.md first; this file is the fast-moving state on top of it.
 
 ---
 
-## A4 LAUNCHED `[14 Oct 2026]` — running on Kaggle; plan audit done; WPR 12 and the Sem 7 endpoint need Rohit
+## A4 PUSHED `[14 Oct 2026]` — v1 failed on the missing secret after ten hours in `running`; toggle + re-push needed; audit done; WPR 12 and the Sem 7 endpoint need Rohit
 
 ### 1. Goal
 
@@ -15,13 +15,20 @@ Use the new Kaggle token Rohit supplied in chat to get A4 running, and audit the
 
 ### 2. Current State
 
-- **A4 is running.** `yaduvxnshi/authentiscan-a4-crossgen-and-gradcam` v1, kernel id
+- **A4 v1 failed in cell 1.** `yaduvxnshi/authentiscan-a4-crossgen-and-gradcam` v1, kernel id
   138590125, pushed 14 Oct with the new token (status check first: 200 on `kernels/status`,
   so the legacy route still accepts settings-page tokens — the 23 Sep 401 was the old token).
   Push response: all eight kernel sources and both datasets accepted, every `invalid*` list
-  empty. Pulled back: cell 0 markdown, private, GPU + internet on. queued → running 01:29 UTC;
-  still running at 01:53 UTC, past the cell-1 secret and cell-2 mount/manifest failure points.
-  Both `[VERIFY at push]` items are closed in practice; confirm from the run log at merge.
+  empty. Pulled back: cell 0 markdown, private, GPU + internet on. queued → running 01:29 UTC,
+  `running` for ten hours, `error` at 11:31 UTC. **Log (fetched via `kernels/output`): the
+  notebook executed for 18 s and died in cell 1 — `No user secrets exist for kernel id
+  138590125 and label GITHUB_PAT`.** The earlier note here that the run was "past the cell-1
+  secret and cell-2 failure points" was an inference from elapsed time and was wrong:
+  `kernels/status` shows `running` while a batch session waits for provisioning, so elapsed
+  time says nothing about cell progress — only the log does. The first `[VERIFY at push]`
+  (sources accepted) stands on the push response; the second (kernel-output mount path) is
+  still open. Whether the ten hours consumed GPU quota is not visible from the API.
+  Kaggle docs (read 14 Oct): Save & Run All sessions get 12 h on CPU/GPU, 9 h on TPU.
 - Execution-split note: the push was executed by Claude on Rohit's explicit instruction with
   the token supplied inline (second time; 23 Aug was the first). CLAUDE.md §1 is unchanged.
   The token is in the chat transcript — regenerate it once `results_a4.zip` is in hand.
@@ -39,7 +46,8 @@ Use the new Kaggle token Rohit supplied in chat to get A4 running, and audit the
 
 ### 3. Changes it made
 
-- Kaggle: one push (v1 auto-run) — the only quota spend; evaluation only.
+- Kaggle: one push (v1 auto-run; failed in cell 1 after 18 s of execution; quota impact of
+  its ten hours in `running` unknown — check the quota page).
 - CLAUDE.md §13: 14 Oct entry; the WPR bullet and the stale "USB transfer" gate corrected.
 - `implementation_plan.md`: stale statuses corrected — §1 status line, Table 5 B2–B7, §3 and
   §9 GenImage primary route, §7a A2 time-budget wording, amendment 3 `[VERIFY at push]`,
@@ -48,12 +56,24 @@ Use the new Kaggle token Rohit supplied in chat to get A4 running, and audit the
 
 ### 4. Failed Attempts
 
-None today. The 23 Sep diagnosis (below) held: dead token, route and payload fine.
+- A4 v1: `GITHUB_PAT` not attached to the new notebook (per-notebook secret, the session-2
+  lesson, foreseen in this file's own step 1 and then mis-read from the status endpoint).
+  Cost: one failed version, ten wall-clock hours, quota unknown. Lesson recorded above:
+  never infer cell progress from `running`; fetch the log.
+- The 23 Sep diagnosis (below) held: dead token, route and payload fine.
 
 ### 5. Next steps
 
-1. **When the run completes** (monitor armed; expect 1–2 h): Claude fetches `results_a4.zip`
-   via `GET /api/v1/kernels/output` with the token (download only, no quota), merges
+1. **Rohit — two browser actions, no code:** (a) open the A4 notebook
+   (`kaggle.com/code/yaduvxnshi/authentiscan-a4-crossgen-and-gradcam`) → Add-ons → Secrets →
+   toggle `GITHUB_PAT` ON; (b) read the quota page: GPU hours consumed on 14 Oct. Then say
+   "go" — Claude re-pushes (v2) with the token already supplied — or press Save & Run All
+   yourself. If v2 also shows `running` for hours before its log starts, suspect the eight
+   kernel-output sources (~4.4 GB with the session zips); fallback = a Kaggle dataset of the
+   ten canonical checkpoints uploaded from this laptop (2.2 GB), attached in their place.
+1b. **When v2 completes** (watch `kernels/status`, but read progress only from the log):
+   Claude fetches `results_a4.zip` via `GET /api/v1/kernels/output` with the token (download
+   only, no quota), merges
    `crossgen.csv` (80 rows expected) with `merge_runs.py --kind crossgen`, copies
    `genimage_verification.csv`, `gradcam_shared_list.txt`, `gradcam_correct/`, the
    `<run_id>/genimage_*/` dirs and `figures/gradcam/` galleries into the repo, spot-checks two
