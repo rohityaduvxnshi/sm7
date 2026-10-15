@@ -6,6 +6,76 @@ Read CLAUDE.md first; this file is the fast-moving state on top of it.
 
 ---
 
+## START HERE — next session (written 15 Oct 2026 at session close)
+
+**State in one line:** A1–A4 done and gated (G1–G4 passed); nothing running on Kaggle; working
+tree clean except the untracked `AGENTS.md`; this wrap-up is the last commit.
+
+**Session-start checklist**
+1. `git pull` — this laptop is the only machine; remote `origin` = github.com/rohityaduvxnshi/sm7
+   (private). Victus withdrawn 4 Sep.
+2. Venv `sem8_major/.venv` (torch 2.13.0+cpu, timm 1.0.28). Health check from `sem8_major/`:
+   `./.venv/Scripts/python.exe code/merge_runs.py --selfcheck` and `... code/data.py --selfcheck`.
+3. Read CLAUDE.md §13 "Where we are", then the A4 COMPLETE block below. Older blocks are history.
+
+**Next: A6 — consolidation (laptop, no GPU, no Kaggle).** Build `code/make_tables.py` and
+`code/make_figures.py` per plan §7a A6. Inputs are only `results/runs.csv`, `results/crossgen.csv`,
+`results/canonical_runs.txt`, the per-run CSVs (`learning_curve.csv`, `confusion_matrix.csv`,
+`roc_points.csv`, `genimage_<gen>_<cond>/`), `results/genimage_verification.csv`, `configs/*.yaml`
+and `figures/gradcam/<manifest run_ids>/*.png`. Outputs: `results/tables/*.csv` (+ `.md` twins) and
+`figures/*.png`. Minimum set, following the Karki et al. schema:
+- T1 per-run CIFAKE test metrics for the 10 canonical runs (+ val_acc, best_epoch, stop_reason);
+- T2 model size and cost: total/trainable params, batch size, max_epochs, train_time_min, hardware;
+- T3 cross-generator matrix: accuracy and AUC per checkpoint × generator × condition, per-model
+  means, n = 1,000 per cell, with the three caveats as table notes;
+- T4 hyperparameters from the YAMLs (Table 3 values, one justification each);
+- T5 tiny-genimage composition from `genimage_verification.csv` (counts, PNG/JPEG, sizes);
+- F1 learning curves (2 × 5 grid); F2 ROC overlays on CIFAKE test (fe panel, ft panel);
+  F3 confusion matrices (10); F4 cross-generator heatmaps (accuracy, AUC; one per condition);
+  F5 Grad-CAM contact sheets from the five manifest galleries only — the 20 Aug smoke gallery
+  `figures/gradcam/resnet50_fe_20260820-0709/` must be excluded by the manifest filter (or deleted).
+Rules: `make_tables.py` fails loudly on a manifest id missing from `runs.csv` or a (model, mode)
+without an entry; one rounding function for every number, rule stated in the table footer (the two
+known tie cases: efficientnet_b0_fe 0.928650, densenet121_fe 0.934850); the three superseded
+30-epoch rows appear only in a convergence footnote table; matplotlib `Agg`; no number typed by
+hand anywhere downstream. **Gate G6:** fresh `git clone` + venv → regenerate → identical tables and
+every listed file present. Then P1 (Paper 2 draft) can start.
+
+**Then A5 (Kaggle T4; Rohit launches):** write `resnet50_ft_noaug.yaml`, `resnet50_ft_res64.yaml`,
+`resnet50_ft_res128.yaml` (plan §4); first make the `time_budget_min` guard real (`run_session.py`
+passes `--time-budget-min`, emitted by the notebook generator); one session of three ResNet50-ft-class
+runs; toggle `GITHUB_PAT` on the new notebook before its first run; round-trip via `merge_runs.py`.
+
+**Facts that are easy to get wrong**
+- `kernels/status` reports `running` while a batch session waits for provisioning. Read the log
+  (`kernels/output`, available once the version ends) before claiming any progress; A4 v1 sat
+  10 h in `running` and executed for 18 s.
+- A new Kaggle notebook's first auto-run fails at cell 1 until `GITHUB_PAT` is toggled on for
+  that notebook (Add-ons → Secrets). Push once, toggle, run again.
+- Kaggle tokens: pass inline, never store (this laptop deletes files containing them); CLI 2.2.4
+  rejects them, direct REST with `Authorization: Bearer` works; `POST www.kaggle.com/api/v1/kernels/push`
+  was still accepted on 14 Oct 2026.
+- Mounts: datasets at `/kaggle/input/datasets/<owner>/<slug>`, notebook outputs at
+  `/kaggle/input/notebooks/<owner>/<slug>/`; the A3/A4 notebooks autodetect both.
+- Save & Run All cap: 12 h for CPU/GPU sessions (9 h is TPU).
+- Long heredocs die in this machine's Bash tool — write scripts to the scratchpad and run them.
+  In PowerShell call the venv python with the full `& "...\.venv\Scripts\python.exe"` form.
+
+**Open asks for Rohit**
+1. Regenerate the Kaggle token (the 14–15 Oct one is in a chat transcript).
+2. Semester 7 endpoint (CLAUDE.md open item 20): was a final report submitted and from which
+   file; did the guide review the draft; plagiarism result? And D3 (item 22).
+3. CIFAKE licence terms before any gallery image goes into Paper 2 (item 21).
+4. A6 before A5 unless told otherwise.
+
+**Housekeeping (small; do alongside A6):** `kaggle_env.md` remaining `[VERIFY]` lines
+(quota-reset day; multi-version attach — moot); `num_workers: 2  # [VERIFY]` tags in every config;
+`resnet50_ft_e50.yaml` header says session 7 (it ran in 8); pin `grad-cam` in the notebooks and
+record its version; `sem8_major/README.md` module list; `AGENTS.md` (untracked Codex copy of
+CLAUDE.md, now far behind — regenerate from CLAUDE.md or ignore it).
+
+---
+
 ## A4 COMPLETE `[15 Oct 2026]` — G4 PASSED; cross-generator result is chance level; next A6 (then A5)
 
 ### 1. Goal
@@ -440,7 +510,7 @@ the browser steps block the session.
 
 ---
 
-## Victus migration `[DECIDED — 22 August 2026; see plan §7a "A3 amendment — Victus carve-out"]`
+## Victus migration `[DECIDED — 22 August 2026; WITHDRAWN 4 September 2026 (plan §7a amendment 3) — kept for the record]`
 
 Probe verdict on the 4070 (8 GB): effnet/vgg/vit fit at matrix batch sizes with headroom;
 **densenet121 at batch 128 does not fit**. Decision (Rohit, on the Victus session's
@@ -509,7 +579,7 @@ launches, quota spends and portal uploads remain Rohit's.
 Division of labour while both machines are active: Victus session drives training; **pull
 before working, push after committing, on both.**
 
-## A3 — the 10-run matrix `[IN PROGRESS — opened 22 August 2026]`
+## A3 — the 10-run matrix `[opened 22 August 2026; CLOSED 26 August at 10 of 10; reruns merged 26 Aug and 4 Sep]`
 
 **Session 3 COMPLETE (merged 23 Aug 2026) — 7 of 10 rows done, all T4.** efficientnet_b0_fe
 val 92.67 / test 92.87; efficientnet_b0_ft val **97.50** / test 97.56 (AUC 0.9971);

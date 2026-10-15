@@ -468,6 +468,9 @@ The semester is complete when all of the following exist:
 | 17 | ~~Table 6.1 legibility~~ RESOLVED 15 Aug: draft v2 restyles it full-width Elsevier-fashion (Table 2, pp. 12–15); apply the same treatment in the Amity template | — |
 | 18 | Whether Amity and/or the target venue require an AI-assistance disclosure statement (AI-assisted drafting and code with human verification). Ask the guide; if yes, draft the statement | Before Week 11 upload / with venue choice |
 | 19 | Merged-paper shape: hybrid review+experiment (review survives as condensed taxonomy + 48-study table + gap analysis, ~12–14k words) vs experimental paper with deep related work (review compressed to 2–3 pages). Decided after major-project development completes, at merge gate P2 (`implementation_plan.md` §10) | P2, Semester 8 |
+| 20 | Semester 7 endpoint as of 15 Oct 2026: the NTCC window closed 9 Oct; the repo holds draft v1/v2 but no final report, no Amity template, no plagiarism result, no record of a guide review or submission. Rohit to state what happened and from which file anything was submitted | ASAP |
+| 21 | CIFAKE licence terms (Kaggle page lists "other") — confirm before any CIFAKE image (the Grad-CAM galleries) is reproduced in Paper 2 | Before P1 figures |
+| 22 | D3 — the guide's consent to mention Track B work on the Minor track. Track B numbers already appear in Progress Reports 1 and 2 (27 Aug, 1 Oct); WPRs 1–12 are literature-only. Record the answer either way | ASAP |
 
 ---
 
@@ -479,6 +482,16 @@ three documents are updated in the same pass, each carrying the date: this file 
 carries Goal / Current State / Active Files / Changes it made / Failed Attempts / Next steps
 for the phase just closed, newest phase first. Read `handoff.md` after this file when
 resuming work.
+
+### Where we are — 15 October 2026 (read this first)
+
+**Track B (implementation, `sem8_major/`):** A1–A3 complete (10-run matrix + 3 reruns, 13 rows, all Tesla T4), **A4 complete and G4 passed** (80 cross-generator cells + 5 Grad-CAM galleries; CIFAKE-trained detectors are at chance on the four unseen GenImage generators — a bracketed negative result, plan §7a A4), **A5 not started** (three ablation YAMLs), **A6 not started** (`make_tables.py`, `make_figures.py`; only `canonical_runs.txt` exists). Gates G1–G4 passed, G5–G6 open. P1–P7 (Paper 2 draft, merged paper) not started. **The next session starts A6** — full spec in `handoff.md` START HERE; A5 follows on Kaggle T4 once the `time_budget_min` guard is made real.
+
+**Track A (Semester 7):** the NTCC window closed 9 Oct. All 12 Minor WPRs rendered (WPR 12 on 14 Oct, repo-backed, incomplete-week wording); draft v1 and v2 of the review exist; Progress Reports 1–2 and the diary exist. **No final report, no Amity template, no plagiarism result and no guide review are recorded** — open item 20.
+
+**Machines and credentials:** this laptop only (DESKTOP-GKS9MUQ, no GPU; repo `d:\Desktop\AuthentiScan`, venv `sem8_major/.venv`); Kaggle for anything needing a GPU; the Victus is withdrawn. All 13 checkpoints (2.2 GB) are on this laptop and in the A3 session outputs on Kaggle. The Kaggle token used 14–15 Oct is in a chat transcript — regenerate it; tokens are passed inline, never stored; `GITHUB_PAT` is toggled per new Kaggle notebook.
+
+**Standing lessons:** `kernels/status` `running` is not execution — read the log; the notebooks autodetect the `/kaggle/input/datasets/...` and `/kaggle/input/notebooks/...` mounts; the Save & Run All cap is 12 h on GPU; every result number reaches a document through a script that reads the CSVs, never by hand.
 
 **15 Aug events:** draft v2 submitted for the department plagiarism check (result pending, open item 3). Dr. Richa Gupta instructed the team to begin preparing the implementation code now (see the §3 amendment). Two tracks now run in parallel; the detailed to-dos for both are at the end of this section.
 
@@ -544,7 +557,7 @@ The acceleration run of 12–13 Aug (see §5 "Acceleration mode") completed all 
 
 **22 Aug (later) — A3 session 1 COMPLETE, G3 PASSED.** After two documented false starts (Kaggle notebook-storage glitch; Kaggle's new `/kaggle/input/datasets/<owner>/<slug>` mount convention — notebooks now autodetect the mount and hard-abort on non-T4 GPUs), the session ran on T4: resnet50_fe val 93.01%/test 92.83%, resnet50_ft val **95.66%**/test 95.93% (AUC 0.9925), both full 30 epochs. Rows merged into `results/runs.csv`; checkpoints archived locally. Times ran ~1.25× calibration and nothing early-stopped → remaining sessions re-budgeted (~34 h worst case; 2–4 this quota week, 5–6 after reset). Execution rule in force: Claude prepares, Rohit launches every push/commit. Next: session 2 (densenet121, ~6.5 h).
 
-### Track B — implementation (guide-instructed early start). Plan written 18 Aug 2026 (`sem8_major/implementation_plan.md`), accelerated 20 Aug (§7a); next = A1. Original inputs kept for the record:
+### Track B — implementation (guide-instructed early start). Plan written 18 Aug 2026 (`sem8_major/implementation_plan.md`), accelerated 20 Aug (§7a); A1–A4 done, next = A6 (see "Where we are" above). Original inputs kept for the record:
 
 1. **Hardware first (open item 7).** RESOLVED 18 Aug: Kaggle free tier for training; local laptop (Python 3.12.10 installed, no CUDA GPU) for dev and CPU smoke tests. (The earlier "no Python installed" note was stale.)
 2. **Environment.** Python 3.11+ (Miniconda suggested), PyTorch + torchvision, timm (ViT and EfficientNet weights), scikit-learn (metrics), matplotlib (figures), a Grad-CAM implementation (library or ~50 lines hand-rolled). Pin versions in an `environment.yml` — Paper 2 must report exact versions (all three reference papers do).
