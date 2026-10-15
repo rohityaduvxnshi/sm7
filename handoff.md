@@ -6,6 +6,70 @@ Read CLAUDE.md first; this file is the fast-moving state on top of it.
 
 ---
 
+## A4 COMPLETE `[15 Oct 2026]` — G4 PASSED; cross-generator result is chance level; next A6 (then A5)
+
+### 1. Goal
+
+Merge the A4 run (80-cell cross-generator sweep + Grad-CAM galleries) and pass gate G4.
+
+### 2. Current State
+
+- v2 of `authentiscan-a4-crossgen-and-gradcam` (Rohit, 15 Oct 01:35 UTC, after attaching the
+  secret) completed at 02:31 UTC — 54 min of execution on a Tesla T4. `results_a4.zip` (14 MB)
+  fetched via `kernels/output` with the chat-supplied token and merged.
+- Repo now holds: `results/crossgen.csv` (80 rows), 80 `results/<run_id>/genimage_<gen>_<cond>/`
+  dirs (confusion matrix + ROC points each), `results/genimage_verification.csv`,
+  `results/gradcam_shared_list.txt`, `results/gradcam_correct/` (5 files),
+  `figures/gradcam/<five ft run_ids>/` (90 PNGs, ~14 MB).
+- **G4 PASSED:** coverage exactly 10 × 4 × 2; 500 real / 500 fake per cell; all 80 cells
+  recomputed from their own artefacts, 0 mismatches; the five galleries share identical correct
+  panels (8 images, 4/4) and have 8 incorrect panels each.
+- Dataset facts: tiny-genimage `val` = 500 `ai` (PNG) + 500 `nature` (JPEG) per generator →
+  1,000 images per cell (below the 2,000–3,000 target); seven generator folders, no SD v1.4;
+  `nature` provenance not verifiable from the files. Recorded in the plan, the GenImage note and
+  `genimage_verification.csv`.
+- **Result:** chance level everywhere — mean accuracy per checkpoint 0.46–0.53 under both
+  conditions; 74/80 cells ≤ 0.55; AUC 0.29–0.64, below 0.5 in 43/80 (27 of 40 `direct224`);
+  Midjourney least bad (mean AUC 0.58); ft no better than fe (0.498 vs 0.499); severe threshold
+  shift (25 cells call >80% fake, 7 call <20%). Framed as a bracketed negative result (three
+  confounds) — wording in plan §7a A4 result block. Numbers come from the check script; A6
+  regenerates them.
+- Mount paths now known: `/kaggle/input/datasets/<owner>/<slug>` and
+  `/kaggle/input/notebooks/<owner>/<slug>/`. Status `running` ≠ executing (14 Oct lesson) — v2's
+  ten-second-to-execution gap was not repeated.
+
+### 3. Changes it made
+
+- Merge + copies as above (no checkpoints; `*.pt` never travelled).
+- Docs: plan §7a A4 result block + status + Table 5 B5 + Table 4 hardware example (15 GB) +
+  §3/§9 GenImage counts; `results/README.md` layout (A2/A4 files) + 15 GB; GenImage note
+  "still open" → resolved; CLAUDE.md §13 (15 Oct entry); this block.
+- No code changes. Nothing pushed to Kaggle by Claude today.
+
+### 4. Failed Attempts
+
+None on 15 Oct.
+
+### 5. Next steps
+
+1. **A6 first (recommended), on this laptop:** `code/make_tables.py` + `code/make_figures.py`
+   generating every Paper 2 table/figure from `runs.csv`, `crossgen.csv` and the per-run CSVs via
+   `canonical_runs.txt`; contact sheets only from galleries whose run_id is in the manifest (the
+   20 Aug smoke gallery `figures/gradcam/resnet50_fe_20260820-0709/` must be excluded or deleted);
+   one rounding rule for every number. Gate G6: regenerate from a clean checkout.
+2. **A5 later, Kaggle T4:** write `resnet50_ft_noaug.yaml`, `resnet50_ft_res64.yaml`,
+   `resnet50_ft_res128.yaml`; fix the inert `time_budget_min` (pass `--time-budget-min` from
+   `run_session.py`) before launching; one session, Rohit launches.
+3. **Rohit:** regenerate the Kaggle token (the current one is in the chat transcript); confirm
+   CIFAKE's licence terms before any gallery image is reproduced in Paper 2; the Sem 7 endpoint
+   questions (final report, D3, plagiarism result) are still open.
+4. Housekeeping from the 14 Oct audit still pending: `kaggle_env.md`'s two remaining `[VERIFY]`
+   lines (quota-reset day; multi-version attach — moot), `num_workers [VERIFY]` tags in the
+   configs, `resnet50_ft_e50.yaml`'s "SESSION 7" header, `grad-cam` unpinned in the notebooks,
+   `sem8_major/README.md` module list, AGENTS.md (commit as a generated copy, or ignore).
+
+---
+
 ## A4 PUSHED `[14 Oct 2026]`; v2 RUNNING `[15 Oct 2026]` — v1 failed on the missing secret after ten hours in `running` (no quota lost); audit done; WPR 12 rendered; Sem 7 endpoint needs Rohit
 
 ### 1. Goal

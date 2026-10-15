@@ -19,7 +19,8 @@ latest; earlier is better).
   subset, which our plan **excludes** (same generator family as CIFAKE). Per-generator full
   mirrors exist but carry the same size problem locally; attached natively inside a Kaggle
   notebook the size does not matter, but coverage of all four needed generators by one
-  well-formed mirror was not confirmed. `[VERIFY at first Kaggle login]`
+  well-formed mirror was confirmed on 18 Aug (API listing) and at the A4 run on 15 Oct 2026:
+  `yangsangtai/tiny-genimage` holds all four target generators.
 - **Tiny-GenImage** (huggingface.co/datasets/TheKernel01/Tiny-GenImage): a 35,000-image,
   8.36 GB parquet redistribution covering real images plus all eight GenImage generators —
   including all four we need. License CC-BY-NC-SA-4.0 (fine for academic use, cite both this
@@ -49,8 +50,14 @@ folders with paired real ("nature") images as loose PNGs, no parquet conversion 
 SD v1.4/v1.5 and Wukong subsets are excluded in either route (SD family = CIFAKE's generator;
 Wukong is SD-derived and outside the plan's four).
 
-## Still open (moves to the Kaggle-side checklist)
+## Resolved at the A4 run (15 Oct 2026; `results/genimage_verification.csv`)
 
-- Confirm Tiny-GenImage per-generator counts and real-image provenance at download.
-- Confirm whether a single Kaggle-native mirror of the four subsets exists worth attaching
-  instead, once Rohit's Kaggle account is set up.
+- Per-generator counts: every `val` split holds 500 `ai` + 500 `nature`, so each cross-generator
+  cell scores 1,000 images (the plan's 2,000–3,000 target was not available in this release).
+  Seven generator folders are present (BigGAN, VQDM, SD v1.5, Wukong, ADM, GLIDE, Midjourney);
+  there is no SD v1.4 folder. The four target generators are all present.
+- Real-image provenance: `nature` files are ImageNet-style JPEGs (typically 500×375 / 375×500);
+  the paired-ImageNet claim rests on the GenImage paper and cannot be verified from the files.
+- Format asymmetry: all `ai` files are PNG (128² BigGAN, 256² ADM/VQDM/GLIDE, 512² SD v1.5/Wukong,
+  1024² Midjourney), all `nature` files JPEG — a detectable cue, stated as a caveat in Paper 2.
+- The Kaggle-native mirror question is answered by the Decision above (`yangsangtai/tiny-genimage`).

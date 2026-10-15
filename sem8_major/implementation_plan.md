@@ -39,7 +39,7 @@ Split specification, fixed at Phase 0 and never changed afterwards:
 
 **GenImage** provides the cross-generator test set only — no training, no fine-tuning on it. Four generators unseen during training are used: Midjourney, ADM, BigGAN, VQDM. Stable Diffusion v1.4/1.5 subsets are excluded because they are the same family CIFAKE was generated with. Target size is roughly 2,000–3,000 balanced images per generator, which is enough for a cross-generator table without a large download. The real half of each generator subset is drawn from GenImage's paired ImageNet real images and passes through the same preprocessing condition as the fakes, so real and fake are treated identically.
 
-Access path resolved 18 Aug 2026 (see `data/genimage_access_note.md`): primary route is the Kaggle-native `yangsangtai/tiny-genimage` (updated the same day; the Tiny-GenImage Hugging Face parquet is a mirror of it), fallback the official Google Drive release; SD-family and Wukong subsets excluded either way. Per-generator counts and real-image provenance remain `[VERIFY at download]`.
+Access path resolved 18 Aug 2026 (see `data/genimage_access_note.md`): primary route is the Kaggle-native `yangsangtai/tiny-genimage` (updated the same day; the Tiny-GenImage Hugging Face parquet is a mirror of it), fallback the official Google Drive release; SD-family and Wukong subsets excluded either way. Per-generator counts verified 15 Oct 2026: tiny-genimage's `val` holds 500 real / 500 fake per generator, so each cross-generator cell uses 1,000 images, below the 2,000–3,000 target (§7a A4 result).
 
 Preprocessing confound and how it is handled: CIFAKE is 32x32 upscaled to 224x224 for the ImageNet-pretrained backbones, while GenImage images are much higher resolution. If GenImage images were fed in at native resolution, a drop in accuracy could be caused by resolution rather than by the generator. Two conditions are therefore run:
 
@@ -128,7 +128,7 @@ Every finished run appends exactly one row to the runs CSV named in the config's
 | train_time_min | Wall-clock training time, minutes |
 | total_params | Total parameter count of the model |
 | trainable_params | Trainable parameter count (differs by mode; Paper 2 reports it per the Karki et al. table) |
-| hardware | GPU model + VRAM as reported by the notebook (e.g. `Tesla T4, 16 GB`), or the local CPU string for smoke runs |
+| hardware | GPU model + VRAM as reported by the notebook (every logged row reads `Tesla T4, 15 GB`), or the local CPU string for smoke runs |
 | torch_version | Exact torch version |
 | timm_version | Exact timm version |
 | val_acc, val_loss | Validation accuracy and loss at the best epoch |
@@ -155,7 +155,7 @@ The hard Semester 7 commitment is **B0 and B1** — environment, data, split, re
 | B2 | 31 Aug–6 Sep | ResNet50 + DenseNet121, both modes (runs 1–4) | 4 rows in `runs.csv` + 4 artefact dirs | DONE 22–23 Aug (§7a A3 sessions 1–2, ahead of date) |
 | B3 | 7–13 Sep | EfficientNet-B0 + VGG19, both modes (runs 5–8) | 4 rows + 4 artefact dirs | DONE 23–25 Aug (A3 sessions 3–5) |
 | B4 | 14–20 Sep | ViT-B/16, both modes (runs 9–10); 10-run matrix complete | 2 rows + 2 artefact dirs | DONE 23–26 Aug (A3 sessions 3 and 6); matrix closed 26 Aug, reruns 26 Aug–4 Sep (§10) |
-| B5 | 21–27 Sep | Grad-CAM galleries; cross-generator GenImage evaluation, both preprocessing conditions | `figures/gradcam/`, `results/crossgen.csv` | superseded by §7a A4 — prepared 4 Sep; first run 14 Oct 2026 failed on the secret, relaunch pending (date lapsed) |
+| B5 | 21–27 Sep | Grad-CAM galleries; cross-generator GenImage evaluation, both preprocessing conditions | `figures/gradcam/`, `results/crossgen.csv` | DONE 15 Oct 2026 via §7a A4 (G4 passed; date lapsed) |
 | B6 | 28 Sep–4 Oct | Ablations (augmentation, resolution); buffer for reruns | Ablation rows in `runs.csv` | superseded by §7a A5 — NOT STARTED (date lapsed) |
 | B7 | 5–9 Oct | Consolidation only — result tables and figures generated from the CSVs. Deliberately light: this is Semester 7 guide-review week for the paper | `results/tables/`, `figures/` | superseded by §7a A6 — NOT STARTED (date lapsed; only `canonical_runs.txt` exists) |
 | S8-1 | relative | Re-verification runs; any ablations not finished | Updated `runs.csv` | NOT STARTED |
@@ -687,8 +687,53 @@ tiny-genimage verifications recorded (closing the A1 `[VERIFY]`).
 refused with a Kaggle 401 (dead token, see `handoff.md`); launched 14 Oct 2026 with a new token as
 `yaduvxnshi/authentiscan-a4-crossgen-and-gradcam` v1 (kernel id 138590125), all ten sources
 accepted; v1 failed in cell 1 (`GITHUB_PAT` not attached to the new notebook) after ten hours in
-`running` status — elapsed time in that status is not execution; v2 follows Rohit's secret
-toggle. G4 opens when `results_a4.zip` is merged.**
+`running` status — elapsed time in that status is not execution; v2 (Rohit, 15 Oct, after
+attaching the secret) completed in 54 min. **A4 COMPLETE, G4 PASSED 15 Oct 2026 — result block below.**
+
+**A4 result `[COMPLETE — merged 15 Oct 2026; G4 PASSED]`.** Run: `authentiscan-a4-crossgen-and-gradcam`
+v2, launched by Rohit on 15 Oct at 01:35 UTC after attaching the per-notebook secret, complete at
+02:31 UTC (54 min of execution per the log; Tesla T4; v1's ten hours in `running` had cost 1–2 min
+of quota). Mount paths, resolving amendment 3's last `[VERIFY]`: datasets at
+`/kaggle/input/datasets/<owner>/<slug>`, notebook outputs at `/kaggle/input/notebooks/<owner>/<slug>/…`;
+all ten canonical checkpoints were found by `find_checkpoints`. `results_a4.zip` (14 MB) was
+fetched through the API and merged with `merge_runs.py --kind crossgen`.
+
+**Gate G4 (15 Oct, on the merged copy):** `results/crossgen.csv` = 80 rows, exactly the 10 × 4 × 2
+product of `canonical_runs.txt` × generators × conditions; every row 500 real / 500 fake; **all 80
+cells recomputed from their own `confusion_matrix.csv` and `roc_points.csv` (accuracy, precision,
+recall, F1 exactly; AUC by trapezoid) with zero mismatches** — the gate asked for two; five
+galleries (each backbone's better checkpoint by val_loss — all five are the ft checkpoints) whose
+correct panels are the identical 8 images (4 real, 4 fake; seed 42) drawn from the 18,662 test images
+all five classify correctly, plus per-model incorrect panels of 8. PASSED.
+
+**tiny-genimage as found** (`results/genimage_verification.csv`, closing the A1 `[VERIFY]`): seven
+generator folders (BigGAN, VQDM, SD v1.5, Wukong, ADM, GLIDE, Midjourney — no SD v1.4 folder); each
+`val` split holds **500 `ai` + 500 `nature`**, so every cell evaluates **1,000 images, not the planned
+2,000–3,000** (the balanced cap took min(1,250, 500); a deviation stated in Paper 2); **format
+asymmetry present for every generator: all `ai` files are PNG, all `nature` files JPEG** — the
+detectable cue A4 warned about, a stated caveat for `direct224` in particular (under `down32` both
+classes pass through the same 32×32 bottleneck, which removes most JPEG structure); native sizes:
+`ai` 128² (BigGAN), 256² (ADM, VQDM, GLIDE), 512² (SD v1.5, Wukong), 1024² (Midjourney); `nature`
+typically 500×375 or 375×500 (ImageNet JPEGs; the paired-ImageNet provenance rests on the GenImage
+paper and is not independently verifiable from the files).
+
+**Result — the generalisation gap in the project's own numbers.** Detectors at 90.5–98.9% on
+CIFAKE's test set fall to chance on the four unseen generators: every one of the ten checkpoints
+averages between 0.46 and 0.53 accuracy across the four generators, under both conditions; 74 of
+80 cells are at or below 0.55 and none reaches 0.70; AUC spans 0.29–0.64 and is **below 0.5 in 43 of
+80 cells (27 of the 40 `direct224` cells)** — the score ordering is inverted there, not merely
+uninformative (resnet50_ft on VQDM 0.288, vgg19 on BigGAN 0.295–0.319). Midjourney is the least bad
+generator (mean AUC 0.58; ADM, BigGAN, VQDM 0.46–0.47); the best cells are Midjourney under
+`down32` at 0.585–0.597 accuracy / 0.62–0.63 AUC (resnet50_fe, efficientnet_b0_fe, vit_fe, vit_ft).
+Fine-tuning buys nothing off-distribution: mean accuracy 0.498 for the five ft checkpoints vs 0.499
+for the five fe. Threshold shift is severe — 25 cells call more than 80% of images fake and 7 call
+fewer than 20% fake — so Paper 2 reports AUC beside accuracy. Framing (§3 confounds plus the format
+cue): the collapse is consistent with the review's central claim that single-generator detectors
+learn generator-specific low-level cues, but this experiment cannot separate generator shift from
+(i) content shift (CIFAR-10-derived reals vs ImageNet reals), (ii) evidence destruction under
+`down32`, and (iii) the PNG/JPEG asymmetry under `direct224`; it is reported as a bracketed negative
+result, not a measured generator effect. The numbers in this paragraph were read from
+`crossgen.csv` by the G4 check script; A6's `make_tables.py` regenerates them for the paper.
 
 ### A5 [was B6] — ablations (if the matrix behaved).
 
@@ -746,7 +791,7 @@ Concrete form of the CLAUDE.md §6 rules:
 
 | # | Item | Needed by |
 |---|---|---|
-| 1 | GenImage access path — RESOLVED 18 Aug 2026, see `data/genimage_access_note.md`: primary route (updated the same day) is the Kaggle-native `yangsangtai/tiny-genimage` (8.35 GB, all four target generators, CC-BY-NC-SA-4.0; the Hugging Face Tiny-GenImage parquet is a mirror of it), fallback is the official Google Drive release; per-generator counts and real-image provenance still `[VERIFY at download]` | — |
+| 1 | GenImage access path — RESOLVED 18 Aug 2026, see `data/genimage_access_note.md`: primary route (updated the same day) is the Kaggle-native `yangsangtai/tiny-genimage` (8.35 GB, all four target generators, CC-BY-NC-SA-4.0; the Hugging Face Tiny-GenImage parquet is a mirror of it), fallback is the official Google Drive release; per-generator counts verified 15 Oct 2026 at the A4 run (500 real / 500 fake per generator in `val`, so 1,000 images per cell rather than the planned 2,000–3,000); real-image provenance (paired ImageNet) rests on the GenImage paper, files consistent (JPEG, ~500×375) | — |
 | 2 | Kaggle GPU quota — RESOLVED 20 Aug 2026: 30 h GPU + 20 h TPU per week, confirmed from the account quota page | — |
 | 3 | Role split between Rohit, Vishal and Hardik (CLAUDE.md open item 4) — no task in this plan is assigned until it is settled | Before B2 |
 | 4 | Semester 8 calendar dates are unknown, so phases S8-1 to S8-3 carry relative weeks only; convert to dates when the calendar is published | Start of Semester 8 |

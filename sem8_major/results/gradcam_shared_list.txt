@@ -1,0 +1,8 @@
+test/REAL/0195 (3).jpg
+test/REAL/0043 (4).jpg
+test/REAL/0483 (5).jpg
+test/REAL/0430 (10).jpg
+test/FAKE/452 (8).jpg
+test/FAKE/32 (5).jpg
+test/FAKE/26 (7).jpg
+test/FAKE/963 (4).jpg

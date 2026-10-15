@@ -12,6 +12,13 @@ results/
 ├── smoke_runs.csv            smoke-run rows only (subset runs from *_smoke.yaml configs) —
 │                             quarantined so no subset number can reach a Paper 2 table;
 │                             train.py refuses to write a smoke row into runs.csv
+├── calibration.csv           A2 per-architecture timing (30 timed batches, ft, T4)
+├── kaggle_env.md             Kaggle VM hardware + library versions recorded at A2
+├── genimage_verification.csv A4: per tiny-genimage folder — target generator, val ai/nature
+│                             counts, extension histogram, sizes of the first 20 files
+├── gradcam_shared_list.txt   A4: the 8 test images (4 real, 4 fake) every better checkpoint
+│                             classifies correctly; all five galleries' correct panels use them
+├── gradcam_correct/          A4: per better checkpoint, every correctly classified test path
 ├── crossgen.csv              one row per cross-generator evaluation of an existing checkpoint:
 │                             run_id, generator, condition, n_real, n_fake,
 │                             acc, precision, recall, f1, auc, ap
@@ -56,7 +63,7 @@ Cross-generator evaluations write their `confusion_matrix.csv` and `roc_points.c
 | `train_time_min` | wall-clock training time in minutes |
 | `total_params` | total parameter count of the model |
 | `trainable_params` | trainable parameter count (differs by mode; Paper 2 reports it) |
-| `hardware` | GPU model + VRAM, e.g. `Tesla T4, 16 GB`, or `local i5-1135G7 CPU` for smoke runs — Paper 2 must report it |
+| `hardware` | GPU model + VRAM as the notebook reports it (every logged row reads `Tesla T4, 15 GB`), or the local CPU string for smoke runs — Paper 2 must report it |
 | `torch_version` | resolved torch version for this run |
 | `timm_version` | resolved timm version for this run |
 | `val_acc` | accuracy on the 10k validation split at the best epoch |
