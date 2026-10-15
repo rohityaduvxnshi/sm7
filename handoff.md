@@ -6,7 +6,7 @@ Read CLAUDE.md first; this file is the fast-moving state on top of it.
 
 ---
 
-## A4 PUSHED `[14 Oct 2026]` — v1 failed on the missing secret after ten hours in `running`; toggle + re-push needed; audit done; WPR 12 and the Sem 7 endpoint need Rohit
+## A4 PUSHED `[14 Oct 2026]`; v2 RUNNING `[15 Oct 2026]` — v1 failed on the missing secret after ten hours in `running` (no quota lost); audit done; WPR 12 rendered; Sem 7 endpoint needs Rohit
 
 ### 1. Goal
 
@@ -27,8 +27,12 @@ Use the new Kaggle token Rohit supplied in chat to get A4 running, and audit the
   `kernels/status` shows `running` while a batch session waits for provisioning, so elapsed
   time says nothing about cell progress — only the log does. The first `[VERIFY at push]`
   (sources accepted) stands on the push response; the second (kernel-output mount path) is
-  still open. Whether the ten hours consumed GPU quota is not visible from the API.
+  still open. **Quota (Rohit, quota page, 15 Oct): v1 consumed only 1–2 minutes** — the ten
+  hours were a provisioning wait, not a held session.
   Kaggle docs (read 14 Oct): Save & Run All sessions get 12 h on CPU/GPU, 9 h on TPU.
+- **v2 launched by Rohit on 15 Oct at 01:35 UTC** (Save & Run All in the browser, after
+  attaching `GITHUB_PAT` to the notebook). Status `running`; no output yet. Progress is read
+  only from the log when the version completes; cap at ~13:35 UTC.
 - Execution-split note: the push was executed by Claude on Rohit's explicit instruction with
   the token supplied inline (second time; 23 Aug was the first). CLAUDE.md §1 is unchanged.
   The token is in the chat transcript — regenerate it once `results_a4.zip` is in hand.
@@ -46,8 +50,8 @@ Use the new Kaggle token Rohit supplied in chat to get A4 running, and audit the
 
 ### 3. Changes it made
 
-- Kaggle: one push (v1 auto-run; failed in cell 1 after 18 s of execution; quota impact of
-  its ten hours in `running` unknown — check the quota page).
+- Kaggle: one push (v1 auto-run; failed in cell 1 after 18 s of execution; 1–2 minutes of
+  quota per the quota page, 15 Oct).
 - CLAUDE.md §13: 14 Oct entry; the WPR bullet and the stale "USB transfer" gate corrected.
 - `implementation_plan.md`: stale statuses corrected — §1 status line, Table 5 B2–B7, §3 and
   §9 GenImage primary route, §7a A2 time-budget wording, amendment 3 `[VERIFY at push]`,
@@ -58,19 +62,18 @@ Use the new Kaggle token Rohit supplied in chat to get A4 running, and audit the
 
 - A4 v1: `GITHUB_PAT` not attached to the new notebook (per-notebook secret, the session-2
   lesson, foreseen in this file's own step 1 and then mis-read from the status endpoint).
-  Cost: one failed version, ten wall-clock hours, quota unknown. Lesson recorded above:
+  Cost: one failed version, ten wall-clock hours, 1–2 minutes of quota. Lesson recorded above:
   never infer cell progress from `running`; fetch the log.
 - The 23 Sep diagnosis (below) held: dead token, route and payload fine.
 
 ### 5. Next steps
 
-1. **Rohit — two browser actions, no code:** (a) open the A4 notebook
-   (`kaggle.com/code/yaduvxnshi/authentiscan-a4-crossgen-and-gradcam`) → Add-ons → Secrets →
-   toggle `GITHUB_PAT` ON; (b) read the quota page: GPU hours consumed on 14 Oct. Then say
-   "go" — Claude re-pushes (v2) with the token already supplied — or press Save & Run All
-   yourself. If v2 also shows `running` for hours before its log starts, suspect the eight
-   kernel-output sources (~4.4 GB with the session zips); fallback = a Kaggle dataset of the
-   ten canonical checkpoints uploaded from this laptop (2.2 GB), attached in their place.
+1. ~~Rohit — toggle the secret, read the quota page~~ DONE 15 Oct: secret attached, v2
+   launched 01:35 UTC by Rohit, v1 cost 1–2 minutes of quota. If v2 also shows `running` for
+   hours before its log starts, the wait is provisioning (it cost no quota yesterday); the
+   eight kernel-output sources (~4.4 GB with the session zips) remain the suspect, and the
+   fallback is a Kaggle dataset of the ten canonical checkpoints uploaded from this laptop
+   (2.2 GB), attached in their place.
 1b. **When v2 completes** (watch `kernels/status`, but read progress only from the log):
    Claude fetches `results_a4.zip` via `GET /api/v1/kernels/output` with the token (download
    only, no quota), merges
