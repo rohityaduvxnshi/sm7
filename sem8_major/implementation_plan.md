@@ -4,7 +4,7 @@
 
 This document is the build plan for the experimental work behind Paper 2 (the implementation paper) and the Semester 8 major project report. It covers environment, data, the experiment matrix, training defaults, the results pipeline, and a dated build schedule.
 
-Status: `[CONFIRMED]` — written 18 August 2026 in response to Dr. Richa Gupta's instruction of 15 August 2026 that implementation code preparation begins now, during Semester 7, rather than at the start of Semester 8 (see CLAUDE.md §3 amendment and §13 Track B). This session produces the plan and the repository skeleton only. No training code is written yet, and no experiment has been run. *(Status line as written 18 Aug 2026; superseded by §7a — as of 14 Oct 2026 the pipeline is implemented, the 10-run matrix and three reruns are complete with 13 rows in `results/runs.csv`, and A4 is running on Kaggle.)*
+Status: `[CONFIRMED]` — written 18 August 2026 in response to Dr. Richa Gupta's instruction of 15 August 2026 that implementation code preparation begins now, during Semester 7, rather than at the start of Semester 8 (see CLAUDE.md §3 amendment and §13 Track B). This session produces the plan and the repository skeleton only. No training code is written yet, and no experiment has been run. *(Status line as written 18 Aug 2026; superseded by §7a — as of 15 Oct 2026 A1–A4 and A6 are complete with gates G1–G4 and G6 passed (13 rows in `results/runs.csv`, 80 in `crossgen.csv`, every Paper 2 table and figure generated under `results/tables/` and `figures/`), A5 is prepared and awaits its Kaggle launch, and P1 can start.)*
 
 **Integrity statement:** no number produced by any run described here goes into Paper 1. Paper 1 is a review, it was submitted for the department plagiarism check on 15 August 2026, and it stays result-free. Everything generated under `sem8_major/results/` belongs to Paper 2 and the major project report.
 
@@ -50,7 +50,7 @@ Two confounds survive either condition and are stated as limitations in Paper 2 
 
 ## 4. Experiment matrix
 
-The core matrix is 5 backbones x 2 transfer-learning modes = 10 runs, listed in Table 2 in build order. Feature extraction (`fe`) means the backbone is frozen and only a new binary head is trained; fine-tuning (`ft`) means the whole network is updated. Every run has its own config file in `sem8_major/configs/`, named `<timm model>_<mode>.yaml`; run ids are stamped at launch as `<model>_<mode>_<YYYYMMDD-HHMM>`.
+The core matrix is 5 backbones x 2 transfer-learning modes = 10 runs, listed in Table 2 in build order. Feature extraction (`fe`) means the backbone is frozen and only a new binary head is trained; fine-tuning (`ft`) means the whole network is updated. Every run has its own config file in `sem8_major/configs/`, named `<timm model>_<mode>.yaml`; run ids are stamped at launch as `<model>_<mode>_<YYYYMMDD-HHMM>` (ablation configs add their `tag`: `<model>_<mode>_<tag>_<YYYYMMDD-HHMM>`, from 15 Oct 2026).
 
 **Table 2. Core experiment matrix (10 runs).**
 
@@ -156,8 +156,8 @@ The hard Semester 7 commitment is **B0 and B1** — environment, data, split, re
 | B3 | 7–13 Sep | EfficientNet-B0 + VGG19, both modes (runs 5–8) | 4 rows + 4 artefact dirs | DONE 23–25 Aug (A3 sessions 3–5) |
 | B4 | 14–20 Sep | ViT-B/16, both modes (runs 9–10); 10-run matrix complete | 2 rows + 2 artefact dirs | DONE 23–26 Aug (A3 sessions 3 and 6); matrix closed 26 Aug, reruns 26 Aug–4 Sep (§10) |
 | B5 | 21–27 Sep | Grad-CAM galleries; cross-generator GenImage evaluation, both preprocessing conditions | `figures/gradcam/`, `results/crossgen.csv` | DONE 15 Oct 2026 via §7a A4 (G4 passed; date lapsed) |
-| B6 | 28 Sep–4 Oct | Ablations (augmentation, resolution); buffer for reruns | Ablation rows in `runs.csv` | superseded by §7a A5 — NOT STARTED (date lapsed) |
-| B7 | 5–9 Oct | Consolidation only — result tables and figures generated from the CSVs. Deliberately light: this is Semester 7 guide-review week for the paper | `results/tables/`, `figures/` | superseded by §7a A6 — NOT STARTED (date lapsed; only `canonical_runs.txt` exists) |
+| B6 | 28 Sep–4 Oct | Ablations (augmentation, resolution); buffer for reruns | Ablation rows in `runs.csv` | superseded by §7a A5 — PREPARED 15 Oct 2026 (configs, notebooks, real time budget); Kaggle launch pending (Rohit) |
+| B7 | 5–9 Oct | Consolidation only — result tables and figures generated from the CSVs. Deliberately light: this is Semester 7 guide-review week for the paper | `results/tables/`, `figures/` | DONE 15 Oct 2026 via §7a A6 (G6 passed; date lapsed) |
 | S8-1 | relative | Re-verification runs; any ablations not finished | Updated `runs.csv` | NOT STARTED |
 | S8-2 | relative | Paper 2 draft following the Karki et al. schema (= §10 phase P1; feeds both the major report and the merged publication) | Paper 2 sections | NOT STARTED |
 | S8-3 | relative | Major project report, viva and demo preparation | Report DOCX → PDF | NOT STARTED |
@@ -601,6 +601,11 @@ early-stopped at epoch 15 (best epoch 10):
 | EfficientNet-B0 | 92.86 | 97.56 | +4.69 |
 | ResNet50 | 92.83 | 95.93 | +3.10 |
 
+*(15 Oct 2026: these are the console printouts of the session; `results/tables/t1` rounds the
+logged six-decimal values half-to-even, under which three exact-tie rows print 0.01 lower —
+VGG19 fe 90.54, ViT fe 94.74, ViT ft 98.88. On 20,000 test images 6 of the 10 accuracies are
+exact ties; the table is authoritative for Paper 2.)*
+
 **Three findings the discussion should be built on, in order of strength.**
 
 1. **ViT wins both modes outright** — best frozen representation (94.75, above every CNN) and
@@ -723,23 +728,44 @@ averages between 0.46 and 0.53 accuracy across the four generators, under both c
 80 cells are at or below 0.55 and none reaches 0.70; AUC spans 0.29–0.64 and is **below 0.5 in 43 of
 80 cells (27 of the 40 `direct224` cells)** — the score ordering is inverted there, not merely
 uninformative (resnet50_ft on VQDM 0.288, vgg19 on BigGAN 0.295–0.319). Midjourney is the least bad
-generator (mean AUC 0.58; ADM, BigGAN, VQDM 0.46–0.47); the best cells are Midjourney under
-`down32` at 0.585–0.597 accuracy / 0.62–0.63 AUC (resnet50_fe, efficientnet_b0_fe, vit_fe, vit_ft).
+generator (mean AUC 0.58; ADM, BigGAN, VQDM 0.46–0.47); the best cells are all Midjourney: the
+highest accuracy, 0.597, is reached twice (efficientnet_b0_fe under `down32`, vit_fe under
+`direct224`) and the highest AUC, 0.642, by vit_fe under `direct224`; no cell reaches 0.60 accuracy
+or 0.65 AUC *(corrected 15 Oct 2026 from `t3c_crossgen_summary` rows acc_max_cells / auc_max_cells —
+the sentence first written here named four `down32` cells at "0.585–0.597 / 0.62–0.63", which was
+wrong for vit_fe and vit_ft and missed the best cell)*.
 Fine-tuning buys nothing off-distribution: mean accuracy 0.498 for the five ft checkpoints vs 0.499
-for the five fe. Threshold shift is severe — 25 cells call more than 80% of images fake and 7 call
-fewer than 20% fake — so Paper 2 reports AUC beside accuracy. Framing (§3 confounds plus the format
+for the five fe. Threshold shift is severe — 29 cells call more than 80% of all 1,000 images fake
+and 6 call fewer than 20% (predicted-fake rate, `t3c_crossgen_summary`) — so Paper 2 reports AUC
+beside accuracy *(corrected 15 Oct 2026: the "25 / 7" first written here were fake-class recall
+counts from the G4 check script — cells detecting more than 80% / fewer than 20% of the fakes —
+under the wrong label; t3c now generates both statistics, named apart)*. Framing (§3 confounds plus the format
 cue): the collapse is consistent with the review's central claim that single-generator detectors
 learn generator-specific low-level cues, but this experiment cannot separate generator shift from
 (i) content shift (CIFAR-10-derived reals vs ImageNet reals), (ii) evidence destruction under
 `down32`, and (iii) the PNG/JPEG asymmetry under `direct224`; it is reported as a bracketed negative
 result, not a measured generator effect. The numbers in this paragraph were read from
 `crossgen.csv` by the G4 check script; A6's `make_tables.py` regenerates them for the paper.
+**Where this paragraph and `results/tables/` disagree, the table is authoritative.**
 
 ### A5 [was B6] — ablations (if the matrix behaved).
 
 Write the three ablation YAMLs (`resnet50_ft_noaug.yaml`, `resnet50_ft_res64.yaml`,
 `resnet50_ft_res128.yaml`) — they do not exist yet — then three short runs, same pipeline,
 same round-trip. **Gate G5:** 3 coherent rows + artefact dirs merged into the repo.
+
+**Status (15 Oct 2026): PREPARED, launch pending (Rohit).** The three configs exist, each the
+canonical `resnet50_ft_e50.yaml` recipe (50-epoch ceiling) with exactly one factor changed plus a
+`tag` (`noaug` / `res64` / `res128`) that `train.py` now puts into the run id. The time budget is
+real: `run_session.py` forwards `--time-budget-min` and the guard no longer fires after the final
+epoch. Two sessions, generated by `make_a3_notebook.py --session 9|10` as
+`notebooks/phase_a5_s9.ipynb` (noaug, budget 420 min, ~7.2 h worst case) and `phase_a5_s10.ipynb`
+(res64 + res128, 230 min each, ~7.9 h worst case), slugs `authentiscan-a5-session-<N>`; timm pinned
+to 1.0.26 and asserted, T4-only, pre-flight echoes resolution / augment / tag. Proven on CPU with a
+smoke subset (tagged run id, 64 px path, clean `stop_reason=time_budget`). Merge with
+`merge_runs.py`, copy the run dirs in, rerun `make_tables.py` → `t6_ablations` appears with the
+varied factor read from `config_used.yaml`; disclose any torch-version difference beside the
+baseline. Sessions 1–8 are frozen behind `--force`.
 
 ### A6 [was B7] — consolidation.
 
@@ -754,6 +780,32 @@ run_ids the tables use, and `make_tables.py` fails loudly if a manifest id is mi
 from a clean checkout reproduces them; every Paper 2 table/figure file exists under
 `results/tables/` and `figures/`. After G6, Paper 2 drafting can begin whenever Semester 8
 (or the guide) allows.
+
+**Status: COMPLETE 15 Oct 2026, G6 PASSED** (commit 6dce673; session record in `handoff.md`).
+`code/make_tables.py` writes `results/tables/` — t1 CIFAKE test metrics, t1b convergence reruns,
+t2 model size and cost, t3a/t3b cross-generator accuracy/AUC, t3c cross-generator summary
+statistics, t4 hyperparameters (values and justifications read from the YAML comments and
+cross-checked against each run's `config_used.yaml`), t5 tiny-genimage composition, and t6
+ablations once A5 rows exist — each as CSV plus a `.md` twin whose footer names its sources and
+the rounding rule. `code/make_figures.py` writes `figures/f1_learning_curves_{loss,acc}`,
+`f2_roc_cifake_test`, `f3_confusion_matrices`, `f4_crossgen_{down32,direct224}` and
+`f5_gradcam_{correct,incorrect}` at print width (7 in, 8 pt, 300 dpi). Rules enforced in code:
+fail-loud on a manifest id missing from `runs.csv`, a (model, mode) without a manifest entry, a
+duplicate cross-generator cell, or a config that drifted from its run; non-manifest rows are
+classified from `config_used.yaml` (only the epoch budget differs → superseded, t1b only; anything
+else → ablation, t6); one rounding function, half-to-even on the logged decimal string — on 20,000
+test images accuracy is a multiple of 0.005 %, so 6 of the 10 test accuracies are exact ties and
+the tables read vgg19 fe 90.54, vit fe 94.74, vit ft 98.88 where earlier prose rounded up;
+galleries are filtered by the manifest and checked to be each backbone's lower-val_loss checkpoint.
+**Gate G6 (15 Oct):** fresh `git clone` + fresh venv from `requirements.lock` (torch 2.13.0+cpu,
+timm 1.0.28, matplotlib 3.11.1, pandas 3.0.5) → `make_tables.py` + `make_figures.py` → `git status`
+clean, all 24 files byte-identical, every listed file present (`.gitattributes` pins LF so Windows
+and Linux check out the same bytes). **Known limitation for P1 (CLAUDE.md open item 23):** the
+ViT-B/16 Grad-CAM gallery from A4 has an empty heat map on about half its panels (Grad-CAM at
+`blocks[-1].norm1` produced a zero map), so the ViT row of F5 is not comparable with the CNN rows;
+the caption must say so, and an attention-based alternative would be a new technique and a new
+Kaggle session. Where any status paragraph in this plan and `results/tables/` disagree, the table
+is authoritative.
 
 ### Decisions/dependencies on Rohit under acceleration
 
@@ -925,7 +977,8 @@ ranking: vit 98.89 > vgg19 97.91 > densenet121 97.60 ≈ efficientnet_b0 97.56 >
 96.51. Canonical fe ranking: vit 94.75 > densenet121 93.48 > resnet50 92.98 ≈
 efficientnet_b0 92.86 > vgg19 90.55. ResNet50's fe→ft gain becomes +3.53 (was +3.10 on the
 30-epoch rows), still the smallest of the five; the VGG19 inversion (+7.36) and the ViT lead
-are unaffected.
+are unaffected. *(15 Oct 2026: under `results/tables/t1`'s half-to-even rule the exact-tie rows
+read vgg19 90.54, vit fe 94.74, vit ft 98.88; the table is authoritative.)*
 
 **Matrix status after session 8:** `runs.csv` holds 13 rows — the 10 matrix rows plus three
 separately timestamped 50-epoch reruns, nothing overwritten. Every row: `Tesla T4, 15 GB`,

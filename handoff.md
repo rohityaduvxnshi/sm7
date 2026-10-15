@@ -6,73 +6,130 @@ Read CLAUDE.md first; this file is the fast-moving state on top of it.
 
 ---
 
-## START HERE — next session (written 15 Oct 2026 at session close)
+## START HERE — next session (written 15 Oct 2026, late, at session close)
 
-**State in one line:** A1–A4 done and gated (G1–G4 passed); nothing running on Kaggle; working
-tree clean except the untracked `AGENTS.md`; this wrap-up is the last commit.
+**State in one line:** A1–A4 done and gated (G1–G4); **A6 done, G6 passed** (every Paper 2 table and
+figure regenerates byte-identically from a clean clone + fresh venv); **A5 prepared, not launched**
+(two Kaggle sessions await Rohit); nothing running on Kaggle; working tree clean except `AGENTS.md`.
 
 **Session-start checklist**
-1. `git pull` — this laptop is the only machine; remote `origin` = github.com/rohityaduvxnshi/sm7
-   (private). Victus withdrawn 4 Sep.
-2. Venv `sem8_major/.venv` (torch 2.13.0+cpu, timm 1.0.28). Health check from `sem8_major/`:
-   `./.venv/Scripts/python.exe code/merge_runs.py --selfcheck` and `... code/data.py --selfcheck`.
-3. Read CLAUDE.md §13 "Where we are", then the A4 COMPLETE block below. Older blocks are history.
+1. `git pull` — this laptop is the only machine; remote `origin` = github.com/rohityaduvxnshi/sm7 (private).
+2. Health checks from `sem8_major/`, calling the venv python by its ABSOLUTE path (the shell's working
+   directory drifts between Bash calls on this laptop):
+   `D:\Desktop\AuthentiScan\sem8_major\.venv\Scripts\python.exe code/merge_runs.py --selfcheck`, then
+   `... code/data.py --selfcheck`, `... code/make_tables.py --selfcheck`.
+3. Read CLAUDE.md §13 "Where we are", then the A6/A5 block below. Older blocks are history.
 
-**Next: A6 — consolidation (laptop, no GPU, no Kaggle).** Build `code/make_tables.py` and
-`code/make_figures.py` per plan §7a A6. Inputs are only `results/runs.csv`, `results/crossgen.csv`,
-`results/canonical_runs.txt`, the per-run CSVs (`learning_curve.csv`, `confusion_matrix.csv`,
-`roc_points.csv`, `genimage_<gen>_<cond>/`), `results/genimage_verification.csv`, `configs/*.yaml`
-and `figures/gradcam/<manifest run_ids>/*.png`. Outputs: `results/tables/*.csv` (+ `.md` twins) and
-`figures/*.png`. Minimum set, following the Karki et al. schema:
-- T1 per-run CIFAKE test metrics for the 10 canonical runs (+ val_acc, best_epoch, stop_reason);
-- T2 model size and cost: total/trainable params, batch size, max_epochs, train_time_min, hardware;
-- T3 cross-generator matrix: accuracy and AUC per checkpoint × generator × condition, per-model
-  means, n = 1,000 per cell, with the three caveats as table notes;
-- T4 hyperparameters from the YAMLs (Table 3 values, one justification each);
-- T5 tiny-genimage composition from `genimage_verification.csv` (counts, PNG/JPEG, sizes);
-- F1 learning curves (2 × 5 grid); F2 ROC overlays on CIFAKE test (fe panel, ft panel);
-  F3 confusion matrices (10); F4 cross-generator heatmaps (accuracy, AUC; one per condition);
-  F5 Grad-CAM contact sheets from the five manifest galleries only — the 20 Aug smoke gallery
-  `figures/gradcam/resnet50_fe_20260820-0709/` must be excluded by the manifest filter (or deleted).
-Rules: `make_tables.py` fails loudly on a manifest id missing from `runs.csv` or a (model, mode)
-without an entry; one rounding function for every number, rule stated in the table footer (the two
-known tie cases: efficientnet_b0_fe 0.928650, densenet121_fe 0.934850); the three superseded
-30-epoch rows appear only in a convergence footnote table; matplotlib `Agg`; no number typed by
-hand anywhere downstream. **Gate G6:** fresh `git clone` + venv → regenerate → identical tables and
-every listed file present. Then P1 (Paper 2 draft) can start.
+**Next, in order**
+1. **Rohit launches A5** (Kaggle T4; check the quota page first — worst case ~7.2 h + ~7.9 h, expected
+   ~10 h in total; both sessions fit one 30 h week). For each of `--session 9` and `--session 10`:
 
-**Then A5 (Kaggle T4; Rohit launches):** write `resnet50_ft_noaug.yaml`, `resnet50_ft_res64.yaml`,
-`resnet50_ft_res128.yaml` (plan §4); first make the `time_budget_min` guard real (`run_session.py`
-passes `--time-budget-min`, emitted by the notebook generator); one session of three ResNet50-ft-class
-runs; toggle `GITHUB_PAT` on the new notebook before its first run; round-trip via `merge_runs.py`.
+       & "d:\Desktop\AuthentiScan\sem8_major\.venv\Scripts\python.exe" "d:\Desktop\AuthentiScan\sem8_major\notebooks\make_a3_notebook.py" --session 9 --push --token KGAT_<token>
+
+   A push auto-starts a run; the first run of a NEW notebook fails in cell 1 until `GITHUB_PAT` is
+   toggled ON for it (Add-ons → Secrets), so: push, toggle, push again (or press Run). Regenerate the
+   Kaggle token first (the 14–15 Oct one is in a chat transcript).
+2. **Claude merges each `results_a5_s<N>.zip`:** `merge_runs.py <unzipped>/results/runs.csv --kind runs`,
+   copy the run dirs (`resnet50_ft_noaug_*`, `resnet50_ft_res64_*`, `resnet50_ft_res128_*`) into
+   `results/`, rerun `make_tables.py` and `make_figures.py` (`t6_ablations` appears by itself; its
+   `varied` column must show exactly one factor per row — that is gate G5 — and the environment columns
+   show whether torch/timm/hardware match the baseline; disclose any difference), commit, then repeat G6
+   on the new tables: clone to a SHORT path (`/c/Users/rohit/AppData/Local/Temp/g6c`; a clone under the
+   scratchpad hits Windows MAX_PATH on a long PDF name in `sem7_minor`), fresh venv at a short path
+   (`g6v`), regenerate, `git status` must be clean. The script used on 15 Oct was `g6.sh` in that
+   session's scratchpad — ten lines, easy to rewrite.
+3. **P1 — Paper 2 draft** can start now (plan §10): every number comes from `results/tables/` and every
+   figure from `figures/f*.png`; captions carry the rounding rule and the F5 ViT limitation (open item 23).
 
 **Facts that are easy to get wrong**
-- `kernels/status` reports `running` while a batch session waits for provisioning. Read the log
-  (`kernels/output`, available once the version ends) before claiming any progress; A4 v1 sat
-  10 h in `running` and executed for 18 s.
-- A new Kaggle notebook's first auto-run fails at cell 1 until `GITHUB_PAT` is toggled on for
-  that notebook (Add-ons → Secrets). Push once, toggle, run again.
-- Kaggle tokens: pass inline, never store (this laptop deletes files containing them); CLI 2.2.4
-  rejects them, direct REST with `Authorization: Bearer` works; `POST www.kaggle.com/api/v1/kernels/push`
-  was still accepted on 14 Oct 2026.
+- `kernels/status` reports `running` while a batch session waits for provisioning — read the log
+  (`kernels/output`) before claiming progress. A new notebook's first run fails until `GITHUB_PAT` is
+  toggled on for that notebook.
+- Kaggle tokens: pass inline, never store (this laptop deletes files containing them); the legacy REST
+  `POST www.kaggle.com/api/v1/kernels/push` with `Authorization: Bearer` worked on 14 Oct 2026.
 - Mounts: datasets at `/kaggle/input/datasets/<owner>/<slug>`, notebook outputs at
-  `/kaggle/input/notebooks/<owner>/<slug>/`; the A3/A4 notebooks autodetect both.
-- Save & Run All cap: 12 h for CPU/GPU sessions (9 h is TPU).
-- Long heredocs die in this machine's Bash tool — write scripts to the scratchpad and run them.
-  In PowerShell call the venv python with the full `& "...\.venv\Scripts\python.exe"` form.
+  `/kaggle/input/notebooks/<owner>/<slug>/`; the notebooks autodetect both.
+- Save & Run All cap: 12 h for GPU sessions. A5 budgets are enforced per run from session 9 on
+  (`stop_reason=time_budget` if hit; sessions 1–8 ran without the flag and are frozen behind `--force`).
+- Long heredocs die in this machine's Bash tool — write scripts to the scratchpad and run them. `python
+  -m venv` and `git clone` both fail under the scratchpad path (MAX_PATH) — use short temp paths.
+- `results/tables/` is authoritative over every number in CLAUDE.md / handoff / plan prose. Half-to-even
+  rounding makes three exact-tie rows read 0.01 lower than older prose (vgg19 fe 90.54, vit fe 94.74,
+  vit ft 98.88; 6 of 10 test accuracies are ties on 20,000 images), and the "25 / 7" threshold-shift
+  counts of 15 Oct were recall counts — the predicted-fake rate is 29 / 6 (t3c carries both).
 
 **Open asks for Rohit**
-1. Regenerate the Kaggle token (the 14–15 Oct one is in a chat transcript).
-2. Semester 7 endpoint (CLAUDE.md open item 20): was a final report submitted and from which
-   file; did the guide review the draft; plagiarism result? And D3 (item 22).
-3. CIFAKE licence terms before any gallery image goes into Paper 2 (item 21).
-4. A6 before A5 unless told otherwise.
+1. Launch A5 (above), after regenerating the Kaggle token.
+2. Open item 23: the ViT Grad-CAM row of F5 is empty on about half its panels — caption disclosure only,
+   or an attention-rollout rerun (new technique, new Kaggle session)?
+3. Open items 20–22 (Semester 7 endpoint, CIFAKE licence, D3) are still unanswered.
 
-**Housekeeping (small; do alongside A6):** `kaggle_env.md` remaining `[VERIFY]` lines
-(quota-reset day; multi-version attach — moot); `num_workers: 2  # [VERIFY]` tags in every config;
-`resnet50_ft_e50.yaml` header says session 7 (it ran in 8); pin `grad-cam` in the notebooks and
-record its version; `sem8_major/README.md` module list; `AGENTS.md` (untracked Codex copy of
-CLAUDE.md, now far behind — regenerate from CLAUDE.md or ignore it).
+**Housekeeping still open:** the grad-cam version used at A4 is unrecorded (A4 installed it unpinned;
+the local lock has 1.5.5; only the A4 log would say); `kaggle_env.md` quota-reset day `[VERIFY]`
+(browser-only); `AGENTS.md` untracked (Codex copy of CLAUDE.md, stale — regenerate or ignore).
+
+---
+
+## A6 COMPLETE, G6 PASSED; A5 PREPARED `[15 Oct 2026, later]` — next: Rohit launches sessions 9–10; P1 can start
+
+### 1. Goal
+
+Build the consolidation scripts (A6) and prepare the ablation phase (A5) per the previous START HERE
+spec, with an adversarial review before anything was committed.
+
+### 2. Current State
+
+- `code/make_tables.py` → `results/tables/` (t1, t1b, t2, t3a, t3b, t3c, t4, t5 as CSV + `.md` twin;
+  t6 once A5 rows exist). `code/make_figures.py` → `figures/f1_learning_curves_{loss,acc}`,
+  `f2_roc_cifake_test`, `f3_confusion_matrices`, `f4_crossgen_{down32,direct224}`,
+  `f5_gradcam_{correct,incorrect}` (7 in wide, 8 pt, 300 dpi, metadata stripped).
+- **G6 PASSED** on commit 6dce673: fresh `git clone` + fresh venv from `requirements.lock` (torch
+  2.13.0+cpu, timm 1.0.28, matplotlib 3.11.1, pandas 3.0.5) → regenerate → `git status` clean, all 24
+  files byte-identical to the committed ones, every listed file present. `.gitattributes`
+  (`* text=auto eol=lf`) makes the checkout match what the scripts write on any OS.
+- Facts the tables surfaced: 6 of 10 test accuracies are exact rounding ties (odd correct counts on
+  20,000 images) — half-to-even is the rule, stated in every footer; threshold shift is 29 cells >80%
+  predicted fake and 6 <20% (the 25 / 7 of the morning were recall counts); best cross-generator cells
+  are acc 0.597 twice (efficientnet_b0_fe / midjourney / down32 and vit_fe / midjourney / direct224)
+  and AUC 0.642 (vit_fe / midjourney / direct224); the ViT Grad-CAM gallery is empty on ~half its
+  panels (CLAUDE.md open item 23).
+- A5 prepared, not launched: `configs/resnet50_ft_noaug.yaml`, `_res64.yaml`, `_res128.yaml` (the
+  canonical `resnet50_ft_e50` recipe + one factor + `tag`); `train.py` writes the tag into the run id
+  and the budget guard no longer fires after the final epoch; `run_session.py --time-budget-min`;
+  `make_a3_notebook.py` sessions 9 (420 min) and 10 (230 min each) with timm pinned to 1.0.26, the
+  ablated factor echoed in the pre-flight, `--force` required for sessions 1–8; notebooks
+  `phase_a5_s9.ipynb` / `phase_a5_s10.ipynb` generated; CPU smoke through `run_session.py` produced
+  `resnet50_ft_res64_<stamp>` at 64 px with `stop_reason=time_budget`.
+- Review: 36-agent workflow (5 finder lenses → merge → 2 skeptics per finding): 15 confirmed (2 high,
+  both governing-document errors, corrected with dated notes), 18 low; all applied except three judged
+  not worth it (greyscale linestyle cycling, a conditional rounding footer, automatic zero-CAM
+  detection — unreliable without the source images, which a clean clone lacks).
+
+### 3. Changes it made
+
+- New: `code/make_tables.py`, `code/make_figures.py`, `results/tables/` (16 files), `figures/f*.png`
+  (8), three ablation configs, `notebooks/phase_a5_s9.ipynb`, `phase_a5_s10.ipynb`, `.gitattributes`.
+- Edited: `code/train.py` (tag infix; guard only before the last epoch), `code/run_session.py`
+  (budget passthrough), `code/gradcam.py` (`overlay_name` shared with make_figures),
+  `notebooks/make_a3_notebook.py` (sessions 9–10, phase labels, timm pin, pre-flight echo, `--force`,
+  corrected comments), `configs/template.yaml` (`tag` field, amp comment), every config's
+  `num_workers` comment, `resnet50_ft_e50.yaml` header, `results/kaggle_env.md`, the three READMEs,
+  CLAUDE.md §13 + open item 23, plan (§1 status, §4 run-id form, §7a A4 corrections, A5/A6 status,
+  Table 5 B6/B7, rounding notes at the standings tables), this file.
+- Kaggle: nothing pushed, nothing launched.
+
+### 4. Failed Attempts
+
+- `python -m venv` and `git clone` under the scratchpad path fail with "filename too long" (Windows
+  MAX_PATH: torch's licence tree; a long PDF name under `sem7_minor`). Short temp paths work.
+- The first G6 byte-comparison loop globbed from the wrong directory and printed three false DIFF
+  lines; `git status` in the clone was the real check, and a direct `cmp` over all 24 files confirmed it.
+- `$PWD`-relative venv paths failed three times because the Bash tool's working directory drifts.
+
+### 5. Next steps
+
+As in START HERE: Rohit launches sessions 9 and 10; Claude merges, regenerates, re-runs G6, closes G5;
+P1 (Paper 2 draft) can begin at any time from `results/tables/` and `figures/`.
 
 ---
 
@@ -101,7 +158,8 @@ Merge the A4 run (80-cell cross-generator sweep + Grad-CAM galleries) and pass g
 - **Result:** chance level everywhere — mean accuracy per checkpoint 0.46–0.53 under both
   conditions; 74/80 cells ≤ 0.55; AUC 0.29–0.64, below 0.5 in 43/80 (27 of 40 `direct224`);
   Midjourney least bad (mean AUC 0.58); ft no better than fe (0.498 vs 0.499); severe threshold
-  shift (25 cells call >80% fake, 7 call <20%). Framed as a bracketed negative result (three
+  shift (29 cells call >80% of all images fake, 6 call <20% — corrected 15 Oct from the "25 / 7"
+  first written here, which were fake-recall counts; both are in t3c). Framed as a bracketed negative result (three
   confounds) — wording in plan §7a A4 result block. Numbers come from the check script; A6
   regenerates them.
 - Mount paths now known: `/kaggle/input/datasets/<owner>/<slug>` and
