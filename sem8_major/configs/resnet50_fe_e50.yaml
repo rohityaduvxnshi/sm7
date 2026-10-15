@@ -13,7 +13,7 @@ seed: 42
 data:
   root: data/cifake
   split_file: data/cifake_split_seed42.csv
-  num_workers: 2             # [VERIFY at first Kaggle login]
+  num_workers: 2             # 2 on the 4-core Kaggle VM; used unchanged by all 13 logged runs
 
 resolution: 224              # ImageNet-pretrained weights expect 224x224
 batch_size: 128              # ResNet50 at 224 fits comfortably on a T4 at this size

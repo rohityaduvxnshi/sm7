@@ -8,6 +8,11 @@ Each config runs as a SEPARATE subprocess and a failure does not stop the sessio
 (implementation_plan.md §7a A3): one crashed run must never cost the other runs in the same
 "Save & Run All". Prints a summary table at the end and exits non-zero if any run failed, so
 the notebook output makes the outcome obvious.
+
+--time-budget-min is forwarded to every train.py call (per run, not per session): the run then
+stops cleanly with its best checkpoint and a valid row (stop_reason=time_budget) instead of being
+killed at the Kaggle session cap. Wired at A5 (15 Oct 2026); sessions 1-8 ran without it, and the
+budgets printed in their notebook headers were advisory only.
 """
 
 import argparse
@@ -23,6 +28,8 @@ def main():
     p.add_argument("--data-root")
     p.add_argument("--results-dir")
     p.add_argument("--python", default=sys.executable)
+    p.add_argument("--time-budget-min", type=float,
+                   help="per-run wall-clock budget forwarded to train.py (plan 7a A2)")
     args = p.parse_args()
 
     code_dir = Path(__file__).resolve().parent
@@ -33,6 +40,8 @@ def main():
             cmd += ["--data-root", args.data_root]
         if args.results_dir:
             cmd += ["--results-dir", args.results_dir]
+        if args.time_budget_min:
+            cmd += ["--time-budget-min", str(args.time_budget_min)]
         print(f"\n{'=' * 70}\nRUN {cfg}\n{'=' * 70}", flush=True)
         t0 = time.time()
         rc = subprocess.call(cmd)

@@ -1,0 +1,7 @@
+model,mode,run_id,status,max_epochs,best_epoch,stop_reason,val_loss,val_acc_pct,test_acc_pct,auc,train_time_min,hardware,torch_version,timm_version
+ResNet50,fe,resnet50_fe_20260822-0532,superseded,30,30,max_epochs,0.1800,93.01,92.83,0.9807,120.0,"Tesla T4, 15 GB",2.10.0+cu128,1.0.26
+ResNet50,fe,resnet50_fe_20260826-0457,canonical,50,49,max_epochs,0.1740,93.17,92.98,0.9815,169.8,"Tesla T4, 15 GB",2.10.0+cu128,1.0.26
+ResNet50,ft,resnet50_ft_20260822-0734,superseded,30,30,max_epochs,0.1132,95.66,95.93,0.9925,190.1,"Tesla T4, 15 GB",2.10.0+cu128,1.0.26
+ResNet50,ft,resnet50_ft_20260827-0206,canonical,50,48,max_epochs,0.0961,96.32,96.51,0.9941,323.4,"Tesla T4, 15 GB",2.10.0+cu128,1.0.26
+EfficientNet-B0,fe,efficientnet_b0_fe_20260823-0248,superseded,30,29,max_epochs,0.1825,92.67,92.86,0.9802,97.6,"Tesla T4, 15 GB",2.10.0+cu128,1.0.26
+EfficientNet-B0,fe,efficientnet_b0_fe_20260826-0749,canonical,50,29,early_stopping,0.1825,92.67,92.86,0.9802,120.2,"Tesla T4, 15 GB",2.10.0+cu128,1.0.26

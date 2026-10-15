@@ -30,6 +30,12 @@ import data
 from eval import load_run
 
 
+def overlay_name(rel):
+    """File name of a committed overlay for a split-file relative path (make_figures
+    reads the galleries back by this rule)."""
+    return re.sub(r"[^A-Za-z0-9_.-]", "_", rel) + ".png"
+
+
 def target_layer(model, name):
     if name == "resnet50":
         return model.layer4[-1]
@@ -144,7 +150,7 @@ def make_gallery(run_id, n=8, checkpoint=None, results_dir="results", data_root=
             pred = int(model(xb).argmax(1))
             heat = cam(input_tensor=xb, targets=[ClassifierOutputTarget(pred)])[0]
             overlay = show_cam_on_image(denormalize(x), heat, use_rgb=True)
-            fname = re.sub(r"[^A-Za-z0-9_.-]", "_", rel) + ".png"
+            fname = overlay_name(rel)
             plt.imsave(kind_dir / fname, overlay)
             panels.append((overlay, rel, label, pred))
         cols = min(4, len(panels))

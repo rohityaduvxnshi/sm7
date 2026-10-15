@@ -58,4 +58,4 @@ Sat Aug 22 04:02:20 2026
 
 - Maximum single-session GPU duration: 12 h for CPU/GPU Save & Run All sessions, 9 h for TPU (Kaggle docs, read 14 Oct 2026)
 - Weekly quota reset day: [VERIFY on the quota page]
-- Can outputs of multiple versions of one notebook be attached at once? [VERIFY — A4 depends on it; fallback is forward-copying artefact dirs]
+- Can outputs of multiple versions of one notebook be attached at once? Moot — A4 attached the outputs of eight separate session notebooks as kernel data sources instead (15 Oct 2026), so it was never needed

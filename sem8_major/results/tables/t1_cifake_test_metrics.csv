@@ -1,0 +1,11 @@
+model,mode,run_id,best_epoch,max_epochs,stop_reason,val_acc_pct,test_acc_pct,precision_pct,recall_pct,f1_pct,auc,ap
+ResNet50,fe,resnet50_fe_20260826-0457,49,50,max_epochs,93.17,92.98,93.00,92.96,92.98,0.9815,0.9817
+ResNet50,ft,resnet50_ft_20260827-0206,48,50,max_epochs,96.32,96.51,96.60,96.41,96.51,0.9941,0.9941
+DenseNet121,fe,densenet121_fe_20260822-1534,4,30,early_stopping,93.59,93.48,91.21,96.24,93.66,0.9848,0.9848
+DenseNet121,ft,densenet121_ft_20260822-1617,7,30,early_stopping,97.64,97.60,97.45,97.76,97.60,0.9972,0.9972
+EfficientNet-B0,fe,efficientnet_b0_fe_20260826-0749,29,50,early_stopping,92.67,92.86,92.73,93.02,92.88,0.9802,0.9804
+EfficientNet-B0,ft,efficientnet_b0_ft_20260823-0427,15,30,early_stopping,97.50,97.56,97.73,97.37,97.55,0.9971,0.9970
+VGG19,fe,vgg19_fe_20260823-1605,8,30,early_stopping,90.54,90.54,90.83,90.19,90.51,0.9669,0.9665
+VGG19,ft,vgg19_ft_20260824-0047,9,30,early_stopping,98.19,97.91,97.84,97.98,97.91,0.9979,0.9979
+ViT-B/16,fe,vit_base_patch16_224_fe_20260823-0553,6,30,early_stopping,94.62,94.74,93.89,95.72,94.80,0.9881,0.9878
+ViT-B/16,ft,vit_base_patch16_224_ft_20260825-1522,10,30,early_stopping,98.98,98.88,98.89,98.88,98.88,0.9994,0.9995

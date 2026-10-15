@@ -1,4 +1,5 @@
-# resnet50_ft, SESSION 7 RERUN at a 50-epoch ceiling. Identical to configs/resnet50_ft.yaml in
+# resnet50_ft, SESSION 8 RERUN at a 50-epoch ceiling (prepared alongside session 7, ran alone in
+# session 8). Identical to configs/resnet50_ft.yaml in
 # every respect except max_epochs (30 -> 50). The original run stopped at the 30-epoch
 # ceiling with validation loss still improving, making its result a lower bound rather
 # than a converged one (see implementation_plan.md 7a session-5 note and 10).
@@ -13,7 +14,7 @@ seed: 42
 data:
   root: data/cifake
   split_file: data/cifake_split_seed42.csv
-  num_workers: 2             # [VERIFY at first Kaggle login]
+  num_workers: 2             # 2 on the 4-core Kaggle VM; used unchanged by all 13 logged runs
 
 resolution: 224              # ImageNet-pretrained weights expect 224x224
 batch_size: 128              # fits a T4 for the lighter backbones

@@ -16,7 +16,7 @@ data:
                                              # /kaggle/input/datasets/<owner>/<slug>) - session notebooks
                                              # autodetect it and pass --data-root
   split_file: data/cifake_split_seed42.csv   # committed split: 10k stratified val carved from the 100k train set
-  num_workers: 2                             # Kaggle worker count [VERIFY at first login]
+  num_workers: 2                             # 2 on the 4-core Kaggle VM; used unchanged by all 13 logged runs
 
 resolution: 224              # ImageNet-pretrained weights expect 224x224, so CIFAKE's 32x32 is upscaled to it
 batch_size: 128              # fits a T4 for resnet50 / densenet121 / efficientnet_b0; use 64 for vgg19 and ViT
@@ -32,12 +32,15 @@ early_stopping_patience: 5   # stop after 5 epochs with no validation-loss impro
 time_budget_min: null        # optional wall-clock guard: stop cleanly (keeping the best checkpoint and
                              # writing the row) rather than being killed at the Kaggle session cap.
                              # Usually passed per session with --time-budget-min instead of set here
-amp: true                    # mixed precision: lower memory and shorter epochs on a T4 (estimate, confirm in Phase 1)
+amp: true                    # mixed precision: lower memory and shorter epochs on a T4; confirmed at A2 (GPU smoke bit-identical to CPU)
 checkpoint: best_val_loss    # keep the best-by-validation-loss checkpoint, discard the rest
 
 output:
   results_dir: results       # per-run artefacts written to <results_dir>/<run_id>/; on Kaggle: /kaggle/working/results
   runs_csv: results/runs.csv # one appended row per completed run
+
+tag: null                    # optional run_id infix (<model>_<mode>_<tag>_<stamp>) for ablation configs
+                             # only, e.g. noaug / res64 / res128 (plan 4), so the run dir says what varied
 
 smoke_subset: null           # images PER CLASS PER SPLIT for smoke runs; null = full dataset.
                              # Non-null only in *_smoke.yaml configs, which must point runs_csv at

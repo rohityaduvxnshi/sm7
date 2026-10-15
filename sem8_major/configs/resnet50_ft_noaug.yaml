@@ -1,0 +1,36 @@
+# resnet50_ft, A5 ABLATION: augmentation OFF. Identical to the canonical baseline
+# configs/resnet50_ft_e50.yaml (the 50-epoch resnet50_ft row in results/canonical_runs.txt)
+# in every respect except `augment: none` (baseline: random horizontal flip) and the `tag`
+# that marks the run id. One factor varies, so the row compares directly with the baseline
+# (implementation_plan.md 4 "Ablations", 7a A5). Table t6_ablations is generated from the
+# config difference, never typed by hand.
+
+model: resnet50
+mode: ft                     # every parameter updated
+seed: 42
+tag: noaug                   # run_id becomes resnet50_ft_noaug_<stamp>
+
+data:
+  root: data/cifake
+  split_file: data/cifake_split_seed42.csv
+  num_workers: 2             # 2 on the 4-core Kaggle VM; used unchanged by all 13 logged runs
+
+resolution: 224              # ImageNet-pretrained weights expect 224x224
+batch_size: 128              # fits a T4 for the lighter backbones
+augment: none                # ABLATED: no flip - does the baseline's only augmentation matter?
+
+optimizer: sgd
+lr: 0.001                   # pretrained weights need small updates or the features are destroyed
+momentum: 0.9
+weight_decay: 0.0
+
+max_epochs: 50               # same ceiling as the canonical baseline row
+early_stopping_patience: 5
+amp: true
+checkpoint: best_val_loss
+
+output:
+  results_dir: results       # on Kaggle: /kaggle/working/results
+  runs_csv: results/runs.csv
+
+smoke_subset: null           # never non-null in a matrix/ablation config; smoke runs live in *_smoke.yaml

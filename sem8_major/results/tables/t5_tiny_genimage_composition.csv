@@ -1,0 +1,8 @@
+dir_name,generator,used_in_sweep,n_ai,n_nature,ai_ext,nature_ext,ai_size_first20,nature_size_first20
+imagenet_ai_0419_biggan,biggan,yes,500,500,.png:500,.jpeg:500,128x128:20,500x375:7 500x333:2 500x332:2
+imagenet_ai_0419_vqdm,vqdm,yes,500,500,.png:500,.jpeg:500,256x256:20,500x375:7 375x500:3 500x376:1
+imagenet_ai_0424_sdv5,-,no,500,500,.png:500,.jpeg:500,512x512:20,500x375:5 500x334:1 473x500:1
+imagenet_ai_0424_wukong,-,no,500,500,.png:500,.jpeg:500,512x512:20,500x375:6 500x334:2 1061x668:1
+imagenet_ai_0508_adm,adm,yes,500,500,.png:500,.jpeg:500,256x256:20,500x375:7 375x500:2 500x376:1
+imagenet_glide,-,no,500,500,.png:500,.jpeg:500,256x256:20,500x375:4 375x500:2 500x333:1
+imagenet_midjourney,midjourney,yes,500,500,.png:500,.jpeg:500,1024x1024:20,500x375:6 375x500:3 500x361:2

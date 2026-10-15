@@ -1,0 +1,22 @@
+setting,value,justification
+resolution,224,ImageNet-pretrained weights expect 224x224
+batch_size,128 (resnet50_fe_e50),ResNet50 at 224 fits comfortably on a T4 at this size
+batch_size,"128 (resnet50_ft_e50, densenet121_fe, densenet121_ft, efficientnet_b0_fe_e50, efficientnet_b0_ft)",fits a T4 for the lighter backbones
+batch_size,"64 (vgg19_fe, vgg19_ft, vit_base_patch16_224_fe, vit_base_patch16_224_ft)",VGG19 and ViT need the smaller batch for T4 memory
+augment,hflip,"horizontal flip only; anything stronger is an ablation, not the baseline"
+optimizer,"sgd (resnet50_fe_e50, resnet50_ft_e50, densenet121_fe, densenet121_ft, efficientnet_b0_fe_e50, efficientnet_b0_ft, vgg19_fe, vgg19_ft)",sgd for the CNNs (matches the Karki et al. reference setup); adamw for ViT
+optimizer,"adamw (vit_base_patch16_224_fe, vit_base_patch16_224_ft)",sgd for the CNNs (matches the Karki et al. reference setup); adamw for ViT
+lr,0.01 (resnet50_fe_e50),higher lr is safe here: only the freshly initialised head is being trained
+lr,"0.001 (resnet50_ft_e50, densenet121_ft, efficientnet_b0_ft, vgg19_ft)",pretrained weights need small updates or the features are destroyed
+lr,"0.01 (densenet121_fe, efficientnet_b0_fe_e50, vgg19_fe)","only the fresh head trains, so a larger rate converges quickly"
+lr,0.001 (vit_base_patch16_224_fe),"head only, higher rate is safe; AdamW is the standard ViT optimiser"
+lr,0.00003 (vit_base_patch16_224_ft),full ViT-B/16 updates need a small rate or pretrained features degrade
+momentum,"0.9 (resnet50_fe_e50, resnet50_ft_e50, densenet121_fe, densenet121_ft, efficientnet_b0_fe_e50, efficientnet_b0_ft, vgg19_fe, vgg19_ft)",standard SGD momentum; ignored when optimizer is adamw
+momentum,"- (vit_base_patch16_224_fe, vit_base_patch16_224_ft)",standard SGD momentum; ignored when optimizer is adamw
+weight_decay,0.0,no regularisation in the baseline; revisit only if learning curves show overfitting
+max_epochs,"50 (resnet50_fe_e50, resnet50_ft_e50, efficientnet_b0_fe_e50)","a ceiling, not a target — early stopping normally ends the run sooner"
+max_epochs,"30 (densenet121_fe, densenet121_ft, efficientnet_b0_ft, vgg19_fe, vgg19_ft, vit_base_patch16_224_fe, vit_base_patch16_224_ft)","a ceiling, not a target — early stopping normally ends the run sooner"
+early_stopping_patience,5,"stop after 5 epochs with no validation-loss improvement, to save GPU quota"
+amp,true,mixed precision: lower memory and shorter epochs on a T4; confirmed at A2 (GPU smoke bit-identical to CPU)
+checkpoint,best_val_loss,"keep the best-by-validation-loss checkpoint, discard the rest"
+seed,42,"one seed for split, init, shuffling and augmentation"

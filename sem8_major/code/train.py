@@ -18,7 +18,9 @@ Writes, as the run proceeds, into <results_dir>/<run_id>/:
     learning_curve.csv   epoch,train_loss,train_acc,val_loss,val_acc
     best.pt              best-by-validation-loss checkpoint (gitignored)
 On completion it evaluates the test split via eval.evaluate() and appends one row to
-<runs_csv> (schema: results/README.md). run_id: <model>_<mode>_<YYYYMMDD-HHMM>.
+<runs_csv> (schema: results/README.md). run_id: <model>_<mode>_<YYYYMMDD-HHMM>, or
+<model>_<mode>_<tag>_<YYYYMMDD-HHMM> when the config sets `tag` (ablation configs, plan 4), so
+the run dir and the row say what varied.
 """
 
 import argparse
@@ -148,7 +150,8 @@ def main():
     device = "cuda" if torch.cuda.is_available() else "cpu"
     amp = bool(cfg.get("amp")) and device == "cuda"
 
-    run_id = f"{cfg['model']}_{cfg['mode']}_{datetime.now():%Y%m%d-%H%M}"
+    tag = f"_{cfg['tag']}" if cfg.get("tag") else ""   # ablation configs only (plan 4)
+    run_id = f"{cfg['model']}_{cfg['mode']}{tag}_{datetime.now():%Y%m%d-%H%M}"
     run_dir = Path(cfg["output"]["results_dir"]) / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
 
@@ -197,9 +200,9 @@ def main():
                 print(f"  early stop at epoch {epoch} (no val-loss gain for {patience})")
                 stop_reason = "early_stopping"
                 break
-        if budget_min:
+        if budget_min and epoch < cfg["max_epochs"]:   # nothing to protect after the last epoch
             elapsed = (time.time() - t0) / 60
-            # 1.15 covers epoch-time jitter plus the final test evaluation still to come
+            # would the NEXT epoch (1.15: jitter plus the final test pass) overrun the budget?
             if elapsed + (elapsed / epoch) * 1.15 > budget_min:
                 print(f"  time budget: stopping after epoch {epoch} "
                       f"({elapsed:.1f} of {budget_min:.0f} min used); best checkpoint kept")
