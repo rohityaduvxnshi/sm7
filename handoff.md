@@ -6,7 +6,112 @@ Read CLAUDE.md first; this file is the fast-moving state on top of it.
 
 ---
 
-## START HERE — next session (written 15 Oct 2026, late, at session close)
+## START HERE — next session (written 17 Oct 2026, at session close)
+
+**State in one line:** A1–A4 done and gated (G1–G4); A6 done, G6 passed; **P1 draft v1 written and reviewed**
+(`sem8_major/paper2/paper2_draft_v1.md`, assembled from `paper2/sections/*.md`); A5 prepared, not launched;
+nothing running on Kaggle; working tree clean except `AGENTS.md`.
+
+**Session-start checklist**
+1. `git pull` — this laptop is the only machine; remote `origin` = github.com/rohityaduvxnshi/sm7 (private).
+2. Health checks from `sem8_major/`, calling the venv python by its ABSOLUTE path
+   (`D:\Desktop\AuthentiScan\sem8_major\.venv\Scripts\python.exe`; the shell's working directory drifts):
+   `code/merge_runs.py --selfcheck`, `code/data.py --selfcheck`, `code/make_tables.py --selfcheck`,
+   `paper2/build_paper.py --selfcheck`, `paper2/check_numbers.py --selfcheck`, then `paper2/build_paper.py` and
+   `paper2/check_numbers.py` (both must print OK and `git status` must stay clean — the committed draft is the build).
+3. Read CLAUDE.md §13 "Where we are", then the P1 block below. Older blocks are history.
+
+**Next, in order**
+1. **Rohit launches A5** (unchanged from the 15 Oct block below: `make_a3_notebook.py --session 9|10 --push --token
+   KGAT_<token>`; regenerate the Kaggle token first; a new notebook's first run fails until `GITHUB_PAT` is toggled
+   on for it — push, toggle, push again; quota check first, ~10 h expected).
+2. **Claude merges each `results_a5_s<N>.zip`** (`merge_runs.py … --kind runs`, copy the three run dirs in), reruns
+   `make_tables.py` (t6_ablations appears; gate G5 = its `varied` column shows exactly one factor per row) and
+   `make_figures.py`, **then rebuilds the paper** (`paper2/build_paper.py`): Table 9 fills in by itself; replace the
+   §4.5 "pending" paragraph in `paper2/sections/04_results.md` with the result read from t6, and revisit the three
+   sentences that point forward to the ablation (§5.5 last sentence, §5.7 bullets 2 and 8); re-run
+   `check_numbers.py`; repeat G6 on the new tables (clone to a SHORT path, fresh venv at a short path, regenerate,
+   `git status` clean).
+3. **P2 gate with the guide** (plan §10): merged-paper shape, venue, authorship order, AI-assistance disclosure —
+   plus the Paper 2 decisions listed in `paper2/README.md` (CIFAKE licence, ViT Grad-CAM rollout-or-caption,
+   repository release, how the companion review is cited; reference additions for P4).
+4. **Rohit's rewrite (P5)** starts from `paper2/sections/*.md`, never from the assembled file; after every rewrite:
+   rebuild and re-run `check_numbers.py`, then re-verify citations.
+
+**Facts that are easy to get wrong**
+- The draft is generated: edit `paper2/sections/*.md`, rebuild; `paper2_draft_v1.md` is committed only so it reads
+  without running anything.
+- `check_numbers.py` proves coincidence with a logged value, not correctness: a wrong small integer or a wrong
+  two-decimal fraction can pass (hundreds of learning-curve and confusion-matrix values exist); a table-specific
+  value wrong in its last digit is caught. The reading check against `results/tables/` stays mandatory.
+- Three canonical runs ran under the 50-epoch ceiling (resnet50 fe/ft, efficientnet_b0 fe); "eight of ten
+  early-stopped" is a statement about stop reason, not the ceiling.
+- timm defaults: ViT-B/16 = `augreg2_in21k_ft_in1k` (ImageNet-21k pretraining), CNNs = in1k; stated as a confound in
+  §5.2; resolved with timm 1.0.28, `[VERIFY]` that 1.0.26 matches. Per-run weight tags were never logged.
+- ViT Grad-CAM: the 7 empty panels are exactly the panels predicted "generated" (one generated-target panel did
+  produce a map) — observation, not diagnosis (CLAUDE.md item 23).
+- The A4 evaluation session's torch/timm/grad-cam versions are unrecorded (`[UNKNOWN]` in §3.9); crossgen rows carry
+  no version fields.
+- `configs/template.yaml`'s optimizer comment was reworded 17 Oct (no uncited "Karki et al." in Table 2) → t4
+  regenerated; figures byte-identical.
+- Earlier facts still hold: `kernels/status` `running` ≠ executing; Kaggle tokens inline, never stored; mounts under
+  `/kaggle/input/datasets/<owner>/<slug>` and `/kaggle/input/notebooks/<owner>/<slug>/`; Save & Run All cap 12 h on
+  GPU; long heredocs die in this Bash tool; `python -m venv` and `git clone` fail under the scratchpad path; half-to-even
+  ties (vgg19 fe 90.54, vit fe 94.74, vit ft 98.88).
+
+**Open asks for Rohit**
+1. Launch A5 (above), after regenerating the Kaggle token.
+2. P2 decisions (above) with the guide; open items 20–22 (Semester 7 endpoint, CIFAKE licence, D3) are still unanswered.
+3. Read `paper2_draft_v1.md` once end to end before the rewrite — the review was adversarial but automated.
+
+---
+
+## P1 DRAFT v1 WRITTEN AND REVIEWED `[17 Oct 2026]` — next: A5 merge → Table 9; P2 gate
+
+### 1. Goal
+
+Write Paper 2 (plan §10 P1) from the G6 artefacts, with every number machine-traceable, and review it adversarially
+before committing.
+
+### 2. Current State
+
+- `sem8_major/paper2/`: `sections/00_front.md … 07_backmatter.md` (abstract 247 words + keywords; 1 Introduction
+  with RQ1–RQ4; 2 Related Work; 3 Materials and Methods 3.1–3.9 with equations (1)–(7); 4 Results 4.1–4.5;
+  5 Discussion 5.1–5.7 incl. limitations; 6 Conclusion; back matter), `build_paper.py`, `check_numbers.py`,
+  `README.md` (14 draft-specific open items), `paper2_draft_v1.md` (~9,800 words with captions; 8 tables inserted,
+  Table 9 pending, 8 figures, 27 references).
+- Review: 70-agent workflow (5 lenses → merge → fact-refuter + fix-checker per finding): 76 raw → 62 merged;
+  23 confirmed, 4 contested (fix-checker's corrected fixes applied), 5 refuted (3 improved anyway), 30 low
+  unverified (28 applied after my own check; 2 deferred to P4: CIFAR-10 and tiny-genimage references). The two
+  factual errors: Figure 3 caption (two → three runs under the 50-epoch ceiling); "both differences favour the
+  ViT" → three unmatched factors (optimiser + learning rate, batch size, pretraining corpus), none ruled out.
+- Facts newly recorded in the paper: ViT in21k pretraining confound; VGG19's probe sits on its 4,096-wide fully
+  connected output; the threshold shift is condition-specific (29 cells >80 % predicted fake, all direct224; 6
+  cells <20 %, all down32: ViT ft on every generator, VGG19 ft on ADM and BigGAN); ViT Grad-CAM zeros = exactly
+  the generated-target panels (7 of 8); the A4 session's library versions are unrecorded.
+- `check_numbers.py`: 420 numeric tokens traced; sources restricted (no smoke_runs/calibration/nvidia-smi values;
+  year filter 2019–2026 only; pairwise differences only for t1/t1b); its docstring states what a pass does not prove.
+
+### 3. Changes it made
+
+- New: `sem8_major/paper2/` (12 files). Edited: `configs/template.yaml` (optimizer comment) →
+  `results/tables/t4_hyperparameters.{csv,md}` regenerated (two cells); CLAUDE.md §12 items 23–24 and §13; plan
+  §1 status, Table 5 S8-2, §10 P1; this file. Figures unchanged. Kaggle untouched.
+
+### 4. Failed Attempts
+
+- First build: the before-caption check missed list-style mentions ("Tables 6 and 7"); the review then showed it
+  also accepted a figure's own alt text as a mention — replaced by a body-only scan with a selfcheck.
+- First audit: 8 false flags from "97.60" vs "97.6" — both sides now normalised.
+- Ordering selfcheck: one phrase mentioning two tables gives equal first positions — equality allowed.
+
+### 5. Next steps
+
+As START HERE above.
+
+---
+
+## [Superseded 17 Oct 2026] START HERE as written 15 Oct 2026, late, at session close
 
 **State in one line:** A1–A4 done and gated (G1–G4); **A6 done, G6 passed** (every Paper 2 table and
 figure regenerates byte-identically from a clean clone + fresh venv); **A5 prepared, not launched**

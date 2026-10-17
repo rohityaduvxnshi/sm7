@@ -4,8 +4,8 @@ batch_size,128 (resnet50_fe_e50),ResNet50 at 224 fits comfortably on a T4 at thi
 batch_size,"128 (resnet50_ft_e50, densenet121_fe, densenet121_ft, efficientnet_b0_fe_e50, efficientnet_b0_ft)",fits a T4 for the lighter backbones
 batch_size,"64 (vgg19_fe, vgg19_ft, vit_base_patch16_224_fe, vit_base_patch16_224_ft)",VGG19 and ViT need the smaller batch for T4 memory
 augment,hflip,"horizontal flip only; anything stronger is an ablation, not the baseline"
-optimizer,"sgd (resnet50_fe_e50, resnet50_ft_e50, densenet121_fe, densenet121_ft, efficientnet_b0_fe_e50, efficientnet_b0_ft, vgg19_fe, vgg19_ft)",sgd for the CNNs (matches the Karki et al. reference setup); adamw for ViT
-optimizer,"adamw (vit_base_patch16_224_fe, vit_base_patch16_224_ft)",sgd for the CNNs (matches the Karki et al. reference setup); adamw for ViT
+optimizer,"sgd (resnet50_fe_e50, resnet50_ft_e50, densenet121_fe, densenet121_ft, efficientnet_b0_fe_e50, efficientnet_b0_ft, vgg19_fe, vgg19_ft)","sgd with momentum for the CNNs, the conventional optimiser for transfer learning with ImageNet-pretrained CNNs; adamw for ViT, the conventional optimiser for transformers"
+optimizer,"adamw (vit_base_patch16_224_fe, vit_base_patch16_224_ft)","sgd with momentum for the CNNs, the conventional optimiser for transfer learning with ImageNet-pretrained CNNs; adamw for ViT, the conventional optimiser for transformers"
 lr,0.01 (resnet50_fe_e50),higher lr is safe here: only the freshly initialised head is being trained
 lr,"0.001 (resnet50_ft_e50, densenet121_ft, efficientnet_b0_ft, vgg19_ft)",pretrained weights need small updates or the features are destroyed
 lr,"0.01 (densenet121_fe, efficientnet_b0_fe_e50, vgg19_fe)","only the fresh head trains, so a larger rate converges quickly"

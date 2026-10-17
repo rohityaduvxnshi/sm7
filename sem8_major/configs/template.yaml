@@ -22,7 +22,7 @@ resolution: 224              # ImageNet-pretrained weights expect 224x224, so CI
 batch_size: 128              # fits a T4 for resnet50 / densenet121 / efficientnet_b0; use 64 for vgg19 and ViT
 augment: hflip               # baseline augmentation is random horizontal flip only; "none" for the ablation
 
-optimizer: sgd               # sgd for the CNNs (matches the Karki et al. reference setup); adamw for ViT
+optimizer: sgd               # sgd with momentum for the CNNs, the conventional optimiser for transfer learning with ImageNet-pretrained CNNs; adamw for ViT, the conventional optimiser for transformers
 lr: 0.01                     # CNN: 0.01 fe / 0.001 ft. ViT (adamw): 1e-3 fe (head only) / 3e-5 ft
 momentum: 0.9                # standard SGD momentum; ignored when optimizer is adamw
 weight_decay: 0.0            # no regularisation in the baseline; revisit only if learning curves show overfitting
