@@ -6,6 +6,38 @@ Read CLAUDE.md first; this file is the fast-moving state on top of it.
 
 ---
 
+## TRACK A — SEM 7 FINAL REPORT BUILT `[20 Oct 2026]` — upload due 26 Oct
+
+**Goal:** the final NTCC Minor Project report as a PDF in the Amity ETMN100 format (guidelines and a sample
+report from another group supplied by Rohit on 20 Oct), passing the mentor's Turnitin check (cap 10%).
+
+**Current state:** `sem7_minor/submission/pdf/G148_Sem7_MinorProjectReport_FINAL.pdf` (100 pp., fonts embedded,
+text searchable) and `…/source_docx/…_FINAL.docx`. `check_report.py` clean; similarity pre-check: body 0.52% vs
+cited papers + Wikipedia, 2.56% incl. the team's own earlier drafts; reference list ~64% matched (needs Turnitin's
+"Exclude bibliography").
+
+**Active files:** `sem7_minor/final_report/{chapters,tables,figures,build}`; `build/build_report.ps1` rebuilds
+everything; `build/sources/project_facts.md` is the facts sheet the chapters were written from.
+
+**Changes made:** chapters 1–6 and 15 written new from the WPR log, diary, synopsis and facts sheet; chapters 7–14
+re-expressed from `sections/*.md` (0% shared 7-word runs with them); Tables 10.1/12.1 re-worded, rows of 12.1
+ordered by year then first author, generator lists alphabetised; citation groups chronological; Rohit's
+decisions applied (roles joint; Track B one sentence in §14.3, no numbers). A 7-lens review corrected six
+extraction errors against the papers' own text (C01, C06, C24, C30, C44, C63 — see
+`references/screening_summary.md`), AP count 15, the "six databases searched" overclaim, and scoped "no
+experiments" to the review itself (the diary records Track B work inside the window).
+
+**Failed attempts / gotchas:** arXiv API rate-limits batch queries (429) — the corpus fetcher backs off and uses
+export.arxiv.org PDFs; long Bash heredocs die — write scripts to the scratchpad; Word stamps Calibri on rebuilt
+TOC paragraphs (export script resets the font).
+
+**Next steps (Rohit):** read the whole PDF and rewrite in your own voice where you can (the Turnitin AI-writing
+indicator is separate from the similarity index); ask the mentor to tick "Exclude bibliography" and "Exclude
+quotes"; sign the declaration, get the certificate signed; upload by 26 Oct; print 2 spiral-bound copies with a
+blue back cover. After editing any `chapters/*.md`, run `build_report.ps1`.
+
+---
+
 ## START HERE — next session (written 17 Oct 2026, at session close)
 
 **State in one line:** A1–A4 done and gated (G1–G4); A6 done, G6 passed; **P1 draft v1 written and reviewed**

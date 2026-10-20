@@ -1,0 +1,487 @@
+{
+ "number": "12.1",
+ "caption": "The 48 primary studies compared side by side, arranged by year of publication and, within a year, by first author",
+ "note": "Note: Each row is a shortened version of the study’s record in the review’s extraction table. “Cross-generator tested?” says whether the detector was evaluated on generators that were absent from its training data; “Key limitation” mostly gives the weakness that the study’s own authors acknowledge; some cells carry a scope point noted by this review, for instance where the authors state no limitation.",
+ "rows": [
+  {
+   "cid": "C17",
+   "approach": "Spectral forensics: power spectrum averaged azimuthally to 1D, then a classical classifier",
+   "model": "RBF-kernel SVM, logistic regression, unsupervised K-means",
+   "dataset": "Faces-HQ (authors' own, 40K), CelebA, FaceForensics++",
+   "generators": "Self-trained DCGAN, thispersondoesnotexist.com fakes, FF++ manipulations",
+   "result": "Faces-HQ: 100% accuracy from as few as 20 labelled examples; FF++ videos: 91% accuracy",
+   "crossgen": "No – each dataset tested alone",
+   "limitation": "Low-resolution content is harder to flag: much less of the frequency spectrum is available"
+  },
+  {
+   "cid": "C05",
+   "approach": "Handcrafted PRNU-like fingerprint from averaged denoising residuals; the source is found by correlation",
+   "model": "Averaged denoising-filter residuals, no trained classifier",
+   "dataset": "Per source 1,000 RGB images (256x256); RAISE camera photos; category sets for CycleGAN / ProGAN / StarGAN",
+   "generators": "9 CycleGAN configurations, 6 ProGAN, 5 StarGAN",
+   "result": "90.3% source-attribution accuracy uncompressed; 90.1% at JPEG QF=95",
+   "crossgen": "No – known GANs only (source ID)",
+   "limitation": "Poorer for StarGAN male/smiling networks and real cameras (PRNU patterns of low energy)"
+  },
+  {
+   "cid": "C10",
+   "approach": "Deep CNN applied to pixel co-occurrence matrices",
+   "model": "Deep CNN fed 3-channel co-occurrence matrices",
+   "dataset": "56,000+ images in two GAN datasets (unpaired translation; facial attributes)",
+   "generators": "CycleGAN, StarGAN",
+   "result": "Over 99% accuracy on each dataset",
+   "crossgen": "Yes – train on one GAN, test on the other",
+   "limitation": "Just two GAN families tested; the abstract states no explicit limitation"
+  },
+  {
+   "cid": "C04",
+   "approach": "Learns GAN fingerprints for fake detection and closed-set attribution",
+   "model": "Deep CNN attribution model; fingerprint drawn from its last 1x1x512 feature/weight tensors; AutoEncoder variant visualises it",
+   "dataset": "LSUN bedroom and CelebA (20,000 reals apiece); per source 100K train, 10K test",
+   "generators": "ProGAN, SNGAN, CramerGAN, MMDGAN (128x128x3 each)",
+   "result": "5-class attribution (real + 4 GANs): CelebA 99.43%, LSUN 98.58%; 86.61 / 67.84 for a PRNU baseline",
+   "crossgen": "No – attributes only to known GANs",
+   "limitation": "Requires labelled samples from each possible source GAN; tested at 128x128 only"
+  },
+  {
+   "cid": "C06",
+   "approach": "Spectrum classifier aimed at GAN upsampling artefacts; an AutoGAN simulator creates them, so no real fakes are needed",
+   "model": "ImageNet-pretrained ResNet-34 on the log frequency spectrum, phase dropped",
+   "dataset": "14-category CycleGAN image sets; AutoGAN trained on 4,000 MSCOCO images",
+   "generators": "CycleGAN mainly; StarGAN, GauGAN tested too",
+   "result": "AutoGAN-trained spectrum classifier, never shown a real fake: 97.2% mean leave-one-out accuracy",
+   "crossgen": "Yes – simulated artefacts expose unseen GANs",
+   "limitation": "Every classifier fails on GauGAN, which upsamples differently; hurt by upsampler mismatch"
+  },
+  {
+   "cid": "C02",
+   "approach": "Classifies patches with restricted receptive fields; heatmaps locate the detectable patches",
+   "model": "Patch models from truncated Xception and ResNet (best: Xception blocks)",
+   "dataset": "CelebA-HQ (24,183) and FFHQ (60,000) for training; FaceForensics++",
+   "generators": "Glow, GMM face generator, ProGAN, StyleGAN, StyleGAN2; FF++ manipulations",
+   "result": "Train ProGAN / test StyleGAN: AP 99.99; unseen resolutions: AP ~100",
+   "crossgen": "Yes – ProGAN-trained, scored on StyleGAN/Glow/GMM",
+   "limitation": "\"No method is completely bulletproof\": stronger generators, out-of-distribution inputs or adversarial attacks can beat it"
+  },
+  {
+   "cid": "C08",
+   "approach": "Classical classifiers on a 1D azimuthal integral of the DFT power spectrum; spectral regularisation is also proposed",
+   "model": "SVM, logistic regression and unsupervised K-means on that spectral feature",
+   "dataset": "Faces-HQ (40K, authors' own), CelebA (202,599), FaceForensics++",
+   "generators": "CelebA: DCGAN, DRAGAN, LSGAN, WGAN-GP; FaceForensics++ deepfakes",
+   "result": "Faces-HQ 100% (SVM, 1000 samples); CelebA 100% (2000 samples); FF++ single frames 85%",
+   "crossgen": "No – (un)supervised tests within each dataset only",
+   "limitation": "Assumes generators that use up-convolution; with other synthesis methods these signatures may be absent"
+  },
+  {
+   "cid": "C18",
+   "approach": "Analyses high-frequency Fourier spectral decay via fitted parameters",
+   "model": "KNN (k=5) using the fitted decay parameters",
+   "dataset": "~5,000 FFHQ and Cat Head Detection dataset images; 10/90 train/test split",
+   "generators": "ALAE, PGGAN, StyleGAN, StyleGAN2, VQ-VAE2",
+   "result": "Mixed-generator training: 99.2% accuracy on 1024x1024 uncompressed images",
+   "crossgen": "No – none of the five generators held out",
+   "limitation": "85% JPEG compression leaves generated and real spectra essentially indistinguishable; at 256x256, accuracy is 88.8%"
+  },
+  {
+   "cid": "C07",
+   "approach": "DCT-spectrum analysis of grid-like artefacts left by upsampling, with simple classifiers",
+   "model": "On DCT spectra: a shallow CNN (4-conv-layer, ~170K params) and ridge regression",
+   "dataset": "LSUN bedrooms, FFHQ, CelebA",
+   "generators": "BigGAN, CramerGAN, MMDGAN, ProGAN, SN-DCGAN, StyleGAN",
+   "result": "FFHQ real-vs-fake: Ridge-Regression-DCT 100.00% (75.78% on raw pixels); CNN-DCT source ID: LSUN 99.64%, CelebA 99.07%",
+   "crossgen": "No – no experiment with a held-out GAN",
+   "limitation": "Purpose-built adversarial perturbations can still fool the classifier"
+  },
+  {
+   "cid": "C09",
+   "approach": "Detects fake faces from global (Gram) texture statistics",
+   "model": "Gram-Net, a CNN built on global texture representations",
+   "dataset": "Reals: CelebA-HQ, FFHQ, CelebA; GAN face sets; natural: ImageNet / BigGAN",
+   "generators": "BigGAN, DCGAN, DRAGAN, PGGAN, StarGAN, StyleGAN",
+   "result": ">98% in-domain; ~77.7% accuracy across GANs (StyleGAN train, DCGAN / DRAGAN / StarGAN test)",
+   "crossgen": "Yes – tested on unseen GAN models",
+   "limitation": "Studies texture contrast alone; real/fake differences are broader"
+  },
+  {
+   "cid": "C01",
+   "approach": "Two-class real-vs-fake CNN; Blur+JPEG augmentation and careful pre- and post-processing",
+   "model": "ImageNet-pretrained ResNet-50",
+   "dataset": "ForenSynths: 720K ProGAN training images, LSUN reals, 11-generator test sets",
+   "generators": "Train: ProGAN; 11 test sets: BigGAN, CRN, CycleGAN, DeepFakes, GauGAN, IMLE, ProGAN, SAN, SITD, StarGAN, StyleGAN; StyleGAN2 tested separately",
+   "result": "Averaged across 11 test sets (ProGAN and 10 unseen generators): mAP 90.1 without augmentation, 90.8 with Blur+JPEG(0.5)",
+   "crossgen": "Yes – trained on ProGAN; 10 of the 11 test generators unseen",
+   "limitation": "Chance-level on traditional (Photoshop-style) edits; the authors hedge with \"for now\""
+  },
+  {
+   "cid": "C19",
+   "approach": "Counter-study of spectral-decay features: the upsampling choice can remove the high-frequency artefact",
+   "model": "KNN (k=5) over 3 spectral features, alongside SVM and MLP; GANs retrained with altered last-layer upsampling",
+   "dataset": "CelebA-HQ (512); CelebA (128) and LSUN Bedrooms (128)",
+   "generators": "DCGAN, LSGAN, StarGAN, WGAN-GP; supplementary: CRN, IMLE",
+   "result": "Detection rate drops to 0–0.3% under bilinear upsampling (baseline 84.8–99.8%)",
+   "crossgen": "No – one classifier per GAN",
+   "limitation": "Authors' own finding: CNN-generated images need not show high-frequency spectral decay, so detectors relying on it are unreliable"
+  },
+  {
+   "cid": "C11",
+   "approach": "Contrastive learning on a network that limits sub-sampling",
+   "model": "ImageNet-pretrained ResNet50 without first-layer subsampling, plus 2 projection layers",
+   "dataset": "Train: 362K real LSUN + 362K ProGAN images; test: ImageNet, COCO, RAISE",
+   "generators": "Train: ProGAN; unseen test: BigGAN, CycleGAN, GauGAN, RelGAN, StarGAN, StyleGAN, StyleGAN2",
+   "result": "Mean over unseen GAN architectures: 0.997 AUC, 95.6% accuracy",
+   "crossgen": "Yes – seven held-out GAN architectures",
+   "limitation": "Adversarial robustness deferred to future work"
+  },
+  {
+   "cid": "C03",
+   "approach": "Critically evaluates leading GAN-image detectors on compressed, resized and unseen-generator images",
+   "model": "Xception, SRNet, Spec, M-Gb, Co-Net, Wang2020 ResNet50, PatchForensics (seven detectors) plus the authors' no-down variant",
+   "dataset": "Train: 362K LSUN real + 362K ProGAN fake; test: ImageNet, COCO, RAISE reals and ~39K synthetic",
+   "generators": "Train: ProGAN; test: BigGAN, CycleGAN, GauGAN, RelGAN, StarGAN, StyleGAN, StyleGAN2",
+   "result": "On uncompressed unseen GANs several methods pass 0.9 AUC but drop sharply after compression or resizing; best no-down variant tops 90% accuracy",
+   "crossgen": "Yes – trained on ProGAN; 7 unseen GANs",
+   "limitation": "Authors note \"we are still very far from having reliable tools for GAN image detection\"; the robustness study is preliminary"
+  },
+  {
+   "cid": "C44",
+   "approach": "ViT compared with a CNN classifier across forgery types",
+   "model": "EfficientNetV2-M vs ViT-Base",
+   "dataset": "ForgeryNet: 15 manipulation methods",
+   "generators": "GAN, reenactment and swap methods, e.g. ATVG-net, Deepfakes, FaceShifter, FS-GAN, StyleGAN2, Talking Head Video",
+   "result": "Trained on three face-transfer methods: EfficientNetV2-M 81.1% on one but 47.0% and 57.0% on the other two; ViT-Base ~62.0% on all three",
+   "crossgen": "Yes – subset training, testing on 15 methods",
+   "limitation": "Accuracy on new, unseen methods stays fairly low"
+  },
+  {
+   "cid": "C21",
+   "approach": "Bilateral high-pass filtering (frequency and pixel level) to amplify frequency artefacts",
+   "model": "BiHPF front-end feeding a ResNet-50 classifier",
+   "dataset": "Real: LSUN, FFHQ; ProGAN images used in training",
+   "generators": "BigGAN, CycleGAN, ProGAN, StarGAN, StyleGAN, StyleGAN2",
+   "result": "Trained on 4-class ProGAN: mean accuracy 84.2% and mean AP 81.8% across unseen GAN models",
+   "crossgen": "Yes – ProGAN-trained, tested on 5 unseen GANs",
+   "limitation": "None stated by the authors; only GAN generators are evaluated"
+  },
+  {
+   "cid": "C12",
+   "approach": "FrePGAN: suppresses frequency artefacts using frequency-level perturbation maps",
+   "model": "ResNet-50 deepfake classifier plus a perturbation generator",
+   "dataset": "Train: ProGAN-generated images; test: FFHQ, LSUN, ImageNet, CelebA, COCO and Deepfake sets",
+   "generators": "BigGAN, CycleGAN, GauGAN, ProGAN, StarGAN, StyleGAN, StyleGAN2",
+   "result": "Cross-model, 4-class training: 79.4% average accuracy and 87.2% average precision",
+   "crossgen": "Yes – seen and unseen GAN models",
+   "limitation": "Trade-off: frequency artefacts help detect known GANs but weaken cross-GAN generalisation"
+  },
+  {
+   "cid": "C14",
+   "approach": "Attention fuses global spatial features with local patch features",
+   "model": "Two-branch ImageNet-pretrained ResNet-50 with a patch selection module and multi-head attention",
+   "dataset": "Diverse self-built test set: 19 generation models, 128,424 images",
+   "generators": "19 models, e.g. BigGAN, Celeb-DF, CycleGAN, FF++, GauGAN, Pix2Pix, ProGAN, StarGAN, StyleGAN/2/3, VAEGAN, WGAN",
+   "result": "Unseen models: 91.73% mean AP; mixed setting: 96.91% global AP",
+   "crossgen": "Yes – centred on unseen models",
+   "limitation": "Artefacts are harder to spot after high-resolution images are resized"
+  },
+  {
+   "cid": "C13",
+   "approach": "Orthogonally trained CNNs, ensembled to favour real-image scores",
+   "model": "Five EfficientNet-B4 CNNs, ensembled",
+   "dataset": "Train: ~116K real (FFHQ, Metfaces, AFHQ2) + ~200K synthetic; test: StyleGAN3 pairs",
+   "generators": "FaceVid2Vid, score-based models, StarGAN-v2, StyleGAN2, Taming Transformers; unseen: StyleGAN3",
+   "result": "0.9995 AUC over the global test set, unseen StyleGAN3 included",
+   "crossgen": "Yes – StyleGAN3 held out of training",
+   "limitation": "The CNNs' orthogonality is checked only empirically, without a theoretical basis"
+  },
+  {
+   "cid": "C64",
+   "approach": "Interpretable detection using ViT-feature SVM support vectors as prototypes",
+   "model": "Fine-tuned ViT and SVM; repository adds xDNN, KNN, Naive Bayes",
+   "dataset": "Custom sets drawn from ImageNet, FFHQ, Oxford-IIIT Pet",
+   "generators": "Stable Diffusion and various other diffusion methods",
+   "result": "Within-dataset best (fine-tuned ViT + MLP head): Oxford-IIIT Pet 99.5%, image-to-image ImageNet 96.7%, class-conditional ImageNet 99.7%, FFHQ 99.4%; 93.0–97.2% with an SVM on fine-tuned features; 81.3% and 84.0% in cross-dataset tests",
+   "crossgen": "No – cross-dataset only; no generator held out",
+   "limitation": "Open datasets are scarce; evaluation on self-built custom datasets only"
+  },
+  {
+   "cid": "C30",
+   "approach": "Analysis-only forensic study of spectral/frequency artefacts in synthetic images; no detector proposed",
+   "model": "None; power-spectrum, autocorrelation and radial/angular spectral analyses",
+   "dataset": "Real: ImageNet, FFHQ, LAION; fakes from 15 models",
+   "generators": "GANs: BigGAN, GALIP, StyleGAN-T, StyleGAN2/3; VQ models; DMs: ADM, DALL-E 2, eDiff-I, GLIDE, Score-SDE; latent DMs: LDM, SD, DiT",
+   "result": "None; artefacts characterised through spectral analyses, no detection metrics",
+   "crossgen": "No – no detector was trained",
+   "limitation": "Post-processing, the authors note, \"may significantly modify and hide\" these artefacts"
+  },
+  {
+   "cid": "C24",
+   "approach": "Analyses forensic traces (spectral fingerprints) of diffusion models and evaluates existing detectors",
+   "model": "Spec, PatchForensics, Wang2020 (augmentation-trained ResNet-50), Grag2021 (first-layer downsampling removed)",
+   "dataset": "Real: COCO, ImageNet, UCID; fakes from COCO prompts",
+   "generators": "ADM, DALL-E 2, GLIDE, Latent Diffusion, Stable Diffusion; references: BigGAN, EG3D, ProGAN, StyleGAN2/3",
+   "result": "Averaged over 12 test generators (the training GAN and 5 diffusion models included): AUC ~75–93% and accuracy ~52–76% uncompressed; accuracy ~50–61% after resizing and compression",
+   "crossgen": "Yes – GAN-trained detectors run on diffusion images",
+   "limitation": "Generalisation is still the chief obstacle; GAN-trained detectors do badly on diffusion images, more so once compressed or resized"
+  },
+  {
+   "cid": "C27",
+   "approach": "SeDID: per-step error between deterministic reverse steps and denoising diffusion steps",
+   "model": "Statistical variant SeDID_Stat and neural-network variant SeDID_NNs",
+   "dataset": "CIFAR-10, TinyImageNet and CelebA, each at 32x32",
+   "generators": "Only DDPM",
+   "result": "SeDID_NNs, mean over the three datasets: ACC 0.9399, AUC 0.9634",
+   "crossgen": "No – DDPM alone; other families absent",
+   "limitation": "Optimal timestep differs between datasets; odd trends on CelebA need more investigation"
+  },
+  {
+   "cid": "C37",
+   "approach": "Real/fake classification by a nearest-neighbour or linear probe on frozen vision-language features; backbone not trained",
+   "model": "NN or linear probe on final-layer CLIP ViT-L/14 image features",
+   "dataset": "Train: 720k ProGAN real/fake images; test: ForenSynths, diffusion and autoregressive sets",
+   "generators": "BigGAN, CRN, CycleGAN, DALL-E, DeepFakes, GauGAN, Glide, Guided, IMLE, LDM, ProGAN, SAN, SITD, StarGAN, StyleGAN",
+   "result": "+15.07 mAP and +25.90% accuracy over prior best methods on diffusion and autoregressive models unseen in training",
+   "crossgen": "Yes – GAN-trained, evaluated on diffusion/AR",
+   "limitation": "Why frozen CLIP features tell real from fake images apart \"remains an open question\""
+  },
+  {
+   "cid": "C53",
+   "approach": "Large-scale dataset; multi-class classifier with reduced filter stride",
+   "model": "ConvNeXt-Large (altered stem)",
+   "dataset": "ArtiFact, 2,496,738 images in total: 964,989 real and 1,531,749 fake",
+   "generators": "25 generation methods: 13 GANs, 7 diffusion models, 5 miscellaneous",
+   "result": "Tests 1–3 of IEEE VIP Cup 2022: accuracy 96.04%, 83.00% and 90.60% respectively",
+   "crossgen": "Yes – challenge tests use unseen generators",
+   "limitation": "Leading detectors still falter on generators unseen in training"
+  },
+  {
+   "cid": "C26",
+   "approach": "Detects and attributes text-to-image fakes with image-only and hybrid (image plus prompt) classifiers",
+   "model": "Image-only: ResNet18; hybrid: CLIP image and text encoders plus a 2-layer MLP",
+   "dataset": "Real: MSCOCO, Flickr30k; fakes by four text-to-image models",
+   "generators": "DALL-E 2, GLIDE, Latent Diffusion, Stable Diffusion",
+   "result": "SD-trained hybrid detector (MSCOCO): accuracy 0.932 on Latent Diffusion, 0.899 on GLIDE, 0.885 on DALL-E 2",
+   "crossgen": "Yes – SD-trained, evaluated on three unseen T2I models",
+   "limitation": "Image-only detection on other models (e.g. GLIDE, DALL-E 2) is \"far from the design goal\""
+  },
+  {
+   "cid": "C15",
+   "approach": "LGrad (Learning on Gradients): pretrained-CNN gradients as a generalised representation of artefacts",
+   "model": "Pretrained-CNN transformation model mapping images to gradients, then a classifier",
+   "dataset": "ForenSynths / CNNDetection training data: 20 ProGAN categories, each 18,000 fake and 18,000 real; 1-, 2- or 4-class training",
+   "generators": "8 test models: BigGAN, CycleGAN, Deepfake, GauGAN, ProGAN, StarGAN, StyleGAN, StyleGAN2",
+   "result": "1-class setting, mean across the 8 test models: 86.3% ACC, 92.7% AP; vs FrePGAN: +11.4% ACC, +13.4% AP",
+   "crossgen": "Yes – across models, data and unseen domains",
+   "limitation": "Authors' own framing: reliance shifts from the data to the transformation model"
+  },
+  {
+   "cid": "C25",
+   "approach": "DIRE (diffusion reconstruction error): residual of an image versus its DDIM reconstruction",
+   "model": "ResNet-50 classifying DIRE maps; reconstruction by ADM (LSUN-Bedroom), 20 DDIM steps",
+   "dataset": "DiffusionForensics benchmark built on LSUN-Bedroom and ImageNet",
+   "generators": "Diffusion models (8): ADM, DDPM, iDDPM, LDM, PNDM, SD-v1, SD-v2, VQ-Diffusion",
+   "result": "ADM-trained detector: 99.9% mean accuracy, 100 AP over 8 diffusion models, unseen ones included",
+   "crossgen": "Yes – holds on unseen diffusion models",
+   "limitation": "None stated by the authors; covers only diffusion-generated images"
+  },
+  {
+   "cid": "C52",
+   "approach": "Million-scale benchmark with tasks for cross-generator and degraded-image testing",
+   "model": "ResNet-50, DeiT-S, Swin-T, CNNSpot, Spec, F3Net, GramNet",
+   "dataset": "GenImage: >1M fake pairs and 1,331,167 real ImageNet images",
+   "generators": "ADM, BigGAN, GLIDE, Midjourney, SD v1.4, SD v1.5, VQDM, Wukong",
+   "result": "ResNet-50 accuracy: 99.9% on its training generator (SD v1.4), 54.9% on Midjourney",
+   "crossgen": "Yes – includes a cross-generator classification task",
+   "limitation": "Steep performance drops across generators and on low-resolution, JPEG-compressed or blurred images"
+  },
+  {
+   "cid": "C51",
+   "approach": "Binary CNN real/fake classifier, explained via Grad-CAM",
+   "model": "Best of 36 custom CNNs: 2 conv layers of 32 filters, 64-unit dense layer",
+   "dataset": "120,000-image CIFAKE dataset: 60k real (CIFAR-10), 60k synthetic",
+   "generators": "Stable Diffusion v1.4, a latent diffusion model",
+   "result": "Test accuracy of 92.98% on CIFAKE",
+   "crossgen": "No – SD v1.4 is the sole generator",
+   "limitation": "One generator at 32px; decisions hinge on background imperfections"
+  },
+  {
+   "cid": "C33",
+   "approach": "Stable Diffusion inversion as detection features",
+   "model": "From-scratch ResNet50 on the image concatenated with its decoded noise map and reconstruction",
+   "dataset": "Real images: LAION, WebLI, reverse-image-search sets; SynRIS benchmark (new; 15 test sets)",
+   "generators": "Detector trained on SD; 15+ test models, e.g. DALL-E 2/3, Imagen, Kandinsky 2/3, Midjourney, PixArt-alpha, Playground 2.5, SDXL, Stable Cascade",
+   "result": "AUC-ROC 0.759 averaged over the tested generators (RIS protocol, SD+LAION training)",
+   "crossgen": "Yes – SD-trained; T2I models unseen in training",
+   "limitation": "Might not generalise beyond diffusion to text-to-image GANs or transformers; inversion costs significantly more compute"
+  },
+  {
+   "cid": "C32",
+   "approach": "DRCT framework: contrastive learning on diffusion-rebuilt hard samples",
+   "model": "Backbones: ConvNeXt-B, CLIP-ViT-L/14 (UnivFD)",
+   "dataset": "DRCT-2M (the authors' million-scale set) and GenImage; MSCOCO reals",
+   "generators": "16 diffusion model types, SD v1.4 and v2 included",
+   "result": "Accuracy rises by over 10% in cross-set tests (training on SD v1.4, testing on GenImage subsets)",
+   "crossgen": "Yes – cross-set tests on held-out diffusion models",
+   "limitation": "Smaller gains on non-diffusion (GAN) images; covers fully generated images only, not locally generated regions"
+  },
+  {
+   "cid": "C38",
+   "approach": "Few-shot forensics: linear SVM over frozen CLIP features of a few reference images",
+   "model": "Linear SVM on penultimate-layer CLIP ViT-L/14 features",
+   "dataset": "Few-shot reference set: 10 to 10k paired real/fake images from one generator; 18-generator test suite",
+   "generators": "18 in total: ADM, DALL-E 2/3, DeepFloyd-IF, DiT, eDiff-I, Firefly, GigaGAN, GLIDE, LDM, Midjourney v5, ProGAN, Score-SDE, SD variants, StyleGAN2/3/T",
+   "result": "~90.0% mean AUC on the 18 generators; over the state of the art, +6% AUC out-of-distribution, +13% on impaired images",
+   "crossgen": "Yes – 18 test generators spanning 3 families",
+   "limitation": "Limited interpretability: it remains unclear which forensic cues CLIP relies on"
+  },
+  {
+   "cid": "C34",
+   "approach": "Zero-shot, entropy-based: scores an image's coding cost with a model learnt only from real images",
+   "model": "ZED: multi-resolution, lossless neural image encoder",
+   "dataset": "Encoder trained on ~338k real images (Open Images); 19-generator synthetic test set",
+   "generators": "19, among them ADM, BigGAN, DALL-E 1/2/3, DiT, Firefly, GauGAN, GigaGAN, GLIDE, Midjourney v5, SD/SDXL, StyleGAN2",
+   "result": "~90.0% mean AUC on the 19 generators; average accuracy >3% above the state of the art",
+   "crossgen": "Yes – 19 never-seen generators, zero-shot",
+   "limitation": "Unreliable under heavy compression or resizing; catches only fully synthetic images, not local edits"
+  },
+  {
+   "cid": "C31",
+   "approach": "Shows detection datasets carry JPEG-compression and image-size biases, and removes them",
+   "model": "Detectors: ResNet50, Swin-T",
+   "dataset": "GenImage",
+   "generators": "ADM, BigGAN, GLIDE, Midjourney, SD v1.4, SD v1.5, VQDM, Wukong",
+   "result": "Bias-corrected training lifts GenImage cross-generator accuracy by >11 pp: ResNet50 from 71.68% to 82.74%, Swin-T from 74.09% to 85.83%",
+   "crossgen": "Yes – across GenImage generator subsets",
+   "limitation": "Constraints notwithstanding, \"datasets may contain other undesirable biases\" such as style differences or generator fingerprints"
+  },
+  {
+   "cid": "C43",
+   "approach": "Universal detection by prompt-tuning CLIP, a vision-language model",
+   "model": "Prompt-tuned CLIP ViT versus linear probe, fine-tuning and adapter",
+   "dataset": "Training: 200k ProGAN; testing: 21 datasets",
+   "generators": "GANs, diffusion models and commercial tools",
+   "result": "Prompt tuning: mAP 98.06%, mean accuracy 89.45% on 18 unseen generators",
+   "crossgen": "Yes – 21 test datasets, all unseen",
+   "limitation": "Weaker on images from commercial tools once JPEG-compressed"
+  },
+  {
+   "cid": "C39",
+   "approach": "Uses intermediate CLIP encoder-block outputs, weighted by trainable importance scores",
+   "model": "RINE: small trainable projection/weighting network over intermediate blocks of a frozen CLIP ViT-L/14",
+   "dataset": "1/2/4-class ProGAN training settings; 20 datasets for testing",
+   "generators": "BigGAN, CRN, CycleGAN, DALL-E, DeepFake, GauGAN, Glide (3), Guided, IMLE, LDM (3), ProGAN, SAN, SITD, StarGAN, StyleGAN/2",
+   "result": "4-class training, 20 test sets: mean accuracy 91.5%, AP 98.8; +10.6% accuracy versus the state of the art",
+   "crossgen": "Yes – GANs and diffusion in 20 test sets",
+   "limitation": "Performance drops considerably when blur, crop, compression and noise are applied together"
+  },
+  {
+   "cid": "C40",
+   "approach": "Forgery-aware CLIP adaptation: image- and frequency-domain adapter with language-guided alignment",
+   "model": "FatFormer: CLIP-ViT with forgery-aware adapter and text-prompt alignment",
+   "dataset": "Training: 4-class ProGAN; testing: unseen GAN and diffusion sets",
+   "generators": "Unseen test-time GANs and diffusion models",
+   "result": "Unseen GANs: 98% accuracy; unseen diffusion models: 95%",
+   "crossgen": "Yes – held-out GANs and diffusion models",
+   "limitation": "ProGAN-only training; authors note room to do better on diffusion models like Guided and call the GAN-diffusion artefact link unresolved"
+  },
+  {
+   "cid": "C29",
+   "approach": "Diffusion-image detection with a LaRE (latent reconstruction error) feature",
+   "model": "LaRE feature with EGRE (Error-Guided feature REfinement module; spatial/channel align-then-refine)",
+   "dataset": "GenImage benchmark",
+   "generators": "GenImage's 8 generator subsets",
+   "result": "Surpasses prior best methods by up to 11.9% average ACC and 12.1% average AP over GenImage's 8 generators",
+   "crossgen": "Yes – evaluated on 8 GenImage generators",
+   "limitation": "Real/fake features still overlap for generators unseen in training (Midjourney, ADM, BigGAN); LaRE cannot stand alone as input"
+  },
+  {
+   "cid": "C28",
+   "approach": "Training-free detection from an LDM autoencoder's reconstruction error",
+   "model": "Pretrained LDM autoencoders; LPIPS reconstruction distance; no classifier trained",
+   "dataset": "LAION-5B reals with prompt-matched fakes; Midjourney images from Discord",
+   "generators": "Stable Diffusion 1.1/1.5/2.1, Kandinsky 2.1, Midjourney 4/5/5.1",
+   "result": "Mean AP 0.992 over leading LDMs such as SD, Kandinsky, Midjourney",
+   "crossgen": "Yes – several LDMs, proprietary Midjourney included",
+   "limitation": "Best results need the source LDM's own autoencoder; limited to latent diffusion"
+  },
+  {
+   "cid": "C23",
+   "approach": "Benchmarks GAN-image detectors on diffusion images, analyses frequency-domain artefacts, retrains them",
+   "model": "Wang2020 (ResNet-50); Gragnaniello2021; Mandelli2022 (an EfficientNet-B4 ensemble)",
+   "dataset": "Mainly LSUN Bedroom 256; also LSUN Cat/Horse, ImageNet, FFHQ",
+   "generators": "5 GANs: Diff-ProjectedGAN, Diff-StyleGAN2, ProGAN, ProjectedGAN, StyleGAN; 5 DMs: ADM, DDPM, IDDPM, LDM, PNDM",
+   "result": "Average AUROC loss of 15.2% for GAN detectors on DM images; Pd@1%FAR averages 94.26% for a DM-trained detector on GANs but only 26.34% for a GAN-trained one on DMs",
+   "crossgen": "Yes – GAN-trained and DM-trained detectors cross-tested",
+   "limitation": "DMs leave fewer artefacts to detect; perturbations hurt DM-image detection more"
+  },
+  {
+   "cid": "C22",
+   "approach": "Learning in frequency space: FFT-domain convolution on high-frequency image/feature representations",
+   "model": "FreqNet, a lightweight residual-block CNN (1.9M parameters, no pretraining)",
+   "dataset": "Train: ForenSynths ProGAN (1/2/4-class); test: GAN self-synthesis sets",
+   "generators": "17 GANs, among them AttGAN, BigGAN, CycleGAN, GauGAN, ProGAN, StarGAN, StyleGAN and StyleGAN2; also a Deepfake set",
+   "result": "Mean accuracy 92.8% on 17 GAN test sets, beating Ojha (83.0%) by +9.8%",
+   "crossgen": "Yes – ProGAN-trained, evaluated on 17 GAN sources",
+   "limitation": "The conclusion names no limitations; only GAN sources are evaluated"
+  },
+  {
+   "cid": "C16",
+   "approach": "Up-sampling artefacts captured via Neighbouring Pixel Relationships (NPR)",
+   "model": "Lightweight CNN on NPR input; conv layers and ResNet blocks, 1.44M parameters",
+   "dataset": "ForenSynths ProGAN 4-class training split (car, cat, chair, horse); 18K real/18K fake each",
+   "generators": "28 generators: 16 GANs, 11 diffusion models, 1 deepfake method",
+   "result": "Averages 92.2% accuracy on the 28 generators, +11.6% versus the previous best method",
+   "crossgen": "Yes – 28 held-out GAN and diffusion models",
+   "limitation": "None stated explicitly; training used only ProGAN 4-class data"
+  },
+  {
+   "cid": "C63",
+   "approach": "Quantitative framework for scoring how XAI methods explain a deepfake detector",
+   "model": "Grad-CAM++, RISE, SHAP, LIME, SOBOL benchmarked on an EfficientNetV2 detector",
+   "dataset": "FaceForensics++",
+   "generators": "Four face manipulation methods: DeepFakes, Face2Face, FaceSwap, NeuralTextures",
+   "result": "LIME best: detector accuracy left at 0.579 on NeuralTextures after altering its top segment, 0.245 on DeepFakes after its top three",
+   "crossgen": "No – one detector, FF++ alone",
+   "limitation": "Explanation methods still struggle most with Face2Face and FaceSwap fakes"
+  },
+  {
+   "cid": "C35",
+   "approach": "Supervised detector learnt from an extremely varied many-generator dataset",
+   "model": "CLIP-pretrained ViT-S classifier; ConvNeXt-S also trialled",
+   "dataset": "Training: Community Forensics (4,803 generators, 2.7M images); testing: Wang, Ojha, Synthbuster, GenImage, authors' 21-model set",
+   "generators": "4,803 in total: latent/pixel diffusion, GANs, commercial systems",
+   "result": "On the out-of-distribution set of 21 unseen models: 0.987 mAP, 89.2% accuracy",
+   "crossgen": "Yes – 21 held-out models from 5 families",
+   "limitation": "Training data leans towards diffusion models; errors remain too frequent for critical uses"
+  },
+  {
+   "cid": "C41",
+   "approach": "Injects a category-common prompt into CLIP's text encoder so that image features carry detection semantics",
+   "model": "C2P-CLIP: CLIP ViT-L/14 plus a category common prompt",
+   "dataset": "UniversalFakeDetect (train on ProGAN; 19 test subsets); GenImage (train on SD v1.4)",
+   "generators": "20 in total: UniversalFakeDetect subsets plus GenImage diffusion models",
+   "result": "UniversalFakeDetect (19 test subsets): accuracy 93.79%, mAP 98.66%; GenImage: 95.8% accuracy",
+   "crossgen": "Yes – spans 20 generation models",
+   "limitation": "Prompt analysis by word frequency alone, without full captions, gives incomplete information"
+  },
+  {
+   "cid": "C36",
+   "approach": "Mixture-of-experts fusion of frequency/noise (low-level) and semantic (high-level) cues; proposes Chameleon, an in-the-wild benchmark",
+   "model": "AIDE: SRM noise filters, a DCT scoring module and an OpenCLIP semantic encoder",
+   "dataset": "AIGCDetectBenchmark, GenImage, Chameleon (authors' own)",
+   "generators": "ADM, BigGAN, CycleGAN, DALLE-2/3, GauGAN, Glide, Midjourney, ProGAN, SD v1.4/1.5, StarGAN, StyleGAN/2, VQDM, Wukong",
+   "result": "Mean accuracy 92.77% (AIGCDetectBenchmark) and 86.88% (GenImage), but only 65.77% on Chameleon",
+   "crossgen": "Yes – 16+ generators, several benchmarks",
+   "limitation": "Every tested detector nearly fails on Chameleon's realistic images; the problem remains \"far from being solved\""
+  },
+  {
+   "cid": "C48",
+   "approach": "Effort: SVD splits frozen foundation-model features into orthogonal subspaces",
+   "model": "CLIP ViT-L/14 (ablations: BEiT-v2, SigLIP)",
+   "dataset": "Training: ProGAN; testing: 19 UniversalFakeDetect subsets, plus FF++ (deepfakes)",
+   "generators": "BigGAN, CycleGAN, DALL-E, GauGAN, GLIDE, Guided/Latent Diffusion, ProGAN, StarGAN, StyleGAN",
+   "result": "mAP 99.41%, mAcc 95.19% over 19 test subsets, unseen generators among them",
+   "crossgen": "Yes – unseen generators among the 19 test subsets",
+   "limitation": "Authors raise only misuse risk and discuss no technical limitations"
+  }
+ ]
+}

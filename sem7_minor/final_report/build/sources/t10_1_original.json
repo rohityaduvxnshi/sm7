@@ -1,0 +1,101 @@
+[
+ {
+  "dataset": "ForenSynths (CNNDetection)",
+  "introduced_by": "Wang et al. [C01]",
+  "year": "2020",
+  "scale": "720K training images, 18,000 fake and 18,000 real in each of 20 ProGAN categories [C15]; 11 per-generator test sets",
+  "real_source": "LSUN",
+  "generators": "Training: ProGAN; 11 test sets: ProGAN, StyleGAN, BigGAN, CycleGAN, StarGAN, GauGAN, DeepFakes, CRN, IMLE, SAN, SITD (StyleGAN2 tested separately)",
+  "notes": "GAN-era protocol: ProGAN for training, unseen generators for testing. Standard training set in later work [C15, C16, C22]; several more detectors train on ProGAN, using 1, 2 or 4 of the 20 categories [C21, C39, C40], 200K of its images [C43] or all 20 categories [C48]. The authors' \"for now\" caveat: future generators may escape detection"
+ },
+ {
+  "dataset": "UniversalFakeDetect",
+  "introduced_by": "Ojha et al. [C37]",
+  "year": "2023",
+  "scale": "720K ProGAN training images; 19 test subsets [C37, C41, C48]",
+  "real_source": "— (training set inherited from ForenSynths [C01])",
+  "generators": "ProGAN, StyleGAN, BigGAN, CycleGAN, StarGAN, GauGAN, CRN, IMLE, SAN, SITD, DeepFakes, Guided, LDM, Glide, DALL-E [C37]",
+  "notes": "Extends the ForenSynths protocol on the test side with diffusion and autoregressive subsets; its 19 subsets became the standard evaluation suite for CLIP-feature detectors [C41, C48]"
+ },
+ {
+  "dataset": "DiffusionForensics",
+  "introduced_by": "Wang et al. [C25]",
+  "year": "2023",
+  "scale": "—",
+  "real_source": "LSUN-Bedroom, ImageNet [C25]",
+  "generators": "ADM, DDPM, iDDPM, PNDM, LDM, SD-v1, SD-v2, VQ-Diffusion (8 diffusion models) [C25]",
+  "notes": "Released with the DIRE detector; scope limited to diffusion-generated images [C25]"
+ },
+ {
+  "dataset": "GenImage",
+  "introduced_by": "Zhu et al. [C52]",
+  "year": "2023",
+  "scale": ">1M fake images plus 1,331,167 real [C52]",
+  "real_source": "ImageNet [C52]",
+  "generators": "Midjourney, SD v1.4, SD v1.5, ADM, GLIDE, Wukong, VQDM, BigGAN (8) [C52]",
+  "notes": "Defines an explicit cross-generator classification task and a degraded-image task. Authors report sharp degradation cross-generator and on low-resolution, JPEG-compressed and blurred images [C52]. Later shown to carry JPEG-compression and image-size biases [C31]"
+ },
+ {
+  "dataset": "ArtiFact",
+  "introduced_by": "Rahman et al. [C53]",
+  "year": "2023",
+  "scale": "2,496,738 images in total (964,989 real and 1,531,749 fake)",
+  "real_source": "—",
+  "generators": "13 GANs, 7 diffusion and 5 other methods (25 in all)",
+  "notes": "Aimed at robustness; the authors' own detector was scored on the IEEE VIP Cup 2022 test sets. The authors note that state-of-the-art detectors still have difficulty with generators absent from training"
+ },
+ {
+  "dataset": "TWIGMA",
+  "introduced_by": "Chen et al. [C56]",
+  "year": "2023",
+  "scale": "—",
+  "real_source": "Not applicable — a dataset of AI-generated images with metadata collected from Twitter [C56]",
+  "generators": "—",
+  "notes": "Platform-collected rather than generated for research; screened in as evidence that synthetic images already circulate in the wild [C56]"
+ },
+ {
+  "dataset": "CIFAKE",
+  "introduced_by": "Bird & Lotfi [C51]",
+  "year": "2024",
+  "scale": "120,000 images (60,000 real + 60,000 synthetic) [C51]",
+  "real_source": "CIFAR-10 [C51]",
+  "generators": "Stable Diffusion v1.4 (latent diffusion) [C51]",
+  "notes": "Single generator at 32×32 resolution; Grad-CAM analysis shows the classification is driven by imperfections in image backgrounds [C51]"
+ },
+ {
+  "dataset": "D3",
+  "introduced_by": "Baraldi et al. [C49]",
+  "year": "2024",
+  "scale": "—",
+  "real_source": "—",
+  "generators": "—",
+  "notes": "Large diffusion-image collection released with a contrastive detection method (ECCV 2024); screened in as a secondary study, so no full-text extraction row exists [C49]"
+ },
+ {
+  "dataset": "Chameleon",
+  "introduced_by": "Yan et al. [C36]",
+  "year": "2025",
+  "scale": "—",
+  "real_source": "—",
+  "generators": "—",
+  "notes": "A benchmark of realistic in-the-wild images. AIDE, the detector proposed in the same study, averages 92.77% accuracy on AIGCDetectBenchmark and 86.88% on GenImage but reaches only 65.77% on Chameleon; the authors describe the problem as far from solved"
+ },
+ {
+  "dataset": "Community Forensics",
+  "introduced_by": "Park & Owens [C35]",
+  "year": "2025",
+  "scale": "2.7M images from 4,803 generators [C35]",
+  "real_source": "—",
+  "generators": "4,803 generators spanning latent and pixel diffusion, GANs, and commercial models [C35]",
+  "notes": "Built to test whether generator diversity buys generalisation. Authors note the dataset is skewed toward diffusion models and that error rates remain too high for critical applications [C35]"
+ },
+ {
+  "dataset": "WildFake",
+  "introduced_by": "Hong et al. [C54]",
+  "year": "2025",
+  "scale": "—",
+  "real_source": "—",
+  "generators": "—",
+  "notes": "Hierarchical dataset of AI-generated images; screened in as a secondary study for this table only, so no full-text extraction row exists [C54]"
+ }
+]

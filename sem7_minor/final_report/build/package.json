@@ -1,0 +1,8 @@
+{
+  "name": "sem7-final-report-build",
+  "private": true,
+  "description": "Builds the Sem 7 final report DOCX from final_report/chapters and tables",
+  "dependencies": {
+    "docx": "^9.13.0"
+  }
+}

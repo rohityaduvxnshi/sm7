@@ -63,3 +63,16 @@ Note for the Week 11 pass: two `cross_generator_tested` values changed from `[VE
 - The 48 primary studies are the input to Week 3's `extraction_table.csv` (one row per paper, all eight extraction columns).
 - The paper's final reference list (target 45-60) is assembled in Week 11 from primary + background first, then secondary as needed; not every screened-in study must be cited.
 - Background classics (2014-2018) sit outside the 2019-2026 inclusion window by design; the window applies to detection studies, not to generator/backbone/XAI method references.
+
+## Corrections from the final-report review (20 October 2026)
+
+An adversarial review of the assembled final report re-read the papers' own text for every figure it quotes. Six extraction cells were corrected (extraction_table.csv and tables/literature_comparison.md updated; the earlier drafts and WPRs keep the old wording):
+
+- C01 (Wang et al., 2020): the eleven test sets behind 90.8 mAP include ProGAN itself (shown in grey in the paper's Table 2); ten generators are unseen; StyleGAN2 was tested separately.
+- C06 (Zhang et al., 2019): the CycleGAN-trained spectrum classifier averages 95.9 in the leave-one-out test (Table II); 99.8 was a single-fold value.
+- C24 (Corvi et al., 2023b): ~52-76% / ~50-61% accuracy (AUC ~75-93%) are averages over twelve test generators (ProGAN and five diffusion models included; Table 1 AVG row), not results on diffusion images alone; the earlier ~60-76% also left out PatchForensics (51.9).
+- C30 (Corvi et al., 2023a): fifteen generators are analysed (Table 1), not thirteen.
+- C44 (Coccomini et al., 2022): 81.1%, 47.0% and 57.0% (EfficientNetV2-M) and ~62.0% (ViT-Base) are accuracies on the three training methods (FaceShifter, FS-GAN, Deepfakes; Sec. 4.2), not seen-versus-unseen results.
+- C63 (Tsigos et al., 2024): 0.579 and 0.245 are the detector accuracy that remains after LIME's top-1 (NeuralTextures) and top-3 (DeepFakes) segments are altered (Table 1), not top-1 accuracy drops.
+
+Counts corrected in the report: 15 (not 14) studies quote average precision (C12 reports 87.2% average precision); 15 studies train on ProGAN-generated images, 14 of them on the ForenSynths set and C02 on ProGAN face images. The 92.77% / 86.88% / 65.77% figures of C36 belong to the authors' own detector (AIDE).
