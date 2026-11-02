@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Viva Preparation Notes - Group 148</title>
+<link rel="stylesheet" href="viva_notes.css">
+</head>
+<body>
+
+<!-- ============================ COVER ============================ -->
+<div class="cover-band">
+  <p class="kicker">Viva preparation notes &middot; Minor Project (NTCC, ETMN100)</p>
+  <p class="title">Deep Learning for AI-Generated Image Detection: A Review of CNN, Vision Transformer, and Explainable Approaches</p>
+  <p class="sub">Simple-language notes for the final NTCC viva, 3 November 2026</p>
+</div>
+
+<table class="cover-meta">
+  <tr><td>Group</td><td>Group 148 &middot; B.Tech Computer Science and Engineering, Semester 7 &middot; ASET, Amity University Uttar Pradesh</td></tr>
+  <tr><td>Team</td><td>Rohit Yadav (A2305223472) &middot; Vishal (A2305223568) &middot; Hardik Mehlawat (A2305223449)</td></tr>
+  <tr><td>Faculty guide</td><td>Dr. Richa Gupta</td></tr>
+  <tr><td>Project window</td><td>20 July &ndash; 9 October 2026 (12 weeks)</td></tr>
+  <tr><td>What this is</td><td>Internal team notes for speaking practice. Not a submission document. Every fact here was checked against our project records and the final report, and a few details against the original papers.</td></tr>
+</table>
+
+<div class="note">
+  <span class="box-label">How to use these notes</span>
+  <ol>
+    <li>Everyone: read Sections 1 to 3 tonight. Together they tell the whole story.</li>
+    <li>Learn your own part in Section 4 and say your "Say this" box aloud two or three times.</li>
+    <li>Practise the questions in Section 7 with each other. The coloured tag shows who answers first; anyone can add to an answer.</li>
+    <li>Read Section 8 last. It lists the things an examiner may notice across our documents, with the honest answer to each.</li>
+  </ol>
+</div>
+
+<h2>Contents</h2>
+<ol class="toc">
+  <li>The whole project, in short</li>
+  <li>Key numbers and where to find things</li>
+  <li>What we found</li>
+  <li>Who explains what (team and individual parts)</li>
+  <li>Problems we faced</li>
+  <li>How we will carry it forward</li>
+  <li>Common viva questions with answers</li>
+  <li>Be ready: things an examiner may notice</li>
+  <li>Simple glossary</li>
+</ol>
+
+<p class="small muted" style="margin-top:10pt">Tags used in Section 7:
+  <span class="tag r">Rohit</span> <span class="tag v">Vishal</span> <span class="tag h">Hardik</span> <span class="tag all">All</span>
+  &nbsp;show who answers first.</p>
+
+<!-- ============================ 1 ============================ -->
+<div class="section newpage">
+<h1>1. The whole project, in short</h1>
+
+<div class="say">
+  <span class="box-label">Say this (the short answer, about 90 seconds; anyone can give it)</span>
+  <p>Our project is about detecting AI-generated images: pictures made by AI tools such as Stable Diffusion or Midjourney instead of a camera. These pictures now look so real that they can be used for fake news, fake evidence and fraud, and there are far too many images for people to check by eye. So we need computer programs, called detectors, that can spot them.</p>
+  <p>This semester our job was a literature review. We did not build a detector for this report; we studied what other researchers have built. We fixed our search rules first, found 101 records, removed 26 duplicates, screened 75 and kept 74. The 48 main studies among them were read in full and compared in one big table.</p>
+  <p>We grouped the detectors into five families by the clue each one uses. Our main finding is that detectors work very well on the image generator they learned from, but often fail on new ones: in one study, accuracy fell from 99.9% to 54.9% on Midjourney images. We also found that almost no study both tests on new generators and explains what the detector is looking at.</p>
+  <p>That gap is our Semester 8 plan: train four well-known CNN models and a Vision Transformer in the same way, test them on generators they have never seen, and use Grad-CAM heat maps to show where in the image they look.</p>
+</div>
+
+<h2>What we did, step by step</h2>
+<div class="flow">
+  <div class="step"><b>1. Fix the scope</b>Still images only. No video, no audio, no experiments in the review. <span class="muted">Week 1</span></div>
+  <div class="arrow">&rarr;</div>
+  <div class="step"><b>2. Search rules first</b>8 search phrases, studies from 2019&ndash;2026, must report numbers. <span class="muted">Week 1</span></div>
+  <div class="arrow">&rarr;</div>
+  <div class="step"><b>3. Search and screen</b>101 found &rarr; 26 duplicates out &rarr; 75 checked &rarr; 74 kept, 1 dropped. <span class="muted">Weeks 2&ndash;3</span></div>
+  <div class="arrow">&rarr;</div>
+  <div class="step"><b>4. Read in full</b>48 main studies; 8 facts recorded for each one. <span class="muted">Week 3</span></div>
+</div>
+<div class="flow">
+  <div class="step"><b>5. Group</b>5 families, by where a detector's clue comes from. <span class="muted">Week 4</span></div>
+  <div class="arrow">&rarr;</div>
+  <div class="step"><b>6. Write and compare</b>Background, the five families, 11 datasets, 8 metrics, one master table of all 48 studies. <span class="muted">Weeks 5&ndash;9</span></div>
+  <div class="arrow">&rarr;</div>
+  <div class="step"><b>7. Find the gap</b>Challenges, the research gap and the Semester 8 plan. <span class="muted">Week 10</span></div>
+  <div class="arrow">&rarr;</div>
+  <div class="step"><b>8. Check and report</b>Every reference and number checked; final report in the Amity format. <span class="muted">Week 11 &rarr; October</span></div>
+</div>
+
+<div class="careful">
+  <span class="box-label">Honest note on dates</span>
+  <p>The week labels in steps 6 to 8 above are the planned weeks, and the weekly reports (WPRs) follow the same plan. Most of the writing was actually finished early, between 10 and 17 August; our project diary shows the real dates. Our final report says this openly in Section 6.1. If asked, give the answer to question H3 in Section 7.</p>
+</div>
+
+<h2>The two semesters</h2>
+<table class="grid">
+  <tr><th style="width:22%"></th><th>Semester 7 (now): Minor Project</th><th>Semester 8: Major Project</th></tr>
+  <tr><td><strong>Work</strong></td><td>Literature review only. No experiments, no results of our own.</td><td>Build and test the detectors that the review planned.</td></tr>
+  <tr><td><strong>Output</strong></td><td>Final report (100 pages), 12 WPRs, two progress reports, project diary.</td><td>Major project report, experimental paper, viva and demo.</td></tr>
+  <tr><td><strong>Link</strong></td><td colspan="2">The review found the gap; Semester 8 fills it. Our guide approved one combined research paper covering both semesters (25 August 2026).</td></tr>
+</table>
+</div>
+
+<!-- ============================ 2 ============================ -->
+<div class="section">
+<h1>2. Key numbers and where to find things</h1>
+
+<table class="grid">
+  <tr><th style="width:20%">Number</th><th>What it means</th></tr>
+  <tr><td class="num">12 weeks</td><td>Project window, 20 July &ndash; 9 October 2026 (82 days). One weekly progress report (WPR) per week, due on Amizone by the next Wednesday.</td></tr>
+  <tr><td class="num">8</td><td>Fixed search phrases, for example "synthetic image detection", "CIFAKE" and "cross-generator generalization".</td></tr>
+  <tr><td class="num">101 &rarr; 75</td><td>Records found, then unique records after removing 26 duplicates.</td></tr>
+  <tr><td class="num">74</td><td>Records kept: 48 main (primary) studies + 11 supporting (secondary) studies + 15 background papers.</td></tr>
+  <tr><td class="num">1</td><td>Record dropped at screening: the TruthLens preprint, which had only 1 citation.</td></tr>
+  <tr><td class="num">48</td><td>Main studies read in full, with 8 facts recorded for each.</td></tr>
+  <tr><td class="num">5</td><td>Families of detectors: 14 + 19 + 2 + 8 + 4 studies.</td></tr>
+  <tr><td class="num">11</td><td>Datasets compared (Table 10.1).</td></tr>
+  <tr><td class="num">8</td><td>Metrics (ways of measuring results) explained with formulas (Chapter 11).</td></tr>
+  <tr><td class="num">36 of 48</td><td>Studies that test on generators the detector never saw in training.</td></tr>
+  <tr><td class="num">4 of 48</td><td>Studies that explain their decisions. Only 1 of them (Chai et al., 2020) also tests on new generators.</td></tr>
+  <tr><td class="num">15</td><td>Studies trained on images from a single older generator, ProGAN.</td></tr>
+  <tr><td class="num">99.9% &rarr; 54.9%</td><td>GenImage study (Zhu et al., 2023): a ResNet-50 on its own training generator vs on Midjourney images.</td></tr>
+  <tr><td class="num">92.77% &rarr; 65.77%</td><td>One detector, AIDE (Yan et al., 2025a): on a standard benchmark vs on realistic images from the internet.</td></tr>
+  <tr><td class="num">74 / 73</td><td>References checked against official records / references cited in the report.</td></tr>
+  <tr><td class="num">100 pages</td><td>Final report: 15 chapters plus references and one appendix, built on 20 October 2026.</td></tr>
+</table>
+
+<h2>Where to point in the report</h2>
+<table class="grid">
+  <tr><th>What</th><th style="width:30%">Where</th><th style="width:14%">Page</th></tr>
+  <tr><td>Flow of records: 101 found &rarr; 74 kept</td><td>Figure 8.1</td><td>28</td></tr>
+  <tr><td>The five families (picture and counts)</td><td>Figure 9.1 and Table 9.1</td><td>32</td></tr>
+  <tr><td>The 11 datasets</td><td>Table 10.1</td><td>45&ndash;46</td></tr>
+  <tr><td>Confusion matrix and metrics picture</td><td>Figure 11.1</td><td>49</td></tr>
+  <tr><td>Master table of all 48 studies</td><td>Table 12.1</td><td>54&ndash;63</td></tr>
+  <tr><td>The counts (36 of 48, 4 of 48, 15 on ProGAN)</td><td>Table 12.2</td><td>64</td></tr>
+  <tr><td>The research gap</td><td>Section 13.6</td><td>72&ndash;73</td></tr>
+  <tr><td>Semester 8 plan and the reason for each choice</td><td>Table 14.1</td><td>76&ndash;77</td></tr>
+  <tr><td>Individual contribution</td><td>Chapter 15</td><td>78</td></tr>
+  <tr><td>References</td><td>&mdash;</td><td>79&ndash;88</td></tr>
+</table>
+<p class="small muted">Page numbers are the ones printed on the page. In a PDF viewer, add 9 (printed page 28 is PDF page 37).</p>
+
+<h2>The report in one view</h2>
+<table class="grid">
+  <tr><th style="width:50%">Chapters 1&ndash;6: the project plan (Amity format)</th><th>Chapters 7&ndash;14: the review itself</th></tr>
+  <tr>
+    <td>1 Introduction &middot; 2 Goals &middot; 3 Scope &middot; 4 Constraints &middot; 5 Requirements &middot; 6 Project management (timeline, roles, risks)</td>
+    <td>7 How fake images are made &middot; 8 How we did the review &middot; 9 The five families &middot; 10 Datasets &middot; 11 Metrics &middot; 12 Comparison (master table) &middot; 13 Challenges and the gap &middot; 14 Conclusion, limits and Semester 8 plan</td>
+  </tr>
+  <tr><td colspan="2">Then Chapter 15 (individual contribution), the references, and Appendix A (abbreviations).</td></tr>
+</table>
+</div>
+
+<!-- ============================ 3 ============================ -->
+<div class="section">
+<h1>3. What we found</h1>
+
+<h2>The five families of detectors (Chapter 9)</h2>
+<p>We sorted detectors by <strong>where their clue comes from</strong>, because that decides how well a detector copes with a new generator.</p>
+<table class="grid">
+  <tr><th style="width:17%">Family</th><th>What clue it uses</th><th style="width:19%">Think of it as</th><th style="width:7%">Studies</th><th style="width:24%">Main weakness</th></tr>
+  <tr><td><strong>1. Hand-made and frequency checks</strong></td><td>A person decides what to measure, such as hidden patterns in the image's fine detail (its frequency spectrum). A simple classifier then decides.</td><td>Checking a banknote under a UV lamp.</td><td>14</td><td>Breaks when the generator changes its design or the image is compressed.</td></tr>
+  <tr><td><strong>2. CNNs with transfer learning</strong></td><td>A neural network learns its own clues, usually starting from a network already trained on millions of everyday photos (ImageNet).</td><td>An experienced photo editor who is then trained to spot fakes.</td><td>19</td><td>Early successes were on GAN images; on diffusion images the scores fell sharply.</td></tr>
+  <tr><td><strong>3. Transformers</strong></td><td>The image is cut into patches and every patch "looks at" every other patch (attention).</td><td>Reading a whole page at once instead of through a small window.</td><td>2</td><td>Papers change many things at once, so it is unclear whether the transformer is the reason for good results.</td></tr>
+  <tr><td><strong>4. CLIP-based (big general models)</strong></td><td>Reuses a large model trained on pictures with captions, kept unchanged ("frozen"); only a small part on top is trained.</td><td>Asking a widely read expert, and learning how to read their opinion.</td><td>8</td><td>Nobody knows exactly why it works; it weakens under blur, cropping and compression.</td></tr>
+  <tr><td><strong>5. Explainability</strong></td><td>Shows which part of the image led to the decision, for example with Grad-CAM heat maps.</td><td>A highlighter on the picture.</td><td>4</td><td>Shows <em>where</em> the model looked, not <em>what</em> it found there.</td></tr>
+</table>
+<p class="small muted">The comparisons in the "Think of it as" column are our own, to help explain; they are not in the report. Three studies fit two families, so the families hold 44 different studies; four dataset studies are discussed separately: 44 + 4 = 48.</p>
+
+<h2>Our three main findings (Chapter 14)</h2>
+<ol>
+  <li><strong>The problem is built in ("structural").</strong> A detector mostly learns the hidden traces of the one generator it trained on. A new generator that is built differently does not leave those traces, so the detector fails on it. Examples: 99.9% &rarr; 54.9% on Midjourney images (Zhu et al., 2023); 92.77% &rarr; 65.77% on realistic images from the internet (Yan et al., 2025a).</li>
+  <li><strong>What helps most.</strong> The best results on new generators come from (a) a big general model that was not trained for detection, kept unchanged (such as CLIP), (b) feeding the detector something computed from the image instead of the raw image, or (c) training on many different generators. None of these fully solves the problem.</li>
+  <li><strong>Testing on new generators and explaining decisions rarely meet.</strong> 36 of 48 studies test on new generators, only 4 explain their decisions, and only 1 does both.</li>
+</ol>
+
+<h2>The research gap (Section 13.6)</h2>
+<div class="say">
+  <span class="box-label">Say this</span>
+  <p>No study does all four of these together: (1) several well-known pretrained CNNs trained in the same way, (2) a Vision Transformer trained in the same way for comparison, (3) heat maps showing which part of the image the models use, and (4) a test on generators the models never saw. Each piece exists somewhere; the combination does not. Our Semester 8 study is designed to do all four.</p>
+</div>
+
+<h2>Five problems the field still faces (Chapter 13)</h2>
+<ul>
+  <li><strong>New generators:</strong> detectors trained on one generator fail on others.</li>
+  <li><strong>Compression and editing:</strong> sharing an image on social media compresses it, and strong compression can wipe out most of the traces. 10 of the 48 studies admit this weakness.</li>
+  <li><strong>Biased and outdated datasets:</strong> for example, GenImage's real and fake images differ in file compression and size, so a model can "cheat"; and every dataset's list of generators goes out of date.</li>
+  <li><strong>Weak explanations:</strong> heat maps show where a model looked, not what it found.</li>
+  <li><strong>Hard to compare:</strong> studies report different measures on different test sets, so their numbers cannot be ranked fairly.</li>
+</ul>
+</div>
+
+<!-- ============================ 4 ============================ -->
+<div class="section newpage">
+<h1>4. Who explains what</h1>
+
+<div class="note">
+  <span class="box-label">Team first</span>
+  <p>Our report (Table 6.2 and Chapter 15) says all three of us worked together on every part: searching, reading, grouping, writing, checking and the weekly reports. Nobody did a part alone, and the main decisions were taken together under our guide's direction. For the viva we have only divided <strong>who explains which part</strong>, so that each of us speaks clearly about something. Each of us must still be able to answer simple questions on any part.</p>
+</div>
+
+<h2>Order of speaking</h2>
+<div class="flow">
+  <div class="step"><b>Rohit (about 1 min)</b>Opening: the problem, why it matters, our aim and plan.</div>
+  <div class="arrow">&rarr;</div>
+  <div class="step"><b>Vishal (2&ndash;3 min)</b>How fakes are made, how we found papers, datasets and metrics.</div>
+  <div class="arrow">&rarr;</div>
+  <div class="step"><b>Hardik (2&ndash;3 min)</b>The five families, what we found, and the research gap.</div>
+  <div class="arrow">&rarr;</div>
+  <div class="step"><b>Rohit (about 1 min)</b>Closing: limits of the review and the Semester 8 plan.</div>
+</div>
+
+<div class="person r">
+  <h2>Rohit Yadav <span class="tag r">Rohit</span></h2>
+  <p><strong>Explains:</strong> the opening (Chapters 1&ndash;2: the problem, why it matters, our aim); the plan (Chapters 3&ndash;6: scope, limits, the 12-week plan, WPRs, risks); the closing (Chapter 14: limits and the Semester 8 plan); questions about the process (WPRs, report format, plagiarism) and the early Semester 8 code work.</p>
+  <div class="say">
+    <span class="box-label">Say this (opening)</span>
+    <p>We are Group 148. Our project is a review of deep-learning methods that detect AI-generated images. AI tools can now make photos that look real, and these can be used for fake news, fake evidence and fraud. There are far too many images for people to check by eye, so we need automatic detectors. This semester our task was to study what others have built, not to build our own. We followed a 12-week plan, from 20 July to 9 October 2026, with a progress report every week. Vishal will explain how fake images are made and how we found our papers, Hardik will explain the detectors and what we found, and I will end with our plan for Semester 8.</p>
+  </div>
+  <div class="say">
+    <span class="box-label">Say this (closing)</span>
+    <p>To sum up: detectors work well on the generator they learned from but often fail on new ones, and almost no study tests new generators and explains its decisions together. Our review has limits: we searched once, in Week 2, and we did not repeat anyone's experiments. In Semester 8 we will fill the gap: four well-known CNNs and a Vision Transformer, trained the same way on CIFAKE, tested on generators they never saw, with Grad-CAM heat maps to show where in the image they look. On our guide's instruction of 15 August, we have already started preparing this code as a separate Semester 8 work track.</p>
+  </div>
+  <p><strong>Numbers to know:</strong> 12 weeks, 20 Jul &ndash; 9 Oct 2026 &middot; WPR due every Wednesday &middot; progress reviews on 27 Aug and 1 Oct &middot; 4 objectives in the synopsis, broken into 9 steps, 2 key questions &middot; 4 CNNs + 1 ViT, 2 ways each &middot; CIFAKE has 120,000 images &middot; report upload date 26 Oct.</p>
+  <p><strong>Questions likely to come to you:</strong> A1&ndash;A8, G1&ndash;G8, H2&ndash;H4, H6, H9, H11, H14.</p>
+  <p class="small"><strong>Suggested Semester 8 focus</strong> (agree it as a team first): running the remaining experiments on Kaggle and putting the combined paper together.</p>
+</div>
+
+<div class="person v">
+  <h2>Vishal <span class="tag v">Vishal</span></h2>
+  <p><strong>Explains:</strong> how fake images are made (Chapter 7); how we found, selected and checked the papers (Chapter 8); the datasets (Chapter 10); the metrics (Chapter 11).</p>
+  <div class="say">
+    <span class="box-label">Say this</span>
+    <p>I will explain how AI images are made, how we found our papers, and how detectors are tested. There are two main kinds of image generators. In a GAN, two networks compete: one makes images and the other tries to catch them. A diffusion model, like Stable Diffusion, starts from random noise and removes it step by step until a picture appears. Both leave tiny traces, mostly in the fine detail of the image, that our eyes cannot see. To find papers, we fixed our search rules first: 8 search phrases, studies from 2019 to 2026, still images only, and they had to report numbers. We found 101 records, removed 26 duplicates, screened 75 and kept 74, including 48 main studies that we read in full. We checked every reference against official records. We then compared 11 datasets and explained 8 ways of measuring results.</p>
+  </div>
+  <p><strong>Numbers to know:</strong> 8 search phrases &middot; 101 &rarr; 75 &rarr; 74 (48 + 11 + 15), 1 dropped &middot; 74 references checked, 1 wrong year fixed &middot; 11 datasets &middot; CIFAKE: 60,000 real + 60,000 fake, 32&times;32 pixels &middot; GenImage: 8 generators &middot; 8 metrics.</p>
+  <p><strong>Questions likely to come to you:</strong> B1&ndash;B10, C1&ndash;C6, E1&ndash;E6, H10.</p>
+  <p class="small"><strong>Suggested Semester 8 focus</strong> (agree it as a team first): building a cleaner new-generator test (matched real photos and file types) and the datasets part of the paper.</p>
+</div>
+
+<div class="person h">
+  <h2>Hardik Mehlawat <span class="tag h">Hardik</span></h2>
+  <p><strong>Explains:</strong> the five families of detectors (Chapter 9); the comparison of the 48 studies (Chapter 12); the challenges and the research gap (Chapter 13).</p>
+  <div class="say">
+    <span class="box-label">Say this</span>
+    <p>I will explain the detectors and what we found. We grouped the detection studies into five families by where the detector gets its clue: hand-made frequency checks (14 studies), CNNs with transfer learning (19), transformers (2), CLIP-based detectors (8), and explanation work like Grad-CAM (4). Then we put all 48 into one master table, Table 12.1, with two extra columns: was the detector tested on generators it never saw, and what weakness do its authors admit. Our main finding is that detectors often fail on new generators: in one study, accuracy fell from 99.9% to 54.9% on Midjourney images. 36 of the 48 studies test on new generators, but only 4 explain their decisions, and only one does both. No study combines several CNNs, a Vision Transformer, heat maps and new-generator testing. That is the gap our Semester 8 work will fill.</p>
+  </div>
+  <p><strong>Numbers to know:</strong> 14 / 19 / 2 / 8 / 4 &middot; 36 of 48 &middot; 4 of 48, only 1 does both &middot; 15 trained on ProGAN &middot; 99.9% &rarr; 54.9% &middot; 92.77% &rarr; 65.77% &middot; Table 12.1 is on pages 54&ndash;63.</p>
+  <p><strong>Questions likely to come to you:</strong> D1&ndash;D11, E7, F1&ndash;F12, H5.</p>
+  <p class="small"><strong>Suggested Semester 8 focus</strong> (agree it as a team first): the explanations (Grad-CAM, and a better method for the transformer) and the analysis of results.</p>
+</div>
+
+<div class="say">
+  <span class="box-label">If asked "What did you do personally?" (each of you)</span>
+  <p>All three of us worked on every part together; our report says this in Chapter 15. For today we divided the explanation, and the parts I am explaining are [your parts]. I am happy to answer on any other part too.</p>
+</div>
+<div class="careful">
+  <span class="box-label">Careful</span>
+  <p>Do not say "I alone did the datasets" or anything similar. It contradicts Table 6.2 and Chapter 15 of our own report. Examiners often check a "joint work" claim by asking each member about a different chapter, so read Sections 1 to 3 even if they are not your part.</p>
+</div>
+</div>
+
+<!-- ============================ 5 ============================ -->
+<div class="section">
+<h1>5. Problems we faced</h1>
+
+<h2>During the review (Semester 7)</h2>
+<table class="grid">
+  <tr><th style="width:38%">Problem</th><th>What we did</th></tr>
+  <tr><td>Too many papers, in a field that changes every few months.</td><td>Wrote fixed search rules before searching (8 phrases, 2019&ndash;2026, must report numbers) and counted papers at every step: 101 &rarr; 75 &rarr; 74 &rarr; 48.</td></tr>
+  <tr><td>Some values could not be confirmed on the first reading of a paper.</td><td>Marked 10 such cells "to verify" instead of guessing, and later settled all 10 from the papers' full text. For two studies the full text showed no test on a new generator, so we set their "tested on new generators?" column to "No" (Frank et al., 2020; Aghasanli et al., 2023).</td></tr>
+  <tr><td>Papers report results in different ways (accuracy, AUC, average precision) on different test sets.</td><td>Explained 8 measures with formulas, copied every number exactly as published, and did not rank detectors across papers.</td></tr>
+  <tr><td>Risk of wrong or fake references.</td><td>Checked all 74 reference IDs against official records, mainly arXiv and Crossref. This found and fixed one wrong year (Wu et al., 2026).</td></tr>
+  <tr><td>Copying numbers into tables by hand can go wrong.</td><td>A script compared the master table with our notes: 48 of 48 rows matched. A final re-check against the papers fixed six more details before the final report.</td></tr>
+  <tr><td>The first plan had 15 weeks, but the window was only 12.</td><td>Merged some weeks, and did most of the writing early, in mid-August.</td></tr>
+  <tr><td>The official report format came late.</td><td>Kept the draft in a plain style that was easy to restyle, then rebuilt it in the Amity format in October.</td></tr>
+  <tr><td>Plagiarism risk; the department's result for our August draft had not come back when the window closed.</td><td>Wrote the final report in fresh wording and ran our own rough similarity check (about 0.5% of the main text matched outside sources).</td></tr>
+  <tr><td>The 48-study table was too wide for a normal page.</td><td>Printed both big tables (10.1 and 12.1) on landscape pages.</td></tr>
+</table>
+
+<h2>While starting the Semester 8 code early (guide's instruction, 15 August)</h2>
+<table class="grid">
+  <tr><th style="width:38%">Problem</th><th>What we did</th></tr>
+  <tr><td>Our laptop has no graphics card (GPU) that can train these models.</td><td>Used Kaggle's free online notebooks with an NVIDIA Tesla T4 GPU (30 GPU-hours per week).</td></tr>
+  <tr><td>The ten training runs could need more than a week's GPU quota (31.3 hours worst case against 30).</td><td>Used early stopping (a run ends once it stops improving) and split the runs into sessions. The ten runs used 19.89 hours.</td></tr>
+  <tr><td>Kaggle surprises: data folders moved, an access key expired, and one run showed "running" for 10 hours although it had failed after 18 seconds.</td><td>Made the notebooks find their data folders by themselves, got a new key, and learnt to read the run's log instead of trusting its status.</td></tr>
+  <tr><td>Three runs had their best score at or next to the 30-epoch limit, so they might still have been improving.</td><td>Ran those three again with a 50-epoch limit. EfficientNet-B0 (feature extraction) gave exactly the same result, so it had already finished learning; both ResNet50 runs improved a little but had still not fully settled at 50 epochs.</td></tr>
+  <tr><td>A faster second laptop planned for training was not available after all.</td><td>Kept every run on Kaggle. This also kept all runs on the same GPU, so the comparison stays fair.</td></tr>
+  <tr><td>Heat maps for the Vision Transformer came out blank on 7 of 16 images.</td><td>Reported it openly. Choosing a better method for transformers is a decision for us and our guide.</td></tr>
+  <tr><td>The new-generator test images differ from CIFAKE in more than the generator (PNG vs JPEG files, image size, photo content).</td><td>Recorded every difference, and treat that result as a warning sign, not as proof.</td></tr>
+</table>
+</div>
+
+<!-- ============================ 6 ============================ -->
+<div class="section">
+<h1>6. How we will carry it forward</h1>
+
+<h2>The Semester 8 plan (from Table 14.1 of our report)</h2>
+<table class="grid">
+  <tr><th style="width:17%">Part</th><th>What we will do</th><th style="width:36%">Why (finding from our review)</th></tr>
+  <tr><td><strong>Models</strong></td><td>Four CNNs pretrained on ImageNet: VGG19, ResNet50, DenseNet121 and EfficientNet-B0.</td><td>The standard family for transfer learning, but rarely compared fairly with each other.</td></tr>
+  <tr><td><strong>Two ways each</strong></td><td>Feature extraction (network frozen, only a new last layer learns) and fine-tuning (all layers learn), under one matched set of rules for every model (same data split, image size and stopping rule).</td><td>Numbers from separate papers seldom measure the same thing.</td></tr>
+  <tr><td><strong>Transformer</strong></td><td>A Vision Transformer trained the same way, used as a reference point.</td><td>Papers that switch to transformers usually change many things at once.</td></tr>
+  <tr><td><strong>Explanations</strong></td><td>Grad-CAM heat maps on right answers and on wrong answers.</td><td>A heat map can reveal a shortcut the model is using.</td></tr>
+  <tr><td><strong>Main dataset</strong></td><td>CIFAKE (120,000 images).</td><td>Small enough for a fair comparison on modest hardware, but it has one generator only.</td></tr>
+  <tr><td><strong>New-generator test</strong></td><td>GenImage images from generators the models never saw.</td><td>A one-generator dataset cannot show the drop on new generators.</td></tr>
+</table>
+
+<h2>Already started (on our guide's instruction of 15 August 2026)</h2>
+<table class="grid">
+  <tr><th style="width:6%">#</th><th>Step</th><th style="width:28%">Status</th></tr>
+  <tr><td>1</td><td>Plan, code, and a fixed data split (90,000 training, 10,000 checking, 20,000 test images)</td><td>Done, August</td></tr>
+  <tr><td>2</td><td>Ten training runs (5 models &times; 2 ways) on Kaggle's free GPU</td><td>Done, 22&ndash;26 August</td></tr>
+  <tr><td>3</td><td>Three runs repeated with a longer limit (50 epochs)</td><td>Done, by 4 September</td></tr>
+  <tr><td>4</td><td>Test on 4 new generators (Midjourney, ADM, BigGAN, VQDM) and the heat maps</td><td>Done, 15 October</td></tr>
+  <tr><td>5</td><td>All result tables and figures produced by script, not typed by hand</td><td>Done, 15 October</td></tr>
+  <tr><td>6</td><td>First draft of the experimental paper (Paper 2)</td><td>Done, 17 October</td></tr>
+  <tr><td>7</td><td>Three small extra tests (no image flipping; 64- and 128-pixel inputs)</td><td>Prepared, not yet run</td></tr>
+  <tr><td>8</td><td>Meeting with our guide about the combined paper (its shape and the journal)</td><td>Next step</td></tr>
+  <tr><td>9</td><td>Major project report, viva and demo</td><td>Semester 8 (dates not yet known)</td></tr>
+</table>
+
+<div class="careful">
+  <span class="box-label">Early Semester 8 results: say only if asked</span>
+  <p>These are not part of the minor project report, which on purpose contains no results of our own.</p>
+  <ul>
+    <li>On CIFAKE's test images all ten models did well, at about 90.5% to 98.9% accuracy. The best was the Vision Transformer, fine-tuned (about 98.9%). The three best fine-tuned CNNs scored about 97.6% to 97.9%, too close to rank.</li>
+    <li>On four generators the models had never seen, every model fell to an average accuracy of about 46% to 53%, close to tossing a coin.</li>
+    <li>This matches our review's main finding. But other things also changed in that test (photo content, file type, image size), so we treat it as a warning sign, not as proof that the generator alone caused the drop.</li>
+  </ul>
+</div>
+
+<h2>What we want to improve next</h2>
+<ul>
+  <li>Run the three extra tests and repeat the main runs with different random starting points (seeds) to see how stable the numbers are.</li>
+  <li>Build a cleaner new-generator test, with matched real photos and the same file type for real and fake images.</li>
+  <li>Try an explanation method that suits transformers better, if our guide agrees.</li>
+  <li>Write the major project report, and then the one combined research paper (review + experiments) that our guide approved on 25 August 2026. The journal is not chosen yet.</li>
+</ul>
+</div>
+
+<!-- ============================ 7 ============================ -->
+<div class="section newpage">
+<h1>7. Common viva questions with answers</h1>
+<p class="small muted">Keep answers short. If you do not know something, say so plainly and say where it would be checked; never guess a number.</p>
+
+<p class="qgroup">A. About the project</p>
+
+<div class="qa"><p class="q"><span class="n">A1.</span>In simple words, what is your project? <span class="tag r">Rohit</span></p>
+<p class="a">It is a literature review of deep-learning methods that decide whether a still image was taken by a camera or made by an AI generator. We read 48 main studies in full, grouped them into five families, compared their datasets and measures, and found the research gap that our Semester 8 experiment will fill. We ran no experiment for this report; every number in it comes from published papers.</p></div>
+
+<div class="qa"><p class="q"><span class="n">A2.</span>Why did you choose this topic? Why does it matter? <span class="tag r">Rohit</span></p>
+<p class="a">AI image tools are now free and easy: a realistic fake photo takes a few seconds and a short text prompt. Such images are used for fake news, fake evidence and pretending to be someone else, and they get mixed into big image collections taken from the web. There are far too many images for people to check by eye, and many traces are invisible anyway, so automatic detection is needed. It is also still unsolved.</p>
+<p class="warn">Careful: add a personal reason only if it is true.</p></div>
+
+<div class="qa"><p class="q"><span class="n">A3.</span>Why a literature review and not a working model? <span class="tag r">Rohit</span></p>
+<p class="a">Our project runs over two semesters: Semester 7 (minor project) is the review and Semester 8 (major project) is the experiment. We said this in our synopsis on 29 July 2026. Reviewing first showed us what is missing, so our experiment is built on a real gap instead of repeating others' work.</p>
+<p class="warn">Careful: do not say "we wrote no code at all". Small Python scripts checked our tables, and the Semester 8 code was started on the guide's instruction (15 August).</p></div>
+
+<div class="qa"><p class="q"><span class="n">A4.</span>What were your objectives? <span class="tag r">Rohit</span></p>
+<p class="a">To collect and check the published evidence, so it is clear what is known and what is missing. Two questions got the most weight: does a detector still work on generators it never saw, and can a person see why it made its decision? We broke this into nine steps, from writing the search rules first to checking every reference (Chapter 2).</p></div>
+
+<div class="qa"><p class="q"><span class="n">A5.</span>What is new in your review compared with earlier surveys? <span class="tag r">Rohit</span></p>
+<p class="a">Earlier surveys cover video and audio as well (Lin et al., 2024), cover only GAN-made faces (Wang et al., 2023b), or were written before diffusion models arrived (Verdoliva, 2020). Ours covers still images from 2019 to 2026, so it includes the diffusion era. We group detectors by where their clue comes from, and our master table shows for every study whether it was tested on new generators and what weakness its authors admit.</p>
+<p class="warn">Careful: do not call it "the first" or "the most complete" review; the report does not claim that.</p></div>
+
+<div class="qa"><p class="q"><span class="n">A6.</span>What is the practical use of your work? <span class="tag r">Rohit</span></p>
+<p class="a">Anyone choosing or building a fake-image detector can use our master table to see each detector's score next to how it was tested. The review warns that a high score often drops on new generators or real-world images, so one headline number should not be trusted. It also gives our Semester 8 experiment a clear, evidence-based design.</p>
+<p class="warn">Careful: we have not built an app or tool; do not claim the project can detect fakes today.</p></div>
+
+<div class="qa"><p class="q"><span class="n">A7.</span>Can your work detect deepfake videos or fake audio? <span class="tag r">Rohit</span></p>
+<p class="a">No. We covered still images only; video and audio were left out on purpose. This report also builds no detector, because it is a review, and the Semester 8 study works on still images too.</p></div>
+
+<div class="qa"><p class="q"><span class="n">A8.</span>Your title names CNNs, Vision Transformers and explainable approaches, but you found only 2 transformer studies and 4 explanation studies. Is the title misleading? <span class="tag r">Rohit</span></p>
+<p class="a">The title names the three kinds of approach we set out to examine, and it was fixed on 29 July, before we read the papers in full. Chapter 9 covers each of them (Sections 9.2, 9.3 and 9.5), and transformers also appear inside another family: most CLIP-based detectors use a Vision Transformer as their image encoder (Sections 9.3 and 9.4). That the transformer family has only 2 studies and the explanation family only 4 (Table 9.1) is itself one of our findings. It is also why our Semester 8 plan adds a Vision Transformer as a reference point, and Grad-CAM heat maps, to its comparison of four CNNs (Table 14.1).</p>
+<p class="warn">Careful: do not claim the review found many transformer or explanation studies. Say the small numbers are a finding.</p></div>
+
+<p class="qgroup">B. How we did the review</p>
+
+<div class="qa"><p class="q"><span class="n">B1.</span>How did you find the papers? <span class="tag v">Vishal</span></p>
+<p class="a">Before collecting anything, in Week 1, we wrote a search protocol: where to search, 8 fixed search phrases (such as "synthetic image detection", "CIFAKE" and "cross-generator generalization") and the rules for keeping or dropping a paper. In Week 2 we ran the phrases on arXiv, on publisher and conference websites (IEEE, ACM, CVF, NeurIPS and others) and on Google Scholar. The search gave 101 records.</p>
+<p class="warn">Careful: our protocol named six databases, but do not say "we searched six databases". Say what Section 8.1 says: arXiv, publisher and conference pages, and Google Scholar. If asked how many records came from each source: we kept the hits by topic (six strands of 16 to 18 records each, Section 8.1), not by database, so do not invent per-database numbers.</p></div>
+
+<div class="qa"><p class="q"><span class="n">B2.</span>How did you decide which papers to keep? <span class="tag v">Vishal</span></p>
+<p class="a">A paper had to be about still images, be published from 2019 to 2026, report numbers (such as accuracy), and be peer-reviewed or a well-cited preprint. Video-only, audio-only, no-number, non-English and unopenable papers were dropped. From 101 records we removed 26 duplicates, screened the 75 left by title and abstract, and kept 74: 48 main studies, 11 supporting studies and 15 background papers. Figure 8.1 (page 28) shows this flow in the PRISMA style, a standard way of drawing how a review picked its papers.</p></div>
+
+<div class="qa"><p class="q"><span class="n">B3.</span>Only one of 75 records was dropped. Isn't that too few? <span class="tag v">Vishal</span></p>
+<p class="a">Clearly off-topic results, such as video-only papers, were dropped while searching, so they were never counted in the 101. Only one paper failed our rules: TruthLens, a preprint with a single citation. It was dropped in Week 3, when we checked citation counts, because it failed the "well-cited preprint" rule.</p>
+<p class="warn">Careful: that is why the report calls Figure 8.1 "PRISMA-style", not a full PRISMA diagram. If asked how many were dropped while searching: we did not count them, so do not guess a number.</p>
+<p class="warn">If asked what "well cited" means: our protocol set no fixed number of citations, which is a weakness. In practice the gap was large: TruthLens had 1 citation, while two supporting preprints we kept had 77 and 34 when we checked in Week 3. Only 1 of the 48 main studies is a preprint at all (Durall et al., 2019).</p></div>
+
+<div class="qa"><p class="q"><span class="n">B4.</span>Why 2019 to 2026? And why does your abstract say 2019 to 2025? <span class="tag v">Vishal</span></p>
+<p class="a">2019 to 2026 is the rule for what could be included; we set it in Week 1 to keep the project to a size we could finish. The 48 main studies we found happen to run from 2019 to 2025. The date rule applies only to detection studies, so older background papers, such as the 2014 paper that introduced GANs, are allowed.</p></div>
+
+<div class="qa"><p class="q"><span class="n">B5.</span>Did you read all 48 papers in full? How did you record them? <span class="tag v">Vishal</span></p>
+<p class="a">The 48 main studies were read from their full texts in Week 3. Each became one row of a table with 8 fixed facts: the study, its method, its model, its dataset, its generators, its reported result, whether it was tested on new generators, and the weakness its authors admit. When a value could not be confirmed we marked it "to verify" instead of guessing; 10 cells were marked, and all 10 were later settled from the papers.</p>
+<p class="warn">Careful: say only what is true for you about the reading. Be ready to explain three or four papers: Wang et al., 2020; Zhu et al., 2023 (GenImage); Bird and Lotfi, 2024 (CIFAKE); Ojha et al., 2023 (CLIP).</p></div>
+
+<div class="qa"><p class="q"><span class="n">B6.</span>How did you make sure your references are real and correct? <span class="tag v">Vishal</span></p>
+<p class="a">A paper could be cited only if it was on our screening list and in our reference file under the same code (such as C07). Each of the 74 references was then checked against an official record, mostly by its DOI or arXiv number on Crossref (the main register of DOIs for research papers) or arXiv, and the titles and authors had to match. All 74 passed. The check also caught one wrong year, which we corrected (Wu et al., 2026).</p>
+<p class="warn">Careful: the checks were done mostly by script against these official records. Say "checked against official records", not "we opened all 74 by hand", unless that is true.</p></div>
+
+<div class="qa"><p class="q"><span class="n">B7.</span>How did you check the numbers you quote? <span class="tag v">Vishal</span></p>
+<p class="a">Every number came only from our extraction table, which was filled from the papers. A small Python script compared the master table with the extraction table, checking each row's author names, accuracy figures and Yes/No flags, and all 48 rows matched. Where we had no value, we left the cell blank (15 cells in the dataset table) instead of guessing. Before the final report the numbers were checked again against the papers' own text, and six details were corrected.</p></div>
+
+<div class="qa"><p class="q"><span class="n">B8.</span>Give one example where checking changed something. <span class="tag v">Vishal</span></p>
+<p class="a">For two studies we could not at first confirm whether they were tested on new generators, so we marked that cell "to verify". A closer check of the full text showed they were not, so we set both to "No". Frank et al., 2020 never tested on a GAN that was left out of training, and in Aghasanli et al., 2023 the fakes used for training and for testing came from the same Stable Diffusion process. Neither is counted as evidence about new generators.</p></div>
+
+<div class="qa"><p class="q"><span class="n">B9.</span>You call this a systematic review. Is it really systematic, and how did you judge the quality of the papers? <span class="tag v">Vishal</span></p>
+<p class="a">It is systematic because the rules came first. The search sources, the 8 phrases, the rules for keeping or dropping a paper and the 8 facts to record were all written in Week 1, before any paper was collected, and we counted the papers at every step (Figure 8.1). For quality, the filter was our own rule: peer-reviewed papers, or preprints that are well cited. In the end only 1 of the 48 main studies is a preprint (Durall et al., 2019); the other 47 were published at conferences, at workshops or in journals. Every main study was read in full, and the weakness its authors admit is recorded in Table 12.1.</p>
+<p class="warn">Careful: we did not score each study with a formal quality checklist, and we did not measure how far two reviewers agree (Section 14.2). Say so if asked, and do not call it a full PRISMA review; the report says "PRISMA-style".</p></div>
+
+<div class="qa"><p class="q"><span class="n">B10.</span>Explain one paper from your review in detail. <span class="tag v">Vishal</span></p>
+<p class="a">Wang et al., 2020, "CNN-generated images are surprisingly easy to spot... for now". They trained one ImageNet-pretrained ResNet-50 on 720,000 images in 20 categories, half real photos and half made by a single GAN, ProGAN, and added blur and JPEG compression to the training images. They then tested it on 11 sets, ProGAN itself and 10 generators it had never seen, and got an average of 90.8 mAP (90.1 without the blur and JPEG). On Photoshop-style edits it was no better than chance, and "for now" in the title is the authors' own warning. Its ProGAN training set became the field's standard: 14 of our 48 studies, this one included, train on it, and one more trains on ProGAN face images instead, which gives the 15 in Table 12.2 (Sections 9.2, 10.1 and 12.1).</p>
+<p class="warn">Careful: 90.8 is mAP, not accuracy, and 1 of the 11 test sets is ProGAN itself. Choose a paper you have really read; Zhu et al., 2023 (F2), Bird and Lotfi, 2024 (E2) and Ojha et al., 2023 (D7) are also explained in these notes.</p></div>
+
+<p class="qgroup">C. How fake images are made</p>
+
+<div class="qa"><p class="q"><span class="n">C1.</span>What is an AI-generated image? <span class="tag v">Vishal</span></p>
+<p class="a">A picture made by a computer model, called a generator (for example a GAN or a diffusion model), instead of being taken by a camera. Detection here is a yes-or-no decision: the detector looks at one image and labels it real or AI-generated.</p></div>
+
+<div class="qa"><p class="q"><span class="n">C2.</span>What is a GAN? <span class="tag v">Vishal</span></p>
+<p class="a">GAN stands for generative adversarial network. Two networks compete: the generator turns random numbers into an image, and the discriminator tries to tell real images from generated ones. The generator learns only from the discriminator's verdict. It builds the image by enlarging a small grid step by step ("upsampling"), and this step is the most studied source of the traces that detectors look for.</p></div>
+
+<div class="qa"><p class="q"><span class="n">C3.</span>What is a diffusion model, and how is it different from a GAN? <span class="tag v">Vishal</span></p>
+<p class="a">There is no competition. During training, noise is added to real images step by step until only noise remains, and the model learns to remove that noise one step at a time. To make a new image it starts from pure noise and keeps removing noise until a picture appears. Stable Diffusion is a "latent" diffusion model: guided by a text prompt, it does this on a small compressed version of the image instead of on full-size pixels, which made it cheap enough for ordinary computers. A fixed decoder then turns the result into the full-size picture, and that decoder leaves its own trace, which some detectors use (Section 7.3).</p></div>
+
+<div class="qa"><p class="q"><span class="n">C4.</span>What traces do generators leave behind? <span class="tag v">Vishal</span></p>
+<p class="a">Mostly tiny repeating patterns in the fine detail of the image. They show up when the image is turned into frequencies (its "spectrum"); the eye cannot see them. Diffusion images have fewer such traces than GAN images, but not none: a study of fifteen generators found traces in every family (Corvi et al., 2023a). The traces are fragile, because compression and resizing remove much of them.</p>
+<p class="warn">Careful: say "fewer traces" for diffusion images, never "no traces".</p></div>
+
+<div class="qa"><p class="q"><span class="n">C5.</span>Why does compression hurt detection so much? <span class="tag v">Vishal</span></p>
+<p class="a">The traces live in the finest detail, and JPEG compression throws exactly that detail away. At 85% JPEG quality, the frequency patterns of fakes from most of the generators tested became almost impossible to tell apart from real ones (Dzanic et al., 2020). Every social media platform compresses images by default, so this is an everyday problem, not an attack. 10 of the 48 studies name weak results on compressed, resized, blurred or low-resolution images as their own weakness.</p></div>
+
+<div class="qa"><p class="q"><span class="n">C6.</span>Is an AI-generated image the same as a deepfake? Why do some face-editing studies appear in your table? <span class="tag v">Vishal</span></p>
+<p class="a">Not exactly. In everyday use (general knowledge, not from our report), a deepfake usually means a real person's face or voice in a video or photo that AI has swapped or changed, while an AI-generated image is made entirely by a generator, with no camera photo behind it. Our rule dropped deepfake work on video only or audio only (Table 8.1), so a few still-image studies of face edits stayed in. Only one main study covers nothing but face-manipulation methods (Tsigos et al., 2024, on FaceForensics++), and Table 12.2 counts it separately.</p></div>
+
+<p class="qgroup">D. Detection methods</p>
+
+<div class="qa"><p class="q"><span class="n">D1.</span>What are your five families, and why group them this way? <span class="tag h">Hardik</span></p>
+<p class="a">We grouped detectors by where their clue comes from: (1) hand-made and frequency checks, 14 studies; (2) CNNs with transfer learning, 19; (3) transformers, 2; (4) detectors that reuse a big frozen model such as CLIP, 8; (5) explanation work such as Grad-CAM, 4. We chose this grouping because how well a detector handles a new generator depends on how closely its clue is tied to the generator it trained on.</p>
+<p class="warn">If asked why the counts add to 47: three studies are counted twice, because they fit two families, so the families hold 44 different studies. The other four are dataset studies that sit outside the families: 44 + 4 = 48.</p></div>
+
+<div class="qa"><p class="q"><span class="n">D2.</span>What is the hand-made (frequency) family, and why does it fail? <span class="tag h">Hardik</span></p>
+<p class="a">Here a person decides what to measure, for example the image's frequency pattern, and a simple classifier decides real or fake. Early results were near-perfect, such as 100% on one face dataset. But the clue comes from one design choice of the generator: changing a single upsampling layer cut detection from 84.8&ndash;99.8% to 0&ndash;0.3% (Chandrasegaran et al., 2021). Compression also erases these clues.</p></div>
+
+<div class="qa"><p class="q"><span class="n">D3.</span>What is a CNN, and what is transfer learning? <span class="tag h">Hardik</span></p>
+<p class="a">A CNN (convolutional neural network) looks at an image through small filters stacked in layers and learns its own clues during training. Transfer learning means starting from a network that was already trained on ImageNet, a huge collection of everyday photos, and then adapting it to the real-or-fake task. The network already knows general shapes and textures, so it does not start from zero.</p></div>
+
+<div class="qa"><p class="q"><span class="n">D4.</span>What is the difference between feature extraction and fine-tuning? <span class="tag h">Hardik</span></p>
+<p class="a">In feature extraction the pretrained network is frozen and only a small new classifier on top is trained. In fine-tuning all the network's weights are updated, so the whole network adapts. Feature extraction is cheaper; fine-tuning can adapt more but needs more computing. Comparing both ways for every model is part of our Semester 8 plan.</p>
+<p class="warn">Careful: the report does not say which way is better. Do not quote Semester 8 numbers as a finding of this report.</p></div>
+
+<div class="qa"><p class="q"><span class="n">D5.</span>What is a Vision Transformer, and how is it different from a CNN? <span class="tag h">Hardik</span></p>
+<p class="a">A Vision Transformer (ViT) cuts the image into small square patches and uses "self-attention", so every patch can use information from every other patch from the very first layer. A CNN instead widens its view slowly through stacked small filters. The ViT's first step turns each 16&times;16-pixel block into one vector in a single step. Section 9.3 of our report says this first step discards part of the fine detail that detectors try to keep; in return the ViT sees links across the whole image.</p>
+<p class="warn">If pushed: a 16&times;16 colour block is 768 numbers, and ViT-B/16 turns it into a vector of 768 numbers, so in principle nothing has to be thrown away. The real point is that the detail inside each block is mixed in one step instead of being scanned by small filters, so fine traces are easier to miss. You can say that "discards" in our report is a simplification of this.</p></div>
+
+<div class="qa"><p class="q"><span class="n">D6.</span>Why is the ViT only a benchmark and not your proposed model? <span class="tag h">Hardik</span></p>
+<p class="a">Only 2 of our 48 studies are transformer-based, and in most papers switching to a transformer also changes the training data and the training method at the same time, so we cannot tell what caused the improvement. In Semester 8 we therefore train the ViT with the same data, split, seed, image size and stopping rule as the CNNs, and use it as a reference point, not as a claimed improvement.</p>
+<p class="warn">Careful: do not say "exactly the same conditions". In our runs three things still differed: the ViT's ready-made weights were most likely pretrained on a bigger dataset (ImageNet-21k, then ImageNet-1k; the CNNs used ImageNet-1k only), it used a different optimiser (AdamW instead of SGD), and a smaller batch (64, like VGG19). So if asked why the ViT scored best, say these differences mean we cannot give the credit to attention alone.</p></div>
+
+<div class="qa"><p class="q"><span class="n">D7.</span>What is CLIP, and how is it used to detect fakes? <span class="tag h">Hardik</span></p>
+<p class="a">CLIP is a large model trained on millions of pictures with their captions; it was never trained to detect fakes, yet real and fake images turn out to be separable in its features. Ojha et al., 2023 kept CLIP frozen and trained only a very simple classifier on top, and on new generators this beat earlier detectors by 25.90% in accuracy. Weaknesses of this approach: Ojha et al. admit nobody knows exactly why it works, and later CLIP-based detectors were found to get weaker under blur, cropping and compression (Koutlis and Papadopoulos, 2024).</p>
+<p class="warn">Careful: 25.90% is an improvement over earlier detectors, not an accuracy score.</p></div>
+
+<div class="qa"><p class="q"><span class="n">D8.</span>What is Grad-CAM? <span class="tag h">Hardik</span></p>
+<p class="a">Grad-CAM draws a heat map over the image showing which regions pushed the model towards its decision. It works in three steps. First, it takes one layer of the network (usually the last convolutional layer), which holds many "feature maps"; each map shows where in the image one kind of pattern was found. Second, it gives each map one weight: the average of its gradient, which says how strongly the decision score reacts to that map. Third, it adds up the weighted maps, keeps only the positive values, and enlarges the result to the size of the image, which gives a rough heat map.</p></div>
+
+<div class="qa"><p class="q"><span class="n">D9.</span>Why does explainability matter, and what is its limit? <span class="tag h">Hardik</span></p>
+<p class="a">A detector that only says "fake, 97%" gives no reason, which is a problem when its decision is used as evidence or to judge a news photo. But a heat map shows where the model looked, not what it found there, and forensic traces are often invisible anyway. Only 4 of the 48 studies analyse explanations, and only one of them (Chai et al., 2020) also tests on new generators.</p></div>
+
+<div class="qa"><p class="q"><span class="n">D10.</span>Why do you plan Grad-CAM, when the one study that compared explanation methods rated LIME best? <span class="tag h">Hardik</span></p>
+<p class="a">That comparison (Tsigos et al., 2024) is narrow: one face-manipulation detector on one dataset, FaceForensics++ (Sections 9.5 and 13.4), so it does not show that LIME is better for every detector. Grad-CAM is the standard tool (Section 9.5), and the CIFAKE authors used it to expose a shortcut: their model relied on small flaws in the image backgrounds. Checking our own models for shortcuts like that, on right and on wrong answers, is exactly what our Semester 8 plan needs (Table 14.1).</p>
+<p class="warn">Careful: do not call Grad-CAM the best explanation method; the report does not say that. Grad-CAM was made for the feature maps of a convolutional layer (Section 9.5), so it suits the Vision Transformer less well; a better method for the ViT is still to be agreed with our guide (Section 5 of these notes).</p></div>
+
+<div class="qa"><p class="q"><span class="n">D11.</span>What is the difference between machine learning and deep learning? Where does your review show it? <span class="tag h">Hardik</span></p>
+<p class="a">In classic machine learning a person decides which features to measure, and a simple model such as an SVM makes the decision from them. In deep learning a neural network with many layers learns its own features straight from the images. Our families show both: in the hand-made family a person chooses the clue, for example the image's frequency pattern fed to an SVM or k-means (Section 9.1), while in the CNN family the network learns the clue during training (Section 9.2). The two definitions are general knowledge; the examples are from our report.</p></div>
+
+<p class="qgroup">E. Datasets and metrics</p>
+
+<div class="qa"><p class="q"><span class="n">E1.</span>Which datasets did you compare? <span class="tag v">Vishal</span></p>
+<p class="a">Table 10.1 compares 11 datasets. The main ones: ForenSynths, the classic GAN-era set (train on ProGAN, test on 11 sets); GenImage, a large benchmark with 8 generators; CIFAKE, tiny 32&times;32 images from one generator; and Chameleon, realistic images collected from the internet. ArtiFact (25 methods) and Community Forensics (4,803 generators) stand out for covering many generators.</p>
+<p class="warn">Sizes, if asked: ForenSynths 720,000 training images (half real photos, half ProGAN fakes); GenImage more than a million fakes and 1,331,167 real ImageNet photos; ArtiFact about 2.5 million images; CIFAKE 120,000 images; Community Forensics 2.7 million images.</p></div>
+
+<div class="qa"><p class="q"><span class="n">E2.</span>What is CIFAKE? Why is it criticised, and why will you still use it? <span class="tag v">Vishal</span></p>
+<p class="a">CIFAKE (Bird and Lotfi, 2024) has 60,000 real photos from CIFAR-10 and 60,000 fakes from Stable Diffusion v1.4, all tiny 32&times;32 images. The authors' small CNN reached 92.98%, but Grad-CAM showed it relied on small flaws in the image backgrounds, which belong to that one generator, so accuracy on CIFAKE says little about other generators. We still use it because it is small and balanced, which makes a fair comparison of five models possible on modest hardware, and we add a GenImage test with new generators to cover its weakness.</p>
+<p class="warn">Careful: 92.98% is Bird and Lotfi's published result, not ours.</p></div>
+
+<div class="qa"><p class="q"><span class="n">E3.</span>What is a dataset "shortcut" or bias? <span class="tag v">Vishal</span></p>
+<p class="a">A difference between the real and fake images that is not a true trace of AI generation, so a model can score high without really detecting anything. Grommelt et al., 2024 found that GenImage's real and fake images differ in JPEG compression and image size. After removing that bias, accuracy on new generators rose by more than 11 points (for example, a ResNet50 from 71.68% to 82.74%).</p></div>
+
+<div class="qa"><p class="q"><span class="n">E4.</span>Explain the confusion matrix. <span class="tag v">Vishal</span></p>
+<p class="a">We call the AI-generated image the "positive" class. A fake called fake is a true positive (TP); a fake passed as real is a false negative (FN); a real image called real is a true negative (TN); a real image flagged as fake is a false positive (FP). All the metrics in Chapter 11 are built from these four counts (Figure 11.1, page 49).</p></div>
+
+<div class="qa"><p class="q"><span class="n">E5.</span>Define accuracy, precision, recall and F1. Why is accuracy alone not enough? <span class="tag v">Vishal</span></p>
+<p class="a">Accuracy is the share of all answers that are right. Precision: of the images flagged as fake, how many really are fake (false alarms lower it). Recall: of all the fakes, how many were caught (misses lower it). F1 combines precision and recall and is high only when both are high. Accuracy is fair only when the test set has equal numbers of real and fake images, and all four depend on the chosen cut-off (threshold) for calling an image fake.</p>
+<p class="warn">Easy example: a smoke alarm. Precision asks how many alarms were real fires; recall asks how many real fires it noticed.</p>
+<p class="warn">If asked to write the formulas (Chapter 11): Accuracy = (TP + TN) / (TP + TN + FP + FN); Precision = TP / (TP + FP); Recall = TP / (TP + FN); F1 = 2 &times; Precision &times; Recall / (Precision + Recall). For the ROC curve, the false-alarm rate is FPR = FP / (FP + TN).</p></div>
+
+<div class="qa"><p class="q"><span class="n">E6.</span>What are ROC, AUC, AP and mAP? <span class="tag v">Vishal</span></p>
+<p class="a">If we try every possible cut-off and plot "fakes caught" against "real images wrongly flagged", we get the ROC (receiver operating characteristic) curve; AUC is the area under that curve, where 0.5 means guessing and 1.0 means perfect. AP (average precision) does a similar job for the curve of precision against recall, and mAP (mean average precision) is the average of the AP values over several test sets, usually one per generator. AUC and AP do not depend on one chosen cut-off.</p>
+<p class="warn">Careful: the 90.8 of Wang et al., 2020 is an mAP figure, not an accuracy percentage.</p></div>
+
+<div class="qa"><p class="q"><span class="n">E7.</span>Which detector is the best? Why don't you rank them? <span class="tag h">Hardik</span></p>
+<p class="a">We deliberately do not rank detectors across papers. Studies use different measures on different test sets, one measure cannot be converted into another, and about 23 of the 48 report accuracy alone. So the results can sit side by side but cannot be fairly ranked. That is why we argue for testing models under one common setup, which is exactly what our Semester 8 study does.</p>
+<p class="warn">Careful: do not name a single "best detector" as a finding of the review.</p></div>
+
+<p class="qgroup">F. Findings and the research gap</p>
+
+<div class="qa"><p class="q"><span class="n">F1.</span>What are the main findings of your review? <span class="tag h">Hardik</span></p>
+<p class="a">First, the generalisation problem is built in: a detector mostly learns the traces of the one generator it trained on, so its accuracy often falls sharply on new ones that are built differently. Second, the best results on new generators tend to use one or more of three ideas: a big general model that was not trained for detection; an input computed from the image instead of the raw image (for example, how each pixel relates to its neighbours); or training data from many generators. Third, testing on new generators and explaining decisions rarely meet: 36 of 48 studies do the first, only 4 do the second, and only one does both.</p></div>
+
+<div class="qa"><p class="q"><span class="n">F2.</span>Explain your two headline drops. <span class="tag h">Hardik</span></p>
+<p class="a">In the GenImage benchmark (Zhu et al., 2023), a ResNet-50 trained on Stable Diffusion v1.4 images is 99.9% accurate on that same generator but only 54.9% on Midjourney images, even though both are diffusion models. In the Chameleon study (Yan et al., 2025a), the authors' own detector, AIDE, scores 92.77% on a standard benchmark but only 65.77% on realistic images from the internet. High scores on the training generator or on a benchmark do not carry over.</p>
+<p class="warn">Careful: 54.9% is on Midjourney only. 92.77% and 65.77% belong to one detector (AIDE), not to "all detectors". Both are other researchers' numbers.</p></div>
+
+<div class="qa"><p class="q"><span class="n">F3.</span>You call the problem "structural". What does that mean? <span class="tag h">Hardik</span></p>
+<p class="a">It means the problem is built into how detectors learn; it is not a bug that more tuning can fix. Much of what a detector learns is a side effect of one generator's design, such as its upsampling layer or its decoder (the part that turns a compressed result back into the full picture). When a new generator changes that design, the evidence disappears instead of just becoming harder to find.</p></div>
+
+<div class="qa"><p class="q"><span class="n">F4.</span>What exactly is the research gap? <span class="tag h">Hardik</span></p>
+<p class="a">No study does all four together: several pretrained CNNs trained the same way; a Vision Transformer trained the same way as a reference; heat maps showing where in the image the models look; and a test on generators they never saw. Each piece exists somewhere; for example, the CIFAKE study used Grad-CAM but had no new-generator test. The gap is the combination (Section 13.6, pages 72&ndash;73).</p>
+<p class="warn">Careful: do not say "nobody has used Grad-CAM or Vision Transformers for this". They have; the gap is the combination.</p></div>
+
+<div class="qa"><p class="q"><span class="n">F5.</span>If 36 of 48 studies already test on new generators, what is left to do? <span class="tag h">Hardik</span></p>
+<p class="a">Testing is common, but most tests check only one move, from one training generator to some new ones, and 15 studies start from the same generator, ProGAN. So these tests show how a detector copes with one particular change, not with new generators in general. Averages also hide the worst case, and benchmarks overstate real-world results (92.77% against 65.77%). And only one study both tests new generators and explains its decisions.</p></div>
+
+<div class="qa"><p class="q"><span class="n">F6.</span>A paper reports 99% accuracy. Isn't the problem solved? <span class="tag h">Hardik</span></p>
+<p class="a">No. The ResNet-50 that scored 99.9% on its own generator got 54.9% on Midjourney. A high average can hide a total failure on one generator, and in real use the worst case matters more than the average. The Chameleon authors themselves say the problem is far from solved.</p></div>
+
+<div class="qa"><p class="q"><span class="n">F7.</span>Can these detectors be fooled? <span class="tag h">Hardik</span></p>
+<p class="a">Yes, and several authors say so themselves: small changes made on purpose can fool some classifiers (Frank et al., 2020). Simple things work too: changing one upsampling layer dropped the detection rate of spectrum-based detectors to 0&ndash;0.3% (Chandrasegaran et al., 2021), and strong JPEG compression erases frequency traces. Our review records these as the authors' own limitations; we did not test any attack.</p></div>
+
+<div class="qa"><p class="q"><span class="n">F8.</span>What happens when a new generator comes out? <span class="tag h">Hardik</span></p>
+<p class="a">If it changes the part of the design a detector depends on, the detector's evidence can disappear; this is what happened when GAN-trained detectors met diffusion images. Datasets also go out of date, because each one freezes its list of generators when it is published. Approaches that use general features, computed inputs or very varied training data cope best, but none fully closes the gap.</p></div>
+
+<div class="qa"><p class="q"><span class="n">F9.</span>What is the difference between a cross-dataset test and a cross-generator test? <span class="tag h">Hardik</span></p>
+<p class="a">A cross-generator test keeps at least one generator out of training and tests on it. A cross-dataset test may only change the photo content while the fakes still come from the same generator. This is exactly why we marked Aghasanli et al., 2023 as "No": their test switched content (ImageNet to pet photos), but all the fakes came from the same Stable Diffusion process.</p></div>
+
+<div class="qa"><p class="q"><span class="n">F10.</span>Why not simply use watermarks instead of detection? <span class="tag h">Hardik</span></p>
+<p class="a">Our review did not cover watermarking, so this is a general view, not a finding of the report. A watermark helps only if the generator adds one and it survives later editing, and openly released models can be run without adding one. So detectors that examine the image itself are still needed; the two approaches support each other.</p></div>
+
+<div class="qa"><p class="q"><span class="n">F11.</span>In Table 12.1, is the "Key limitation" column your opinion or the authors'? <span class="tag h">Hardik</span></p>
+<p class="a">Mostly the authors' own: it is the weakness each study admits about itself (Table 8.2). Where a study names no weakness, the cell says so and may add a short note of ours on its scope, for example "None stated by the authors; only GAN generators are evaluated". The note under Table 12.1 says this. We kept the column so that every headline score is read next to its weak point.</p>
+<p class="warn">Careful: do not say every cell is in the authors' own words; a few cells are our notes on scope.</p></div>
+
+<div class="qa"><p class="q"><span class="n">F12.</span>Your gap is only a combination of things others have done. Is that really a research gap? <span class="tag h">Hardik</span></p>
+<p class="a">Yes, because only the combination can answer our two key questions together: does a detector still work on generators it never saw, and can we see why it decided? Numbers from separate papers seldom measure the same thing (Section 13.5), so this needs one study that trains several CNNs and a ViT under one common setup, tests them on the same unseen generators and explains them with the same heat-map method. The nearest studies stop short: GenImage puts a ResNet-50 beside transformers, and Coccomini et al., 2022 compare one CNN with one ViT, but neither compares several pretrained CNNs or looks at explanations (Section 12.6).</p>
+<p class="warn">Careful: present Semester 8 as a careful, fair comparison, not as a new detector or a breakthrough.</p></div>
+
+<p class="qgroup">G. The future (Semester 8)</p>
+
+<div class="qa"><p class="q"><span class="n">G1.</span>What will you do in Semester 8? <span class="tag r">Rohit</span></p>
+<p class="a">We will compare four well-known CNNs pretrained on ImageNet (VGG19, ResNet50, DenseNet121 and EfficientNet-B0), each used two ways: frozen, where only a new last layer learns (feature extraction), and fully updated, where all layers learn (fine-tuning). A Vision Transformer trained the same way is the reference point. We train on CIFAKE, test on GenImage images from generators the models never saw, and draw Grad-CAM heat maps for right and wrong answers. Table 14.1 (pages 76&ndash;77) links each choice to a finding of the review.</p></div>
+
+<div class="qa"><p class="q"><span class="n">G2.</span>Why these four CNNs? <span class="tag r">Rohit</span></p>
+<p class="a">They are the standard family used for transfer learning in this field, but our review found they are rarely compared with each other under the same conditions. They also differ in design. VGG19 is a deep plain stack of layers and the largest of the four (about 140 million weights). ResNet50 has skip connections that let information jump over layers. DenseNet121 passes each layer the outputs of all the earlier layers in its block, placed side by side instead of added as in ResNet, so it reuses features and stays small (about 7 million weights). EfficientNet-B0 is the smallest (about 4 million weights). It is built from light "mobile" blocks, and the bigger EfficientNets are made from it by growing its depth, width and image size together. Training them the same way gives a fair comparison.</p>
+<p class="warn">If an examiner quotes other weight counts: ours count our new two-output last layer in place of the original 1,000-output ImageNet layer, so they are smaller than the usual published figures (about 144 million for VGG19, 8 million for DenseNet121 and 5.3 million for EfficientNet-B0).</p></div>
+
+<div class="qa"><p class="q"><span class="n">G3.</span>Have you started the implementation? <span class="tag r">Rohit</span></p>
+<p class="a">Yes. On 15 August 2026 our guide asked us to start the Semester 8 code early, so we opened it as a separate work track. So far the code is built, the ten training runs (five models, two ways each) are done on Kaggle's free GPU, the test on four new generators and the heat maps are done, and a first draft of the experimental paper is written. The results belong to the Semester 8 major project, so they are not in this report; Section 14.3 mentions the work once.</p>
+<p class="warn">Numbers only if asked: use the box in Section 6.</p></div>
+
+<div class="qa"><p class="q"><span class="n">G4.</span>What hardware did you use, and what will you use? <span class="tag r">Rohit</span></p>
+<p class="a">For this review, an ordinary laptop (Intel Core i5, 16 GB RAM), because a review needs no GPU; nothing was bought. For the Semester 8 training we use Kaggle's free online notebooks with an NVIDIA Tesla T4 GPU, which gives 30 GPU-hours per week.</p></div>
+
+<div class="qa"><p class="q"><span class="n">G5.</span>What are the limitations of your review? <span class="tag r">Rohit</span></p>
+<p class="a">We searched once, in Week 2 (27 July &ndash; 2 August 2026), so later papers are missing, and we included only English papers we could read in full. The 11 supporting studies were used where needed, not read like the 48 main ones. We repeated no experiment: every number is as its authors reported it, and because studies use different measures, many results cannot be ranked. We also did not measure how far two reviewers would agree on screening decisions.</p></div>
+
+<div class="qa"><p class="q"><span class="n">G6.</span>If you did this project again, what would you do differently? <span class="tag r">Rohit</span></p>
+<p class="a">Have two members screen and record each paper separately and measure how often they agree. Check every number against its paper early, not only at the end. Get the official report format at the start, and keep each weekly report in step with the dates the work was actually done. Re-run the search near the end to catch newer papers.</p>
+<p class="warn">Adjust this to what you really think.</p></div>
+
+<div class="qa"><p class="q"><span class="n">G7.</span>Do you plan to publish? <span class="tag r">Rohit</span></p>
+<p class="a">Yes. On 25 August 2026 our guide approved one research paper that combines this review with the Semester 8 experiments; the two Amity reports stay separate. The journal or conference is not chosen yet.</p>
+<p class="warn">Careful: nothing has been submitted yet, so do not suggest it is under review.</p></div>
+
+<div class="qa"><p class="q"><span class="n">G8.</span>CIFAKE images are only 32&times;32 pixels, but these networks expect 224&times;224. How do you handle that? <span class="tag r">Rohit</span></p>
+<p class="a">Each 32&times;32 image is enlarged to 224&times;224 before it goes into the network, because the ImageNet-pretrained models were built for that input size. The GenImage test images are much bigger, so we test them in two ways: first shrunk to 32&times;32 and then enlarged exactly like CIFAKE (the main test), and resized straight to 224&times;224 (a check). Shrinking throws away much of the fine detail where the traces live, and other things also change in this test (photo content and file type), so neither way tests the generator alone; we report both and say so.</p>
+<p class="warn">Careful: this comes from our Semester 8 plan, not from the minor report. Give numbers only from the box in Section 6.</p></div>
+
+<p class="qgroup">H. Team, process and honesty</p>
+
+<div class="qa"><p class="q"><span class="n">H1.</span>What did each member of the team do? <span class="tag all">All</span></p>
+<p class="a">We did not split the work by person. All three of us took part in every stage (searching, reading, grouping, writing, checking references and the weekly reports), and the main decisions were taken together under our guide's direction (Table 6.2 and Chapter 15). For today's viva we have divided who explains which part. Then each member adds one line, using the "What did you do personally?" box in Section 4.</p></div>
+
+<div class="qa"><p class="q"><span class="n">H2.</span>How did you plan and track the work? <span class="tag r">Rohit</span></p>
+<p class="a">We split the 12-week window (20 July &ndash; 9 October 2026) into weekly stages, each with a set output. Every week a one-page weekly progress report naming all three of us was due on Amizone by the next Wednesday. There were two progress reviews: a presentation on 27 August with Progress Report 1 and the project diary, and Progress Report 2 dated 1 October.</p></div>
+
+<div class="qa"><p class="q"><span class="n">H3.</span>Your weekly reports say parts were written in September, but your diary says August. Which is right? <span class="tag r">Rohit</span></p>
+<p class="a">The diary has the real dates. We wrote most of the review early, between 10 and 17 August, and sent the full draft for the plagiarism check on 15 August. Our weekly reports follow the 12-week plan: each one reports the part that the plan gave to that week, and carries that week's due date. Our final report says this openly in Section 6.1. Looking back, the later weekly reports should have said those parts were already written.</p>
+<p class="warn">Careful: do not claim the sections were written in the weeks the WPRs name. If asked when the WPR files were made: WPRs 4 to 11 were prepared in mid-August, once the writing was done, and each was dated for its due Wednesday; WPRs 1 to 3 were made on time, and WPR 12 on 14 October. If asked what you did after mid-August: we prepared the two progress reports and worked on the Semester 8 code that our guide asked for.</p></div>
+
+<div class="qa"><p class="q"><span class="n">H4.</span>Your report says there are no experiments, but your diary and progress reports show accuracy numbers. Explain. <span class="tag r">Rohit</span></p>
+<p class="a">Both are true. The minor project is the review, and it has no experiments of our own; every number in it comes from published papers. Separately, on 15 August our guide asked us to start the Semester 8 code early, and the diary and progress reports record that work. We kept its numbers out of the final report on purpose, because they belong to the Semester 8 major project; Section 14.3 mentions the work once.</p>
+<p class="warn">If pressed on the WPR line "Experimental work: Not started": the WPRs cover only the review; the wording meant "not part of the minor project".</p></div>
+
+<div class="qa"><p class="q"><span class="n">H5.</span>Some numbers in your progress reports differ from the final report. Why? <span class="tag h">Hardik</span></p>
+<p class="a">Before the final report we re-checked every number against the papers' own text and corrected six details. For example, we had written that GAN-trained detectors got "60&ndash;76%" on diffusion images. In fact those numbers are averages over all twelve test generators, not diffusion images alone, and once a detector we had left out is added, the range is about 52&ndash;76% (Corvi et al., 2023b). We also found that 15 studies, not 14, report average precision. The final report has the corrected values; the older documents keep the old wording.</p>
+<p class="warn">Careful: if an examiner quotes an old number, say the final report has the corrected one. Do not defend the old number. Section 8 lists the main changes.</p></div>
+
+<div class="qa"><p class="q"><span class="n">H6.</span>Did you check for plagiarism? What is your similarity score? <span class="tag r">Rohit</span></p>
+<p class="a">Amity allows at most 15% similarity on Turnitin, and our mentor asked for at most 10%. We sent an earlier draft for the department's check on 15 August, but did not receive the result before the window closed. For the final report we ran our own rough check against the papers we cite: about 0.5% of the main text matched outside sources. That is only an indicator, not the official score. The check was our own small Python script, not Turnitin: it measures how much of our text sits inside runs of 8 or more words that also appear in sources such as the papers we cite and Wikipedia. Turnitin compares against a far larger collection.</p>
+<p class="warn">Careful: never make up a score. If you have the official Turnitin figure, quote that exact number. The reference list always matches other documents (titles and journal names), so the Turnitin options "Exclude bibliography" and "Exclude quotes" are normal to use.</p></div>
+
+<div class="qa"><p class="q"><span class="n">H7.</span>Did you use AI tools such as ChatGPT? <span class="tag all">All</span></p>
+<p class="a">Yes. We used an AI assistant (Claude, through Claude Code) during the project: it helped us collect the papers and record their details, draft and reword text, write the small Python scripts that check our tables, and build the report files. Its work was not taken on trust: every reference ID was checked against official records such as arXiv and Crossref, every number against our extraction table, and a final check against the papers' own text found and fixed six details. These checks were also run with the assistant's help, mostly by script. The topic, the rules and the decisions on what to include were ours, under our guide's direction.</p>
+<p class="warn">Careful: do not deny AI use; the project records show it, and denying it is the bigger risk. Do not claim every sentence was typed by hand. The report has no AI-use statement because we had not yet settled with our guide whether one was needed; if asked, say so plainly and offer to add one.</p></div>
+
+<div class="qa"><p class="q"><span class="n">H8.</span>Is the report written in your own words? <span class="tag all">All</span></p>
+<p class="a">The text was drafted with the help of an AI assistant and then checked against the sources. What we stand behind is the content: every reference is real, every number was checked against its paper, and we can explain any part in our own words.</p>
+<p class="warn">Careful: if you did your own rewrite pass before uploading, say so; if not, do not claim it.</p></div>
+
+<div class="qa"><p class="q"><span class="n">H9.</span>Why was the final report prepared after the project window closed? <span class="tag r">Rohit</span></p>
+<p class="a">The official report format was not available to us during the 12 weeks; our last weekly report records this. We kept the draft in a plain style that was easy to restyle, and once we had the ETMN100 guidelines we rebuilt it in Amity's "Project Plan" format, adding the planning Chapters 1 to 6. The NTCC calendar set 26 October 2026 as the upload date.</p></div>
+
+<div class="qa"><p class="q"><span class="n">H10.</span>You say 74 references were included but cite 73. Why? Isn't 73 a lot? <span class="tag v">Vishal</span></p>
+<p class="a">74 records were included and all 74 were checked; 73 of them are cited in the text, and the reference list shows only cited works. The one not cited is a supporting study (Tariang et al., 2024). 73 is above our own target of 45 to 60, but that target was ours, not an Amity rule, and all 48 main studies must be cited because each has a row in the master table.</p></div>
+
+<div class="qa"><p class="q"><span class="n">H11.</span>Where is your PERT chart? Your WPRs say "pending". <span class="tag r">Rohit</span></p>
+<p class="a">We gave a week-by-week schedule chart in both progress reports and a timeline table in the final report (Table 6.1). A true PERT network diagram, which shows which task depends on which, was not drawn.</p></div>
+
+<div class="qa"><p class="q"><span class="n">H12.</span>What problems did you face? <span class="tag all">All</span></p>
+<p class="a">Three main ones. Papers report results in different ways, so we explained each measure and did not rank detectors across papers. Checking settled the weak spots in our own notes: the official records showed one wrong year, and the full texts turned two "to verify" entries into "No". And the official report format came late, so we kept the draft easy to restyle. Section 5 has the full list, including the Semester 8 ones.</p></div>
+
+<div class="qa"><p class="q"><span class="n">H13.</span>What did you learn from this project? <span class="tag all">All</span></p>
+<p class="a">To fix the rules before reading, so that every paper is judged the same way. To check sources instead of trusting them: even after our script check, re-reading the papers before the final report changed six details. That a headline accuracy means little without its test conditions. And the main technical lesson: many detectors learn one generator's traces, so they fail on new ones.</p>
+<p class="warn">Add a personal point of your own if you have one.</p></div>
+
+<div class="qa"><p class="q"><span class="n">H14.</span>Which software and tools did you use? <span class="tag r">Rohit</span></p>
+<p class="a">Only free tools or tools we already had; nothing was bought (Table 5.1). We searched arXiv, publisher and conference pages and Google Scholar, and checked each reference against its official record (arXiv, Crossref or PMLR). The paper lists and the 8-fact table were kept as CSV files and the references in a BibTeX file. Small Python scripts did the checks, the drafts were written in Markdown in VS Code, the figures were drawn as SVG, and Microsoft Word produced the report and its PDF. From 20 August the files were kept in Git, in a private GitHub repository. We also used an AI assistant (Claude Code), as explained in H7.</p>
+<p class="warn">Careful: Table 5.1 does not list the AI assistant, so name it yourself when you list tools; leaving it out would look like hiding it.</p></div>
+</div>
+
+<!-- ============================ 8 ============================ -->
+<div class="section">
+<h1>8. Be ready: things an examiner may notice</h1>
+<p>Examiners may hold our WPRs, diary, progress reports and the final report together. These are the places where they differ, with the honest answer for each.</p>
+
+<table class="grid">
+  <tr><th style="width:37%">If the examiner points out&hellip;</th><th>Honest answer</th></tr>
+  <tr><td>The WPRs show the writing spread over September, but the diary shows August.</td><td>The diary has the real dates: we wrote early (10&ndash;17 August). The WPRs follow the plan's order and due dates. Section 6.1 of our report says this. (Question H3.)</td></tr>
+  <tr><td>The diary says Sections 3 to 8, most of the review, were drafted in just two days (13&ndash;14 August).</td><td>The slow part came first: in Week 3 the 48 papers were read and their 8 facts recorded, and by 12 August the five families were fixed. Each section was then written from that table, with the AI assistant helping to draft the text, and the numbers and references were checked against our records (question H7). Do not claim it was all typed by hand in two days.</td></tr>
+  <tr><td>The project diary stops on 27 August, six weeks before the window closed.</td><td>It was prepared for the first progress review on 27 August, so it records the work up to that day. Later progress is in Progress Report 2 (1 October) and the WPRs. After mid-August we prepared the two progress reports and worked on the Semester 8 code our guide asked for (question H3).</td></tr>
+  <tr><td>The WPRs and report say "no experiments", but the diary and progress reports show accuracy numbers.</td><td>Two different pieces of work: the review (no experiments) and the Semester 8 code our guide asked us to start on 15 August. Its results were kept out of the minor report on purpose. (Question H4.)</td></tr>
+  <tr><td>WPR 12 and both progress reports say the rewrite in our own words and the guide's review of the draft were still to be done.</td><td>That was true when they were written, and Section 6.1 of our report lists the same open items at the close of the window on 9 October. Then say only what really happened after that: whether the guide reviewed the report before the 26 October upload, and whether each of you did your own rewrite pass. Never claim either if it did not happen (questions H7 and H8).</td></tr>
+  <tr><td>A number about a published study in an older document differs from the final report.</td><td>The final report is the corrected version: every number was re-checked against the papers, and six details were corrected, along with a few counts and wordings. Main ones: Wang et al., 2020 used 11 test sets, of which 10 were new generators; Yan et al., 2025a's 92.77% &rarr; 65.77% belongs to one detector, AIDE; Corvi et al., 2023b is about 52&ndash;76% averaged over 12 generators; Coccomini et al., 2022's 81.1%, 47.0% and 57.0% are scores on the three methods it was trained on; 15 studies (not 14) report average precision.</td></tr>
+  <tr><td>Older documents say "six databases were searched".</td><td>Our protocol named six databases. The search phrases were actually run on arXiv, publisher and conference pages, and Google Scholar, as Section 8.1 says. The final wording is the accurate one.</td></tr>
+  <tr><td>The rule says 2019&ndash;2026, but the abstract says 2019&ndash;2025.</td><td>2019&ndash;2026 is the rule; the 48 studies we found are from 2019&ndash;2025.</td></tr>
+  <tr><td>74 references included, but 73 listed.</td><td>All 74 were checked; 73 are cited. One supporting study was not needed in the text.</td></tr>
+  <tr><td>WPR 1 mentions a 15-week schedule.</td><td>Our first plan had 15 weeks. The portal window was 12 weeks, so we merged some weeks.</td></tr>
+  <tr><td>WPR 2 says 12 supporting studies; later documents say 11.</td><td>TruthLens was dropped in Week 3 because it had only one citation.</td></tr>
+  <tr><td>WPRs and drafts mention "Section 6" or "Table 6.1" for the comparison.</td><td>The final report puts six planning chapters first (Amity format). Old Section 6 is now Chapter 12, and the old master table is now Table 12.1.</td></tr>
+  <tr><td>Draft v2 uses different "a/b" letters for some authors (for example Corvi et al., 2023a and 2023b).</td><td>Same papers; the letters follow the final report's alphabetical reference list. Use the final report's labels.</td></tr>
+  <tr><td>The synopsis said every included paper would be read in full.</td><td>The 48 main studies were read in full; the 11 supporting studies were used where needed; the 15 background papers are classics such as the papers that introduced ResNet or Grad-CAM. Section 14.2 states this.</td></tr>
+  <tr><td>The two progress reports give different Semester 8 numbers.</td><td>Between the two reviews we repeated three runs with a longer limit (50 epochs); only the two ResNet50 results changed, and both rose a little. A 0.01 difference from our later Semester 8 tables is only rounding.</td></tr>
+  <tr><td>"20 GAN-only + 8 diffusion-only + 19 both" makes 47, not 48.</td><td>The 48th study (Tsigos et al., 2024) covers only face-editing methods; Table 12.2 lists it separately.</td></tr>
+  <tr><td>The progress reports say the ViT's win is "a direct answer" to the CNN-versus-transformer question.</td><td>That line was too strong. Besides its design, the ViT used a different optimiser from the CNNs, a smaller batch than most of them, and probably more pretraining images, so it leads on CIFAKE but we cannot say attention is the reason. The review found the same problem in other papers (Section 9.3).</td></tr>
+  <tr><td>The title page says "A Project Plan On".</td><td>That is the heading Amity's ETMN100 format uses. Chapters 7&ndash;14 are the review itself.</td></tr>
+  <tr><td>Every WPR says "Technical &amp; Economical Feasibility: Not started".</td><td>A review needs nothing built or bought, so no separate feasibility study was written. The final report covers the same ground: Table 3.1 shows no extra cost apart from printing and binding, and Sections 5.3&ndash;5.4 list the software (all free or already installed) and the ordinary laptop used, with no GPU needed.</td></tr>
+</table>
+
+<div class="careful">
+  <span class="box-label">Things not to say</span>
+  <ul>
+    <li>"We trained or tested models for this report." The minor report is a review; Semester 8 numbers are separate work.</li>
+    <li>"We searched six databases." Use the wording of Section 8.1.</li>
+    <li>"I alone did&hellip;" Chapter 15 says all work was joint.</li>
+    <li>A plagiarism score you do not actually have.</li>
+    <li>"We did not use AI."</li>
+    <li>"Diffusion images have no traces." They have fewer, not none.</li>
+    <li>"Wang et al. got 90.8% accuracy." It is 90.8 mAP.</li>
+    <li>"Our review is the first", or "X is the best detector".</li>
+    <li>"The ViT won because attention is better." In our Semester 8 runs other settings also differed.</li>
+    <li>An old number from a WPR or progress report for one of the corrected details.</li>
+  </ul>
+</div>
+</div>
+
+<!-- ============================ 9 ============================ -->
+<div class="section">
+<h1>9. Simple glossary</h1>
+<div class="gloss">
+  <p><strong>AI-generated image:</strong> a picture made by a computer model instead of a camera.</p>
+  <p><strong>Generator:</strong> the AI model that makes images, for example Stable Diffusion, Midjourney or ProGAN.</p>
+  <p><strong>GAN:</strong> two networks compete; one makes images and the other tries to catch the fakes.</p>
+  <p><strong>Diffusion model:</strong> makes an image by starting from noise and removing it step by step.</p>
+  <p><strong>Stable Diffusion:</strong> a popular diffusion model guided by a text prompt. CIFAKE's fakes come from version 1.4.</p>
+  <p><strong>Midjourney:</strong> a commercial image generator, used in the 99.9% &rarr; 54.9% example.</p>
+  <p><strong>ProGAN:</strong> an older GAN; 15 of our 48 studies train on its images.</p>
+  <p><strong>Trace (artefact):</strong> a tiny hidden pattern that a generator leaves in an image.</p>
+  <p><strong>Upsampling:</strong> enlarging a small grid into a bigger image step by step; the most studied source of traces.</p>
+  <p><strong>Frequency (spectrum):</strong> the image seen as smooth parts and fine detail; traces sit in the fine detail.</p>
+  <p><strong>JPEG compression:</strong> making an image file smaller by throwing away fine detail; strong compression can erase traces.</p>
+  <p><strong>Detector:</strong> a program that labels an image as real or fake.</p>
+  <p><strong>Binary classification:</strong> choosing between two labels, here real or fake.</p>
+  <p><strong>Deep learning:</strong> training neural networks with many layers on many examples.</p>
+  <p><strong>Weights:</strong> the numbers inside a network that hold what it has learned; training adjusts them, unless they are frozen.</p>
+  <p><strong>Features:</strong> numbers that describe an image, such as which edges, textures or patterns it contains. A network learns its own; in the hand-made family a person chooses them.</p>
+  <p><strong>Classifier:</strong> the part that makes the final choice between labels (here real or fake), often a small layer or a simple model placed on top of the features.</p>
+  <p><strong>CNN:</strong> a neural network that looks at an image through small filters arranged in layers.</p>
+  <p><strong>ImageNet:</strong> a large public collection of labelled everyday photos used to pretrain models.</p>
+  <p><strong>Pretrained model (backbone):</strong> a network already trained on ImageNet, reused as a starting point.</p>
+  <p><strong>Transfer learning:</strong> reusing a pretrained network for a new task.</p>
+  <p><strong>Feature extraction:</strong> keep the pretrained network frozen and train only a small new last layer.</p>
+  <p><strong>Fine-tuning:</strong> update all of the network's weights for the new task.</p>
+  <p><strong>Frozen:</strong> weights that are not changed during training.</p>
+  <p><strong>Vision Transformer (ViT):</strong> cuts the image into patches; every patch "pays attention" to every other patch.</p>
+  <p><strong>Self-attention:</strong> a step that lets each part of the input use information from all the other parts.</p>
+  <p><strong>CLIP:</strong> a big model trained on pictures with captions; its features can separate real from fake images.</p>
+  <p><strong>Grad-CAM:</strong> a heat map showing which image regions drove a model's decision.</p>
+  <p><strong>Explainability:</strong> showing why a model made its decision.</p>
+  <p><strong>Dataset:</strong> a collection of labelled images for training and testing.</p>
+  <p><strong>Benchmark:</strong> a standard dataset and test used to compare methods fairly.</p>
+  <p><strong>CIFAKE:</strong> 120,000 tiny (32&times;32) images: 60,000 real (CIFAR-10) and 60,000 fake (Stable Diffusion v1.4).</p>
+  <p><strong>GenImage:</strong> a large benchmark with 1,331,167 real images and more than a million fakes from 8 generators.</p>
+  <p><strong>Cross-generator test:</strong> testing on a generator the detector never saw in training.</p>
+  <p><strong>Cross-dataset test:</strong> testing on different photos, possibly from the same generator.</p>
+  <p><strong>In-the-wild images:</strong> images collected from the internet as people actually shared them (for example AI-made pictures posted online), instead of images the researchers generated themselves.</p>
+  <p><strong>Shortcut (bias):</strong> an accidental difference, such as file type, that lets a model "cheat".</p>
+  <p><strong>Confusion matrix:</strong> a 2&times;2 table of right and wrong answers (TP, FP, TN, FN).</p>
+  <p><strong>Accuracy:</strong> the share of all answers that are right.</p>
+  <p><strong>Precision:</strong> of the images flagged as fake, the share that really are fake.</p>
+  <p><strong>Recall:</strong> of all the fakes, the share that were caught.</p>
+  <p><strong>F1 score:</strong> one number combining precision and recall.</p>
+  <p><strong>Threshold:</strong> the score above which an image is called fake.</p>
+  <p><strong>ROC curve and AUC:</strong> fakes caught against false alarms at every threshold; an AUC of 0.5 is guessing and 1.0 is perfect.</p>
+  <p><strong>AP and mAP:</strong> a summary of the precision-recall curve; mAP averages it over several test sets.</p>
+  <p><strong>Systematic review:</strong> a literature review that follows fixed rules written before the search.</p>
+  <p><strong>PRISMA-style flow:</strong> a diagram of how many papers were found, removed and kept.</p>
+  <p><strong>Primary, secondary and background studies:</strong> read in full and tabled; used where needed; classic papers on generators, networks or methods, plus three earlier surveys.</p>
+  <p><strong>Extraction table:</strong> our table of 8 facts recorded for each main study.</p>
+  <p><strong>Taxonomy:</strong> a way of sorting methods into groups (our five families).</p>
+  <p><strong>Preprint:</strong> a paper posted online (for example on arXiv) before peer review.</p>
+  <p><strong>DOI and arXiv ID:</strong> permanent identifiers used to check that a paper is real.</p>
+  <p><strong>Kaggle:</strong> a website with free online notebooks and GPUs; we use it for the Semester 8 training.</p>
+  <p><strong>GPU:</strong> a graphics processor that trains neural networks much faster than a normal processor.</p>
+  <p><strong>Epoch:</strong> one full pass over all the training images.</p>
+  <p><strong>Seed:</strong> the number that starts the random-number generator. Fixing it fixes a run's random choices (data split, shuffling order, flips, the new layer's starting weights), so the run can be repeated; on a GPU an exact repeat also needs the same hardware and software.</p>
+  <p><strong>Ablation:</strong> changing one setting to see how much it matters.</p>
+</div>
+</div>
+
+</body>
+</html>
