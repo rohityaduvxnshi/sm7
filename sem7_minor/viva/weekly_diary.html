@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Project Diary &ndash; Weekly Progress Overview (Group 148)</title>
+<style>
+  /* Weekly progress diary, Group 148 - A4 landscape, rendered to PDF by headless Edge. */
+  @page {
+    size: A4 landscape;
+    margin: 14mm;
+    @bottom-center { content: "Group 148  |  Project Diary  |  Page " counter(page) " of " counter(pages); font: 8pt "Segoe UI", Arial, sans-serif; color: #5b6672; }
+  }
+
+  :root {
+    --ink: #1d2733;
+    --muted: #56616d;
+    --accent: #1f4e79;
+    --rule: #c5cfd9;
+    --zebra: #f3f6f9;
+    --after: #e3ecf5;
+    --note: #7a5200;
+  }
+
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html { background: #ffffff; }
+  body {
+    margin: 0;
+    background: #ffffff;
+    color: var(--ink);
+    font: 9pt/1.35 "Segoe UI", Arial, sans-serif;
+  }
+
+  /* Header block */
+  .head { border-bottom: 2px solid var(--accent); padding-bottom: 5pt; }
+  h1 { margin: 0 0 2pt; font-size: 18pt; line-height: 1.2; font-weight: 600; color: var(--accent); }
+  .proj { margin: 0 0 5pt; font-size: 11pt; font-weight: 600; line-height: 1.3; }
+  .meta { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.5pt 22pt; font-size: 9pt; }
+  .meta div { display: flex; }
+  .meta .k { flex: 0 0 68pt; color: var(--muted); }
+  .meta .span2 { grid-column: 1 / -1; }
+  .lead { margin: 5pt 0 6pt; font-size: 9.5pt; color: var(--muted); }
+
+  /* Weekly table */
+  table.diary { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 8.8pt; }
+  .diary th {
+    background: var(--accent); color: #ffffff; text-align: left; font-weight: 600;
+    padding: 3.5pt 5pt; border: 1px solid var(--accent);
+  }
+  .diary td { padding: 3pt 5pt; border: 1px solid var(--rule); vertical-align: top; }
+  .nb { white-space: nowrap; }
+  .diary thead { display: table-header-group; }
+  .diary tr { break-inside: avoid; page-break-inside: avoid; }
+  .diary tbody tr:nth-child(even) td { background: var(--zebra); }
+  .diary td.wk { text-align: center; font-weight: 700; color: var(--accent); }
+  .diary td.wk small { display: block; font-weight: 400; color: var(--muted); font-size: 8pt; }
+  .diary tbody tr.after td { background: var(--after); border-top: 2px solid var(--accent); }
+  .note { display: block; margin-top: 2pt; color: var(--note); font-style: italic; font-size: 8.3pt; line-height: 1.3; }
+
+  /* Below the table */
+  .scope { margin: 7pt 0 0; font-size: 8.8pt; color: var(--muted); }
+  h2 { margin: 8pt 0 3pt; font-size: 10.5pt; color: var(--accent); font-weight: 600; break-after: avoid; }
+  ul.dates { list-style: none; margin: 0; padding: 0; column-count: 2; column-gap: 22pt; font-size: 9pt; }
+  ul.dates li { break-inside: avoid; margin: 0 0 2.5pt; display: grid; grid-template-columns: 74pt 1fr; }
+  ul.dates .d { font-weight: 600; }
+
+  /* Signature lines (left blank on purpose) */
+  .sign { margin-top: 14pt; break-inside: avoid; }
+  .sign .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0 22pt; }
+  .sign .line { border-bottom: 1px solid var(--ink); height: 22pt; }
+  .sign .nm { margin-top: 3pt; font-weight: 600; }
+  .sign .role { color: var(--muted); font-size: 8.5pt; }
+  .sign .dt { margin-top: 9pt; display: flex; align-items: flex-end; }
+  .sign .dt i { flex: 1; border-bottom: 1px solid var(--ink); height: 10pt; margin-left: 4pt; }
+</style>
+</head>
+<body>
+
+<header class="head">
+  <h1>Project Diary &ndash; Weekly Progress Overview</h1>
+  <p class="proj">Deep Learning for AI-Generated Image Detection: A Review of CNN, Vision Transformer, and Explainable Approaches</p>
+  <div class="meta">
+    <div><span class="k">Group</span><span>148</span></div>
+    <div><span class="k">Course</span><span>NTCC Minor Project ETMN100</span></div>
+    <div><span class="k">Programme</span><span>B.Tech, Computer Science and Engineering, Semester 7</span></div>
+    <div><span class="k">Project window</span><span>20 July &ndash; 9 October 2026 (12 weeks)</span></div>
+    <div><span class="k">Institution</span><span>Amity School of Engineering and Technology, Amity University Uttar Pradesh</span></div>
+    <div><span class="k">Faculty guide</span><span>Dr. Richa Gupta</span></div>
+    <div class="span2"><span class="k">Team</span><span>Rohit Yadav (A2305223472), Vishal (A2305223568), Hardik Mehlawat (A2305223449)</span></div>
+  </div>
+</header>
+
+<p class="lead">Weekly overview compiled from our Weekly Progress Reports (WPRs 1&ndash;12) and the NTCC project diary.</p>
+
+<table class="diary">
+  <colgroup>
+    <col style="width:5%"><col style="width:9.5%"><col style="width:22.5%"><col style="width:43%"><col style="width:20%">
+  </colgroup>
+  <thead>
+    <tr><th>Week</th><th>Dates (2026)</th><th>Planned work</th><th>Progress / what was done</th><th>Output</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="wk">1</td>
+      <td>20&ndash;26 Jul</td>
+      <td>Fix the title and scope. Write the search protocol with inclusion and exclusion criteria. Set the section outline.</td>
+      <td>Scope fixed as real versus AI-generated still images. Search protocol, criteria and an eight-section outline written; working repository set up. Title finalised on 29&nbsp;Jul (reported in WPR 1).</td>
+      <td>Search protocol; outline; WPR 1 <span class="nb">(dated 29 Jul)</span></td>
+    </tr>
+    <tr>
+      <td class="wk">2</td>
+      <td>27 Jul &ndash; 2 Aug</td>
+      <td>First round of literature collection. Screening by title and abstract.</td>
+      <td>Eight query seeds run on arXiv, publisher and conference pages and Google Scholar. 101 records found, 26 duplicates removed, 75 screened by title and abstract; 48 primary studies shortlisted.</td>
+      <td>Candidate and screening lists with stage counts; WPR 2 <span class="nb">(dated 5 Aug)</span></td>
+    </tr>
+    <tr>
+      <td class="wk">3</td>
+      <td>3&ndash;9 Aug</td>
+      <td>Read the primary studies in full. Fill the extraction table.</td>
+      <td>All 48 primary studies read in full and entered in an eight-column table (10 doubtful cells flagged for checking). One preprint with 1 citation excluded; 74 papers kept (48 primary, 11 secondary, 15 background).</td>
+      <td>Extraction table (48 studies); updated screening list; WPR 3 <span class="nb">(dated 12 Aug)</span></td>
+    </tr>
+    <tr>
+      <td class="wk">4</td>
+      <td>10&ndash;16 Aug</td>
+      <td>Finalise the taxonomy. Draft the introduction.</td>
+      <td>Taxonomy fixed: 5 families (14 / 19 / 2 / 8 / 4); three studies fit two families, and the four dataset studies are kept separate. Introduction drafted. The 10 flagged cells settled from the full texts.
+        <span class="note">Done 10&ndash;12 Aug (NTCC diary), inside this week; reported in this week&rsquo;s WPR.</span></td>
+      <td>Taxonomy map; introduction draft; WPR 4 <span class="nb">(dated 19 Aug)</span></td>
+    </tr>
+    <tr>
+      <td class="wk">5</td>
+      <td>17&ndash;23 Aug</td>
+      <td>Draft the background on GANs, diffusion models and the artefacts they leave.</td>
+      <td>Background section drafted. BibTeX reference file built for all 74 included papers; every identifier opened and checked (74 of 74); one wrong publication year corrected.
+        <span class="note">Done ahead of schedule on 10&ndash;12 Aug (NTCC diary); reported in this week&rsquo;s WPR.</span></td>
+      <td>Background draft; BibTeX file; verification log; WPR 5 <span class="nb">(dated 26 Aug)</span></td>
+    </tr>
+    <tr>
+      <td class="wk">6</td>
+      <td>24&ndash;30 Aug</td>
+      <td>Draft the handcrafted and frequency-domain section and the CNN and transfer-learning section (3.1&ndash;3.2).</td>
+      <td>Sections 3.1 and 3.2 drafted, covering the 14 and 19 studies assigned to them.
+        <span class="note">Done ahead of schedule on 13&ndash;14 Aug (NTCC diary); reported in this week&rsquo;s WPR.</span></td>
+      <td>First two taxonomy sections; WPR 6 <span class="nb">(dated 2 Sep)</span></td>
+    </tr>
+    <tr>
+      <td class="wk">7</td>
+      <td>31 Aug &ndash; 6 Sep</td>
+      <td>Draft the transformer, multimodal and explainability sections (3.3&ndash;3.5).</td>
+      <td>Sections 3.3 to 3.5 drafted, covering 2, 8 and 4 studies; the taxonomy section is now complete.
+        <span class="note">Done ahead of schedule on 13&ndash;14 Aug (NTCC diary); reported in this week&rsquo;s WPR.</span></td>
+      <td>Complete taxonomy draft; WPR 7 <span class="nb">(dated 9 Sep)</span></td>
+    </tr>
+    <tr>
+      <td class="wk">8</td>
+      <td>7&ndash;13 Sep</td>
+      <td>Draft the datasets and evaluation-metrics sections, with the dataset table and figures.</td>
+      <td>Datasets and metrics sections drafted. Dataset table (11 datasets), eight metrics written as equations, and two figures (search flow, metrics overview) made.
+        <span class="note">Done ahead of schedule on 13&ndash;14 Aug (NTCC diary); reported in this week&rsquo;s WPR.</span></td>
+      <td>Datasets and metrics drafts; dataset table; two figures; WPR 8 <span class="nb">(dated 16 Sep)</span></td>
+    </tr>
+    <tr>
+      <td class="wk">9</td>
+      <td>14&ndash;20 Sep</td>
+      <td>Build the master comparison table. Draft the comparative analysis.</td>
+      <td>Master table of all 48 studies built and checked by script against the extraction table (48 of 48 rows matched). Comparative analysis drafted from it.
+        <span class="note">Done ahead of schedule on 13&ndash;14 Aug (NTCC diary); reported in this week&rsquo;s WPR.</span></td>
+      <td>Master table (48 studies); comparative analysis draft; WPR 9 <span class="nb">(dated 23 Sep)</span></td>
+    </tr>
+    <tr>
+      <td class="wk">10</td>
+      <td>21&ndash;27 Sep</td>
+      <td>Draft the challenges and gap analysis, the conclusion and the abstract.</td>
+      <td>Challenges and gap analysis, conclusion and abstract drafted; review text complete (about 9,850 words). The Semester 8 study appears as future work only, with no results.
+        <span class="note">Done ahead of schedule on 13&ndash;14 Aug (NTCC diary); reported in this week&rsquo;s WPR.</span></td>
+      <td>Challenges, conclusion and abstract drafts; WPR 10 <span class="nb">(dated 30 Sep)</span></td>
+    </tr>
+    <tr>
+      <td class="wk">11</td>
+      <td>28 Sep &ndash; 4 Oct</td>
+      <td>Assemble the full draft. Verify the references. Run consistency checks.</td>
+      <td>Full draft assembled as draft v1 (DOCX and 31-page PDF) with 73 cited references in IEEE style. Consistency checks run; all 74 reference checks confirmed.
+        <span class="note">Assembled ahead of schedule on 15&ndash;17 Aug, references checked on 10&ndash;12 Aug (NTCC diary); reported in this week&rsquo;s WPR. A journal-style draft v2 (19 pages) went to the department&rsquo;s plagiarism check on 15 Aug.</span></td>
+      <td>Draft v1 (DOCX and PDF); citation map; WPR 11 <span class="nb">(dated 7 Oct)</span></td>
+    </tr>
+    <tr>
+      <td class="wk">12</td>
+      <td>5&ndash;9 Oct</td>
+      <td>Guide review of the draft; corrections; restyling in the Amity format; submission pack.</td>
+      <td>Window closed on 9 Oct; no new deliverable. Submission pack reviewed (drafts v1 and v2, verified references, WPRs 1&ndash;11, Progress Reports 1 and 2, NTCC diary). Open at the close: the official report format, the plagiarism-check result, the team&rsquo;s own rewrite and the guide&rsquo;s review.</td>
+      <td>WPR 12 <span class="nb">(dated 14 Oct)</span>, reported as incomplete</td>
+    </tr>
+    <tr class="after">
+      <td class="wk" colspan="2">After the window<small>(October 2026)</small></td>
+      <td>Prepare the final report in the Amity format.</td>
+      <td>Official report format (ETMN100 guidelines) obtained. Final report built on 20 Oct in the Amity &ldquo;Project Plan&rdquo; format: 100 pages, 15 chapters. Upload on Amizone due 26 Oct.</td>
+      <td>Final report (PDF, with DOCX source)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="scope">Note: this diary covers the literature review, which reports no experiments or results of its own. On 15 August 2026 the guide also asked the team to begin preparing the Semester 8 implementation code; that is a separate work track and is not recorded here.</p>
+
+<h2>Key dates</h2>
+<ul class="dates">
+  <li><span class="d">29 Jul 2026</span>Synopsis entered on Amizone.</li>
+  <li><span class="d">27 Aug 2026</span>First progress review presentation (Progress Report 1 and the NTCC project diary were prepared for it).</li>
+  <li><span class="d">1 Oct 2026</span>Progress Report 2 dated (progress up to the end of Week 10).</li>
+  <li><span class="d">9 Oct 2026</span>Project window closed.</li>
+  <li><span class="d">20 Oct 2026</span>Final report built in the Amity format.</li>
+  <li><span class="d">26 Oct 2026</span>Final report upload on Amizone due.</li>
+  <li><span class="d">2&ndash;6 Nov 2026</span>Evaluation.</li>
+</ul>
+
+<div class="sign">
+  <div class="grid">
+    <div><div class="line"></div><div class="nm">Rohit Yadav</div><div class="role">Student</div><div class="dt">Date:<i></i></div></div>
+    <div><div class="line"></div><div class="nm">Vishal</div><div class="role">Student</div><div class="dt">Date:<i></i></div></div>
+    <div><div class="line"></div><div class="nm">Hardik Mehlawat</div><div class="role">Student</div><div class="dt">Date:<i></i></div></div>
+    <div><div class="line"></div><div class="nm">Dr. Richa Gupta</div><div class="role">Faculty guide</div><div class="dt">Date:<i></i></div></div>
+  </div>
+</div>
+
+</body>
+</html>
